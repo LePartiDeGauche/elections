@@ -17,7 +17,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionDomain\Entity;
+namespace PartiDeGauche\ElectionDomain\Entity\Echeance;
 
 class Echeance
 {

@@ -17,23 +17,30 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionDomain\Entity;
+namespace PartiDeGauche\ElectionDomain\Entity\Election;
 
-use PartiDeGauche\ElectionDomain\VO\VoteInfo;
+use PartiDeGauche\ElectionDomain\CandidatInterface;
+use PartiDeGauche\ElectionDomain\VO\Score;
 use PartiDeGauche\ElectionDomain\TerritoireInterface;
 
-
-class VoteInfoAssignment
+class ScoreAssignment
 {
     private $id;
     private $election;
+    private $candidat;
     private $territoire;
-    private $voteInfoVO;
+    private $scoreVO;
 
-    public function __construct(VoteInfo $voteInfo = null, Election $election,
-        TerritoireInterface $territoire)
+    public function getCandidat()
     {
-        $this->voteInfoVO = $voteInfo;
+        return $this->candidat;
+    }
+
+    public function __construct(Score $score = null, Election $election,
+        CandidatInterface $candidat, TerritoireInterface $territoire)
+    {
+        $this->scoreVO = $score;
+        $this->candidat = $candidat;
         $this->election = $election;
         $this->territoire = $territoire;
     }
@@ -48,13 +55,13 @@ class VoteInfoAssignment
         return $this->territoire;
     }
 
-    public function getVoteInfoVO()
+    public function getScoreVO()
     {
-        return $this->voteInfoVO;
+        return $this->scoreVO;
     }
 
-    public function setVoteInfoVO(VoteInfo $voteInfo)
+    public function setScoreVO(Score $score)
     {
-        $this->voteInfoVO = $voteInfo;
+        $this->scoreVO = $score;
     }
 }

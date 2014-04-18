@@ -17,14 +17,29 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionDomain\Entity;
+namespace PartiDeGauche\ElectionDomain\Tests\Entity\Echeance;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 
-class ElectionDeListe extends Election
+class EcheanceTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var ArrayCollection
-     */
-    protected $candidats;
+    public function testHasDateAndNomAndTour()
+    {
+        $date = new \DateTime();
+        $echeance = new Echeance($date, 'Nom de l\'élection', true);
+
+        $this->assertEquals($date, $echeance->getDate());
+        $this->assertEquals('Nom de l\'élection', $echeance->getNom());
+        $this->assertTrue($echeance->isSecondTour());
+    }
+
+    public function testNomIsString()
+    {
+        $this->setExpectedException(
+            '\InvalidArgumentException'
+        );
+
+        $date = new \DateTime();
+        $echeance = new Echeance($date, 12);
+    }
 }

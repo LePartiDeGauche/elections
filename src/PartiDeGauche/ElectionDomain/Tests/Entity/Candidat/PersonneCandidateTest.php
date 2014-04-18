@@ -17,10 +17,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionDomain\Tests\Entity;
+namespace PartiDeGauche\ElectionDomain\Tests\Entity\Candidat;
 
 use PartiDeGauche\ElectionDomain\CandidatInterface;
-use PartiDeGauche\ElectionDomain\Entity\PersonneCandidate;
+use PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate;
 
 class PersonneCandidateTest extends \PHPUnit_Framework_TestCase
 {

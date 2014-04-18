@@ -19,7 +19,7 @@
 
 namespace PartiDeGauche\ElectionDomain\VO;
 
-use PartiDeGauche\ElectionDomain\Entity\Election;
+use PartiDeGauche\ElectionDomain\Entity\Election\Election;
 use PartiDeGauche\ElectionDomain\TerritoireInterface;
 
 class VoteInfo

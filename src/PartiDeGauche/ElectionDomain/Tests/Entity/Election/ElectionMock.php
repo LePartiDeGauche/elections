@@ -17,13 +17,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionDomain\Entity;
+namespace PartiDeGauche\ElectionDomain\Tests\Entity\Election;
 
-use Doctrine\ORM\Mapping as ORM;
-use PartiDeGauche\ElectionDomain\CandidatInterface;
+use PartiDeGauche\ElectionDomain\Entity\Election\Election as BaseElection;
 
-
-abstract class Candidat implements CandidatInterface
+class ElectionMock extends BaseElection
 {
-    private $id;
 }

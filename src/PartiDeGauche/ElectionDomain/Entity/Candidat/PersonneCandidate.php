@@ -17,14 +17,40 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionDomain\Entity;
+namespace PartiDeGauche\ElectionDomain\Entity\Candidat;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
-class ElectionUninominale extends Election
+class PersonneCandidate extends Candidat
 {
     /**
-     * @var ArrayCollection
+     * Le nom de famille de la personne
+     * @var string
      */
-    protected $candidats;
+    private $nom;
+
+    /**
+     * Le prénom de la personne.
+     * @var string
+     */
+    private $prenom;
+
+    /**
+     * Constructeur d'objet personne.
+     * @param string $prenom Le prénom de la personne.
+     * @param string $nom    Le nom de la personne.
+     */
+    public function __construct($prenom, $nom)
+    {
+        \Assert\that($prenom)->string();
+        \Assert\that($nom)->string();
+
+        $this->prenom = $prenom;
+        $this->nom = $nom;
+    }
+
+    public function __toString()
+    {
+        return $this->prenom . ' ' . $this->nom;
+    }
 }

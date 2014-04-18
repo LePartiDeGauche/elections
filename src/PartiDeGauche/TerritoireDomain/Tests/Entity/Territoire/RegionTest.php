@@ -17,72 +17,48 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\TerritoireDomain\Tests;
+namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
 use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
-use PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire;
-use PartiDeGauche\TerritoireDomain\Entity\Departement;
-use PartiDeGauche\TerritoireDomain\Entity\Region;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
-class DepartementTest extends \PHPUnit_Framework_TestCase
+class RegionTest extends \PHPUnit_Framework_TestCase
 {
     public function testCodeIsStringMax4()
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $region = new Region(11, 'Île-de-France');
-        $departement = new Departement(
-            $region,
-            'ZEEEE',
-            'Hauts-de-Seine'
-        );
+        $region = new Region('ZEEEE', 'Île-de-France');
     }
 
-    public function testHasRegionAndCodeAndNom()
+    public function testHasCodeAndNom()
     {
         $region = new Region(11, 'Île-de-France');
-        $departement = new Departement(
-            $region,
-            92,
-            'Hauts-de-Seine'
-        );
 
-        $this->assertEquals(92, $departement->getCode());
-        $this->assertEquals('Hauts-de-Seine', $departement->getNom());
-        $this->assertEquals($region, $departement->getRegion());
+        $this->assertEquals(11, $region->getCode());
+        $this->assertEquals('Île-de-France', $region->getNom());
     }
 
     public function testIsCirconscription()
     {
         $region = new Region(11, 'Île-de-France');
-        $departement = new Departement(
-            $region,
-            92,
-            'Hauts-de-Seine'
-        );
 
-        $this->assertTrue($departement instanceof CirconscriptionInterface);
+        $this->assertTrue($region instanceof CirconscriptionInterface);
     }
 
     public function testIsTerritoire()
     {
         $region = new Region(11, 'Île-de-France');
-        $departement = new Departement(
-            $region,
-            92,
-            'Hauts-de-Seine'
-        );
 
-        $this->assertTrue($departement instanceof AbstractTerritoire);
+        $this->assertTrue($region instanceof AbstractTerritoire);
     }
 
     public function testNomIsStringMax255()
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $region = new Region(11, 'Île-de-France');
-        $departement = new Departement(
-            $region,
+        $region = new Region(
             'ZEEE',
             'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
             . 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'

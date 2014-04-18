@@ -17,7 +17,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\TerritoireDomain\Entity;
+namespace PartiDeGauche\TerritoireDomain\Entity\Territoire;
 
 class Departement extends AbstractTerritoire
 {

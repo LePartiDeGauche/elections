@@ -17,12 +17,14 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionDomain\Tests\Entity;
+namespace PartiDeGauche\ElectionDomain\Tests\Entity\Candidat;
 
 use PartiDeGauche\ElectionDomain\CandidatInterface;
-use PartiDeGauche\ElectionDomain\Entity\Echeance;
+use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
-use PartiDeGauche\ElectionDomain\Entity\ListeCandidate;
+use PartiDeGauche\ElectionDomain\Entity\Candidat\ListeCandidate;
+use PartiDeGauche\ElectionDomain\Tests\Entity\CirconscriptionMock;
+use PartiDeGauche\ElectionDomain\Tests\Entity\Election\ElectionMock;
 
 class ListeCandidateTest extends \PHPUnit_Framework_TestCase
 {

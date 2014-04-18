@@ -17,50 +17,45 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionDomain\Entity;
+namespace PartiDeGauche\ElectionDomain\Entity\Election;
 
-class ListeCandidate extends Candidat
+use PartiDeGauche\ElectionDomain\VO\VoteInfo;
+use PartiDeGauche\ElectionDomain\TerritoireInterface;
+use PartiDeGauche\ElectionDomain\CandidatInterface;
+
+
+class VoteInfoAssignment
 {
-    /**
-     * L'élection à laquelle la liste était candidate.
-     * @var Election
-     */
+    private $id;
     private $election;
+    private $territoire;
+    private $voteInfoVO;
 
-    /**
-     * Le nom de la liste.
-     * @var string
-     */
-    private $nom;
-
-    /**
-     * Constructeur d'objet personne.
-     * @param string $nom    Le nom de la liste.
-     */
-    public function __construct(Election $election, $nom)
+    public function __construct(VoteInfo $voteInfo = null, Election $election,
+        TerritoireInterface $territoire)
     {
-        \Assert\that($nom)->string();
-
+        $this->voteInfoVO = $voteInfo;
         $this->election = $election;
-        $election->addCandidat($this);
-        $this->nom = $nom;
+        $this->territoire = $territoire;
     }
 
-    /**
-     * Retourne le nom de l'élection.
-     * @return string Le nom de l'élection.
-     */
-    public function __toString()
-    {
-        return $this->nom;
-    }
-
-    /**
-     * Récupérer l'élection à laquelle participait la liste.
-     * @return Election L'élection à laquelle participait la liste.
-     */
     public function getElection()
     {
         return $this->election;
+    }
+
+    public function getTerritoire()
+    {
+        return $this->territoire;
+    }
+
+    public function getVoteInfoVO()
+    {
+        return $this->voteInfoVO;
+    }
+
+    public function setVoteInfoVO(VoteInfo $voteInfo)
+    {
+        $this->voteInfoVO = $voteInfo;
     }
 }

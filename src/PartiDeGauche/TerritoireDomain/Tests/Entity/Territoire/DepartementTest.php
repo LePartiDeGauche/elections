@@ -17,67 +17,73 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\TerritoireDomain\Tests;
+namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
 use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
-use PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire;
-use PartiDeGauche\TerritoireDomain\Entity\Commune;
-use PartiDeGauche\TerritoireDomain\Entity\Departement;
-use PartiDeGauche\TerritoireDomain\Entity\Region;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
-class CommuneTest extends \PHPUnit_Framework_TestCase
+class DepartementTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCodeIsNumeric()
+    public function testCodeIsStringMax4()
     {
-        $region = new Region(82, 'Rhône-Alpes');
-        $departement = new Departement($region, 38, 'Isère');
-        $commune = new Commune($departement, 'ZE', 'Grenoble');
+        $this->setExpectedException('\InvalidArgumentException');
+
+        $region = new Region(11, 'Île-de-France');
+        $departement = new Departement(
+            $region,
+            'ZEEEE',
+            'Hauts-de-Seine'
+        );
     }
 
-
-    public function testHasDepartementAndCodeAndNom()
+    public function testHasRegionAndCodeAndNom()
     {
-        $region = new Region(82, 'Rhône-Alpes');
-        $departement = new Departement($region, 38, 'Isère');
-        $commune = new Commune($departement, 185, 'Grenoble');
-
-        $this->assertEquals('Grenoble', $commune->getNom());
-
-        $this->assertEquals(185, $commune->getCode());
-
-        $this->assertEquals(
-            new Departement(new Region(82, 'Rhône-Alpes'), 38, 'Isère'),
-            $commune->getDepartement()
+        $region = new Region(11, 'Île-de-France');
+        $departement = new Departement(
+            $region,
+            92,
+            'Hauts-de-Seine'
         );
+
+        $this->assertEquals(92, $departement->getCode());
+        $this->assertEquals('Hauts-de-Seine', $departement->getNom());
+        $this->assertEquals($region, $departement->getRegion());
     }
 
     public function testIsCirconscription()
     {
-        $region = new Region(82, 'Rhône-Alpes');
-        $departement = new Departement($region, 38, 'Isère');
-        $commune = new Commune($departement, 185, 'Grenoble');
+        $region = new Region(11, 'Île-de-France');
+        $departement = new Departement(
+            $region,
+            92,
+            'Hauts-de-Seine'
+        );
 
-        $this->assertTrue($commune instanceof CirconscriptionInterface);
+        $this->assertTrue($departement instanceof CirconscriptionInterface);
     }
 
     public function testIsTerritoire()
     {
-        $region = new Region(82, 'Rhône-Alpes');
-        $departement = new Departement($region, 38, 'Isère');
-        $commune = new Commune($departement, 185, 'Grenoble');
+        $region = new Region(11, 'Île-de-France');
+        $departement = new Departement(
+            $region,
+            92,
+            'Hauts-de-Seine'
+        );
 
-        $this->assertTrue($commune instanceof AbstractTerritoire);
+        $this->assertTrue($departement instanceof AbstractTerritoire);
     }
 
     public function testNomIsStringMax255()
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $region = new Region(82, 'Rhône-Alpes');
-        $departement = new Departement($region, 38, 'Isère');
-        $commune = new Commune(
-            $departement,
-            185,
+        $region = new Region(11, 'Île-de-France');
+        $departement = new Departement(
+            $region,
+            'ZEEE',
             'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
             . 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
             . 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'

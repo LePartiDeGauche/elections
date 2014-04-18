@@ -17,10 +17,14 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionDomain\Tests\Entity;
+namespace PartiDeGauche\ElectionDomain\Entity\Election;
 
-use PartiDeGauche\ElectionDomain\Entity\Election as BaseElection;
+use Doctrine\Common\Collections\ArrayCollection;
 
-class ElectionMock extends BaseElection
+class ElectionDeListe extends Election
 {
+    /**
+     * @var ArrayCollection
+     */
+    protected $candidats;
 }

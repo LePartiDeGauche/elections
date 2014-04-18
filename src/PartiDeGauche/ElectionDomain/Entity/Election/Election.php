@@ -17,12 +17,13 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionDomain\Entity;
+namespace PartiDeGauche\ElectionDomain\Entity\Election;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use PartiDeGauche\ElectionDomain\CandidatInterface;
 use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
+use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 use PartiDeGauche\ElectionDomain\TerritoireInterface;
 use PartiDeGauche\ElectionDomain\VO\Score;
 use PartiDeGauche\ElectionDomain\VO\VoteInfo;
@@ -242,7 +243,7 @@ abstract class Election
         $voteAssigment->setVoteInfoVO($voteInfo);
     }
 
-    private function getScoreAssignmentCandidat(Candidat $candidat,
+    private function getScoreAssignmentCandidat(CandidatInterface $candidat,
         TerritoireInterface $territoire)
     {
         $criteria = Criteria::create()

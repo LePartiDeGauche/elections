@@ -17,11 +17,11 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionDomain\Tests\Entity;
+namespace PartiDeGauche\ElectionDomain\Tests\Entity\Election;
 
 use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
-use PartiDeGauche\ElectionDomain\Entity\Echeance;
-use PartiDeGauche\ElectionDomain\Entity\PersonneCandidate;
+use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
+use PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate;
 use PartiDeGauche\ElectionDomain\TerritoireInterface;
 use PartiDeGauche\ElectionDomain\VO\VoteInfo;
 

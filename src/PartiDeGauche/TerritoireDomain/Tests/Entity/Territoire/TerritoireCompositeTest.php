@@ -17,10 +17,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\TerritoireDomain\Tests;
+namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
-use PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire;
-use PartiDeGauche\TerritoireDomain\Entity\TerritoireComposite;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\TerritoireComposite;
 
 class TerritoireCompositeTest extends \PHPUnit_Framework_TestCase
 {

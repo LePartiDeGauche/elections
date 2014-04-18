@@ -17,11 +17,14 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\TerritoireDomain\Entity;
+namespace PartiDeGauche\ElectionDomain\Entity\Election;
 
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
-abstract class AbstractTerritoire implements CirconscriptionInterface
+class ElectionUninominale extends Election
 {
-    private $id;
+    /**
+     * @var ArrayCollection
+     */
+    protected $candidats;
 }
