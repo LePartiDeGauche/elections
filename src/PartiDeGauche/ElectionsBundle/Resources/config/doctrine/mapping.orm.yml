@@ -1,0 +1,191 @@
+PartiDeGauche\ElectionDomain\Entity\Candidat:
+    type: entity
+    inheritanceType: SINGLE_TABLE
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+
+PartiDeGauche\ElectionDomain\Entity\Echeance:
+    type: entity
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        date:
+            type: date
+        nom:
+            type: string
+            length: 255
+            unique: true
+
+PartiDeGauche\ElectionDomain\Entity\ElectionDeListe:
+    type: entity
+    oneToMany:
+        candidats:
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\ListeCandidate
+            cascade: { "persist" }
+            mappedBy: election
+
+PartiDeGauche\ElectionDomain\Entity\Election:
+    type: entity
+    inheritanceType: SINGLE_TABLE
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    manyToOne:
+        echeance:
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Echeance
+    oneToMany:
+        scores:
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\ScoreAssignment
+            mappedBy: election
+        voteInfos:
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\VoteInfoAssignment
+            mappedBy: election
+
+PartiDeGauche\ElectionDomain\Entity\ElectionUninominale:
+    type: entity
+    manyToMany:
+        candidats:
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\PersonneCandidate
+
+PartiDeGauche\ElectionDomain\Entity\ListeCandidate:
+    type: entity
+    fields:
+        nom:
+            type: string
+            length: 255
+    manyToOne:
+        election:
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\ElectionDeListe
+            inversedBy: candidats
+
+PartiDeGauche\ElectionDomain\Entity\PersonneCandidate:
+    type: entity
+    fields:
+        nom:
+            type: string
+            length: 255
+        prenom:
+            type: string
+            length: 255
+
+PartiDeGauche\ElectionDomain\Entity\ScoreAssignment:
+    type: entity
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    embedded:
+        scoreVO:
+            class: PartiDeGauche\ElectionDomain\VO\Score
+    manyToOne:
+        election:
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Election
+            inversedBy: scores
+        candidat:
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Candidat
+        territoire:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire
+
+PartiDeGauche\ElectionDomain\Entity\VoteInfoAssignment:
+    type: entity
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    embedded:
+        voteInfoVO:
+            class: PartiDeGauche\ElectionDomain\VO\VoteInfo
+    manyToOne:
+        election:
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Election
+            inversedBy: voteInfos
+        territoire:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire
+
+PartiDeGauche\ElectionDomain\VO\Score:
+    type: embeddable
+    fields:
+        voix:
+            type: integer
+        pourcentage:
+            type: float
+            precision: 0.01
+
+PartiDeGauche\ElectionDomain\VO\VoteInfo:
+    type: embeddable
+    fields:
+        exprimes:
+            type: integer
+        inscrits:
+            type: integer
+        votants:
+            type: integer
+
+PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire:
+    type: entity
+    inheritanceType: SINGLE_TABLE
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+
+PartiDeGauche\TerritoireDomain\Entity\Commune:
+    type: entity
+    fields:
+        code:
+            type: string
+            length: 10
+        nom:
+            type: string
+            length: 255
+    manyToOne:
+        departement:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Departement
+            joinColumn:
+                name: territoire_id
+
+PartiDeGauche\TerritoireDomain\Entity\Departement:
+    type: entity
+    fields:
+        code:
+            type: string
+            length: 10
+        nom:
+            type: string
+            length: 255
+    manyToOne:
+        region:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Region
+            joinColumn:
+                name: territoire_id
+
+PartiDeGauche\TerritoireDomain\Entity\Region:
+    type: entity
+    fields:
+        code:
+            type: string
+            length: 10
+        nom:
+            type: string
+            length: 255
+
+PartiDeGauche\TerritoireDomain\Entity\TerritoireComposite:
+    type: entity
+    manyToOne:
+        territoire1:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire
+            joinColumn:
+                name: territoire_id
+        territoire2:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire
