@@ -23,13 +23,14 @@ use PartiDeGauche\ElectionDomain\Entity\Echeance;
 
 class EcheanceTest extends \PHPUnit_Framework_TestCase
 {
-    public function testHasDateAndNom()
+    public function testHasDateAndNomAndTour()
     {
         $date = new \DateTime();
-        $echeance = new Echeance($date, 'Nom de l\'élection');
+        $echeance = new Echeance($date, 'Nom de l\'élection', true);
 
         $this->assertEquals($date, $echeance->getDate());
         $this->assertEquals('Nom de l\'élection', $echeance->getNom());
+        $this->assertTrue($echeance->isSecondTour());
     }
 
     public function testNomIsString()

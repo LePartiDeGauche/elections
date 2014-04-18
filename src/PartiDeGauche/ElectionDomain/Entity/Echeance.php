@@ -21,6 +21,9 @@ namespace PartiDeGauche\ElectionDomain\Entity;
 
 class Echeance
 {
+    const PREMIER_TOUR = false;
+    const SECOND_TOUR = true;
+
     /**
      * @var integer
      */
@@ -39,17 +42,27 @@ class Echeance
     private $nom;
 
     /**
+     * Est-ce que l'échance est un second tour.
+     * @var boolean
+     */
+    private $secondTour;
+
+    /**
      * Constructeur d'objet Echeance.
      * @param DateTime $date La date de l'échance.
      * @param string   $nom  Le nom de l'échance.
      */
-    public function __construct(\DateTime $date, $nom)
+    public function __construct(\DateTime $date, $nom,
+        $secondTour = self::PREMIER_TOUR)
     {
         \Assert\that($nom)
             ->string('Le nom de la commune doit être en toutes lettres.');
+        \Assert\that($secondTour)
+            ->boolean();
 
         $this->date = $date;
         $this->nom = $nom;
+        $this->secondTour = $secondTour;
     }
 
     /**
@@ -68,5 +81,14 @@ class Echeance
     public function getNom()
     {
         return $this->nom;
+    }
+
+    /**
+     * Savoir si l'échéance est un secon tour.
+     * @return boolean Vrai s'il l'échéance est un second tour.
+     */
+    public function isSecondTour()
+    {
+        return $this->secondTour;
     }
 }
