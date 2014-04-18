@@ -19,6 +19,10 @@
 
 namespace PartiDeGauche\ElectionDomain\VO;
 
+use PartiDeGauche\ElectionDomain\Entity\Candidat;
+use PartiDeGauche\ElectionDomain\Entity\Election;
+use PartiDeGauche\ElectionDomain\TerritoireInterface;
+
 class Score
 {
     /**
@@ -95,15 +99,6 @@ class Score
     }
 
     /**
-     * Récupérer le score en nombre de voix.
-     * @return integer Le scre en nombre de voix.
-     */
-    public function toVoix()
-    {
-        return $this->voix;
-    }
-
-    /**
      * Récupérer le score en pourcentage.
      * @return float Le score en pourcentage.
      */
@@ -112,7 +107,13 @@ class Score
         return $this->pourcentage;
     }
 
-    private function __constructor()
+    /**
+     * Récupérer le score en nombre de voix.
+     * @return integer Le scre en nombre de voix.
+     */
+    public function toVoix()
     {
+        return $this->voix;
     }
+
 }

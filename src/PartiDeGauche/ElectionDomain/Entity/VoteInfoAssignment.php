@@ -19,38 +19,42 @@
 
 namespace PartiDeGauche\ElectionDomain\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use PartiDeGauche\ElectionDomain\VO\VoteInfo;
+use PartiDeGauche\ElectionDomain\TerritoireInterface;
 
-class PersonneCandidate extends Candidat
+
+class VoteInfoAssignment
 {
-    /**
-     * Le nom de famille de la personne
-     * @var string
-     */
-    private $nom;
+    private $id;
+    private $election;
+    private $territoire;
+    private $voteInfoVO;
 
-    /**
-     * Le prénom de la personne.
-     * @var string
-     */
-    private $prenom;
-
-    /**
-     * Constructeur d'objet personne.
-     * @param string $prenom Le prénom de la personne.
-     * @param string $nom    Le nom de la personne.
-     */
-    public function __construct($prenom, $nom)
+    public function __construct(VoteInfo $voteInfo = null, Election $election,
+        TerritoireInterface $territoire)
     {
-        \Assert\that($prenom)->string();
-        \Assert\that($nom)->string();
-
-        $this->prenom = $prenom;
-        $this->nom = $nom;
+        $this->voteInfoVO = $voteInfo;
+        $this->election = $election;
+        $this->territoire = $territoire;
     }
 
-    public function __toString()
+    public function getElection()
     {
-        return $this->prenom . ' ' . $this->nom;
+        return $this->election;
+    }
+
+    public function getTerritoire()
+    {
+        return $this->territoire;
+    }
+
+    public function getVoteInfoVO()
+    {
+        return $this->voteInfoVO;
+    }
+
+    public function setVoteInfoVO(VoteInfo $voteInfo)
+    {
+        $this->voteInfoVO = $voteInfo;
     }
 }

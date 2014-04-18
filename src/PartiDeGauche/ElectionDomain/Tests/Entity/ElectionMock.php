@@ -17,10 +17,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\TerritoireDomain;
+namespace PartiDeGauche\ElectionDomain\Tests\Entity;
 
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
+use PartiDeGauche\ElectionDomain\Entity\Election as BaseElection;
 
-abstract class AbstractTerritoire implements CirconscriptionInterface
+class ElectionMock extends BaseElection
 {
 }

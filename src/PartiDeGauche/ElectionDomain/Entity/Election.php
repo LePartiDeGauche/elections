@@ -19,19 +19,26 @@
 
 namespace PartiDeGauche\ElectionDomain\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use PartiDeGauche\ElectionDomain\CandidatInterface;
 use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
 use PartiDeGauche\ElectionDomain\TerritoireInterface;
 use PartiDeGauche\ElectionDomain\VO\Score;
 use PartiDeGauche\ElectionDomain\VO\VoteInfo;
 
-class Election
+abstract class Election
 {
     /**
-     * Les candidats à l'élection.
-     * @var array
+     * @var integer
      */
-    private $candidats = array();
+    private $id;
+
+    /**
+     * Les candidats à l'élection.
+     * @var ArrayCollection
+     */
+    protected $candidats;
 
     /**
      * La circonscription de l'élection.
@@ -46,20 +53,14 @@ class Election
     private $echeance;
 
     /**
-     * Le nombre d'inscrits.
-     * @var integer
-     */
-    private $inscrits;
-
-    /**
-     * Les socres des candidats.
-     * @var \SplObjectStorage
+     * Les scores des candidats.
+     * @var ArrayCollection
      */
     private $scores;
 
     /**
      * Les éventuelles informations sur le vote.
-     * @var \SplObjectStorage
+     * @var ArrayCollection
      */
     private $voteInfos;
 
@@ -70,10 +71,12 @@ class Election
     public function __construct(Echeance $echeance,
         CirconscriptionInterface $circonscription)
     {
+        $this->candidats = new ArrayCollection();
+
         $this->echeance = $echeance;
         $this->circonscription = $circonscription;
-        $this->voteInfos = new \SplObjectStorage();
-        $this->scores = new \SplObjectStorage();
+        $this->voteInfos = new ArrayCollection();
+        $this->scores = new ArrayCollection();
     }
 
     /**
@@ -83,7 +86,6 @@ class Election
     public function addCandidat(CandidatInterface $candidat)
     {
         $this->candidats[] = $candidat;
-        $this->scores[$candidat] = new \SplObjectStorage();
     }
 
     /**
@@ -92,7 +94,7 @@ class Election
      */
     public function getCandidats()
     {
-        return $this->candidats;
+        return $this->candidats->toArray();
     }
 
     /**
@@ -127,7 +129,9 @@ class Election
             $territoire = $this->circonscription;
         }
 
-        return $this->scores[$candidat][$territoire];
+        return $this
+            ->getScoreAssignmentCandidat($candidat, $territoire)
+            ->getScoreVO();
     }
 
     /**
@@ -140,7 +144,7 @@ class Election
             $territoire = $this->circonscription;
         }
 
-        return $this->voteInfos[$territoire];
+        return $this->getVoteInfoAssignment($territoire)->getVoteInfoVO();
     }
 
     /**
@@ -165,19 +169,24 @@ class Election
             $territoire = $this->circonscription;
         }
 
-        if (isset($this->voteInfos[$territoire])) {
-            $exprimes = $this->voteInfos[$territoire]->getExprimes();
+        $voteInfo = $this->getVoteInfo($territoire);
+
+        if ($voteInfo) {
+            $exprimes = $voteInfo->getExprimes();
         }
 
         if (isset($exprimes)) {
             $score =
                 Score::fromPourcentageAndExprimes($pourcentage, $exprimes);
-            $this->scores[$candidat][$territoire] = $score;
-
-            return;
+        } else {
+            $score = Score::fromPourcentage($pourcentage);
         }
 
-        $this->scores[$candidat][$territoire] = Score::fromPourcentage($pourcentage);
+        $scoreAssignment = $this->getScoreAssignmentCandidat($candidat,
+            $territoire);
+        $scoreAssignment->setScoreVO($score);
+
+        return;
     }
 
     /**
@@ -201,18 +210,21 @@ class Election
             $territoire = $this->circonscription;
         }
 
-        if (isset($this->voteInfos[$territoire])) {
-            $exprimes = $this->voteInfos[$territoire]->getExprimes();
+        $voteInfo = $this->getVoteInfo($territoire);
+
+        if ($voteInfo) {
+            $exprimes = $voteInfo->getExprimes();
         }
 
         if (isset($exprimes)) {
             $score = Score::fromVoixAndExprimes($voix, $exprimes);
-            $this->scores[$candidat][$territoire] = $score;
-
-            return;
+        } else {
+            $score = Score::fromVoix($voix);
         }
 
-        $this->scores[$candidat][$territoire] = Score::fromVoix($voix);
+        $scoreAssignment = $this->getScoreAssignmentCandidat($candidat,
+            $territoire);
+        $scoreAssignment->setScoreVO($score);
     }
 
     /**
@@ -226,6 +238,42 @@ class Election
             $territoire = $this->circonscription;
         }
 
-        $this->voteInfos[$territoire] = $voteInfo;
+        $voteAssigment = $this->getVoteInfoAssignment($territoire);
+        $voteAssigment->setVoteInfoVO($voteInfo);
+    }
+
+    private function getScoreAssignmentCandidat(Candidat $candidat,
+        TerritoireInterface $territoire)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('candidat', $candidat))
+            ->andWhere(Criteria::expr()->eq('territoire', $territoire))
+        ;
+        $array = array_values($this->scores->matching($criteria)->toArray());
+        if (array_key_exists(0, $array)) {
+            return $array[0];
+        }
+
+        $scoreAssignment =
+            new ScoreAssignment(null, $this, $candidat, $territoire);
+        $this->scores[] = $scoreAssignment;
+
+        return $scoreAssignment;
+    }
+
+    private function getVoteInfoAssignment(TerritoireInterface $territoire)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('territoire', $territoire))
+        ;
+        $array = array_values($this->voteInfos->matching($criteria)->toArray());
+        if (array_key_exists(0, $array)) {
+            return $array[0];
+        }
+
+        $voteInfoAssignment = new VoteInfoAssignment(null, $this, $territoire);
+        $this->voteInfos[] = $voteInfoAssignment;
+
+        return $voteInfoAssignment;
     }
 }

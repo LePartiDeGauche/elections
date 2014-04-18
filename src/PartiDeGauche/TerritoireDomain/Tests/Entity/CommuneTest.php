@@ -20,7 +20,7 @@
 namespace PartiDeGauche\TerritoireDomain\Tests;
 
 use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
-use PartiDeGauche\TerritoireDomain\AbstractTerritoire;
+use PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire;
 use PartiDeGauche\TerritoireDomain\Entity\Commune;
 use PartiDeGauche\TerritoireDomain\Entity\Departement;
 use PartiDeGauche\TerritoireDomain\Entity\Region;
@@ -29,8 +29,6 @@ class CommuneTest extends \PHPUnit_Framework_TestCase
 {
     public function testCodeIsNumeric()
     {
-        $this->setExpectedException('\InvalidArgumentException');
-
         $region = new Region(82, 'Rhône-Alpes');
         $departement = new Departement($region, 38, 'Isère');
         $commune = new Commune($departement, 'ZE', 'Grenoble');

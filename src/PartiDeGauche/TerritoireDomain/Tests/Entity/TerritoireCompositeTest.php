@@ -19,7 +19,7 @@
 
 namespace PartiDeGauche\TerritoireDomain\Tests;
 
-use PartiDeGauche\TerritoireDomain\AbstractTerritoire;
+use PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire;
 use PartiDeGauche\TerritoireDomain\Entity\TerritoireComposite;
 
 class TerritoireCompositeTest extends \PHPUnit_Framework_TestCase

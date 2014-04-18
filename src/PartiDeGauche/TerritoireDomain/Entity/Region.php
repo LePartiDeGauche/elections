@@ -19,8 +19,6 @@
 
 namespace PartiDeGauche\TerritoireDomain\Entity;
 
-use PartiDeGauche\TerritoireDomain\AbstractTerritoire;
-
 class Region extends AbstractTerritoire
 {
     /**

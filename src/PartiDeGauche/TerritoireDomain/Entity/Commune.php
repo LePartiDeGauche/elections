@@ -19,8 +19,6 @@
 
 namespace PartiDeGauche\TerritoireDomain\Entity;
 
-use PartiDeGauche\TerritoireDomain\AbstractTerritoire;
-
 class Commune extends AbstractTerritoire
 {
     /**
@@ -49,7 +47,7 @@ class Commune extends AbstractTerritoire
      */
     public function __construct(Departement $departement, $code, $nom)
     {
-        \Assert\that($code)->numeric();
+        \Assert\that((string) $code)->maxLength(10);
         \Assert\that($nom)
             ->string()
             ->maxLength(

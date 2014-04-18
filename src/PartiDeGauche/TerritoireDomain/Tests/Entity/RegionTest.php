@@ -20,7 +20,7 @@
 namespace PartiDeGauche\TerritoireDomain\Tests;
 
 use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
-use PartiDeGauche\TerritoireDomain\AbstractTerritoire;
+use PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire;
 use PartiDeGauche\TerritoireDomain\Entity\Region;
 
 class RegionTest extends \PHPUnit_Framework_TestCase

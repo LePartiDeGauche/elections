@@ -19,9 +19,7 @@
 
 namespace PartiDeGauche\ElectionDomain\Entity;
 
-use PartiDeGauche\ElectionDomain\CandidatInterface;
-
-class ListeCandidate implements CandidatInterface
+class ListeCandidate extends Candidat
 {
     /**
      * L'élection à laquelle la liste était candidate.
@@ -44,6 +42,7 @@ class ListeCandidate implements CandidatInterface
         \Assert\that($nom)->string();
 
         $this->election = $election;
+        $election->addCandidat($this);
         $this->nom = $nom;
     }
 

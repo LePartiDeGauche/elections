@@ -22,11 +22,13 @@ namespace PartiDeGauche\ElectionDomain\Entity;
 class Echeance
 {
     /**
+     * @var integer
+     */
+    private $id;
+
+    /**
      * La date de l'échéance.
      * @var DateTime
-     *
-     * @ORM\Column(name="date", type="integer")
-     * @ORM\Id
      */
     private $date;
 

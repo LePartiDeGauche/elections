@@ -19,38 +19,48 @@
 
 namespace PartiDeGauche\ElectionDomain\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use PartiDeGauche\ElectionDomain\VO\Score;
+use PartiDeGauche\ElectionDomain\TerritoireInterface;
 
-class PersonneCandidate extends Candidat
+class ScoreAssignment
 {
-    /**
-     * Le nom de famille de la personne
-     * @var string
-     */
-    private $nom;
+    private $id;
+    private $election;
+    private $candidat;
+    private $territoire;
+    private $scoreVO;
 
-    /**
-     * Le prénom de la personne.
-     * @var string
-     */
-    private $prenom;
-
-    /**
-     * Constructeur d'objet personne.
-     * @param string $prenom Le prénom de la personne.
-     * @param string $nom    Le nom de la personne.
-     */
-    public function __construct($prenom, $nom)
+    public function getCandidat()
     {
-        \Assert\that($prenom)->string();
-        \Assert\that($nom)->string();
-
-        $this->prenom = $prenom;
-        $this->nom = $nom;
+        return $this->candidat;
     }
 
-    public function __toString()
+    public function __construct(Score $score = null, Election $election,
+        Candidat $candidat, TerritoireInterface $territoire)
     {
-        return $this->prenom . ' ' . $this->nom;
+        $this->scoreVO = $score;
+        $this->candidat = $candidat;
+        $this->election = $election;
+        $this->territoire = $territoire;
+    }
+
+    public function getElection()
+    {
+        return $this->election;
+    }
+
+    public function getTerritoire()
+    {
+        return $this->territoire;
+    }
+
+    public function getScoreVO()
+    {
+        return $this->scoreVO;
+    }
+
+    public function setScoreVO(Score $score)
+    {
+        $this->scoreVO = $score;
     }
 }

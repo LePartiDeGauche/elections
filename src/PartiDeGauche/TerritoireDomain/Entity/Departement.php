@@ -19,8 +19,6 @@
 
 namespace PartiDeGauche\TerritoireDomain\Entity;
 
-use PartiDeGauche\TerritoireDomain\AbstractTerritoire;
-
 class Departement extends AbstractTerritoire
 {
     /**
@@ -35,6 +33,12 @@ class Departement extends AbstractTerritoire
      * @var string
      */
     private $nom;
+
+    /**
+     * La région du département
+     * @var Reion
+     */
+    private $region;
 
     /**
      * Constructeur d'objet département.
@@ -62,6 +66,7 @@ class Departement extends AbstractTerritoire
 
         $this->code = (string) $code;
         $this->nom = $nom;
+        $this->region = $region;
     }
 
     /**
@@ -80,5 +85,14 @@ class Departement extends AbstractTerritoire
     public function getNom()
     {
         return $this->nom;
+    }
+
+    /**
+     * Récupérer la région du départemet.
+     * @return Region La région du département.
+     */
+    public function getRegion()
+    {
+        return $this->region;
     }
 }

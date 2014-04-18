@@ -19,38 +19,12 @@
 
 namespace PartiDeGauche\ElectionDomain\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
-class PersonneCandidate extends Candidat
+class ElectionUninominale extends Election
 {
     /**
-     * Le nom de famille de la personne
-     * @var string
+     * @var ArrayCollection
      */
-    private $nom;
-
-    /**
-     * Le prénom de la personne.
-     * @var string
-     */
-    private $prenom;
-
-    /**
-     * Constructeur d'objet personne.
-     * @param string $prenom Le prénom de la personne.
-     * @param string $nom    Le nom de la personne.
-     */
-    public function __construct($prenom, $nom)
-    {
-        \Assert\that($prenom)->string();
-        \Assert\that($nom)->string();
-
-        $this->prenom = $prenom;
-        $this->nom = $nom;
-    }
-
-    public function __toString()
-    {
-        return $this->prenom . ' ' . $this->nom;
-    }
+    protected $candidats;
 }
