@@ -1,0 +1,5 @@
+parti_de_gauche_elections:
+    resource: "@PartiDeGaucheElectionsBundle/Controller/"
+    type:     annotation
+    prefix:   /
+

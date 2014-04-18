@@ -33,7 +33,7 @@ twig:
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    bundles:        [ ]
+    bundles:        [ 'PartiDeGaucheElectionsBundle' ]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
@@ -58,4 +58,11 @@ doctrine:
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
-        auto_mapping: true
+        auto_mapping: false
+        mappings:
+            PartiDeGaucheElectionsBundle:
+                type: yml
+                is_bundle: true
+                dir: Resources/config/doctrine
+                prefix: PartiDeGauche
+                alias: PartiDeGaucheTerritoireDomain
