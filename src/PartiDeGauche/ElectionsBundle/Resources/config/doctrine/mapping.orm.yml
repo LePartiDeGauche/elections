@@ -1,4 +1,4 @@
-PartiDeGauche\ElectionDomain\Entity\Candidat:
+PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat:
     type: entity
     inheritanceType: SINGLE_TABLE
     id:
@@ -7,7 +7,7 @@ PartiDeGauche\ElectionDomain\Entity\Candidat:
             generator:
                 strategy: AUTO
 
-PartiDeGauche\ElectionDomain\Entity\Echeance:
+PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance:
     type: entity
     id:
         id:
@@ -24,15 +24,15 @@ PartiDeGauche\ElectionDomain\Entity\Echeance:
         secondTour:
             type: boolean
 
-PartiDeGauche\ElectionDomain\Entity\ElectionDeListe:
+PartiDeGauche\ElectionDomain\Entity\Election\ElectionDeListe:
     type: entity
     oneToMany:
         candidats:
-            targetEntity: PartiDeGauche\ElectionDomain\Entity\ListeCandidate
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Candidat\ListeCandidate
             cascade: { }
             mappedBy: election
 
-PartiDeGauche\ElectionDomain\Entity\Election:
+PartiDeGauche\ElectionDomain\Entity\Election\Election:
     type: entity
     inheritanceType: SINGLE_TABLE
     id:
@@ -42,22 +42,22 @@ PartiDeGauche\ElectionDomain\Entity\Election:
                 strategy: AUTO
     manyToOne:
         echeance:
-            targetEntity: PartiDeGauche\ElectionDomain\Entity\Echeance
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance
     oneToMany:
         scores:
-            targetEntity: PartiDeGauche\ElectionDomain\Entity\ScoreAssignment
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Election\ScoreAssignment
             mappedBy: election
         voteInfos:
-            targetEntity: PartiDeGauche\ElectionDomain\Entity\VoteInfoAssignment
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
             mappedBy: election
 
-PartiDeGauche\ElectionDomain\Entity\ElectionUninominale:
+PartiDeGauche\ElectionDomain\Entity\Election\ElectionUninominale:
     type: entity
     manyToMany:
         candidats:
-            targetEntity: PartiDeGauche\ElectionDomain\Entity\PersonneCandidate
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate
 
-PartiDeGauche\ElectionDomain\Entity\ListeCandidate:
+PartiDeGauche\ElectionDomain\Entity\Candidat\ListeCandidate:
     type: entity
     fields:
         nom:
@@ -65,10 +65,10 @@ PartiDeGauche\ElectionDomain\Entity\ListeCandidate:
             length: 255
     manyToOne:
         election:
-            targetEntity: PartiDeGauche\ElectionDomain\Entity\ElectionDeListe
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Election\ElectionDeListe
             inversedBy: candidats
 
-PartiDeGauche\ElectionDomain\Entity\PersonneCandidate:
+PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate:
     type: entity
     fields:
         nom:
@@ -78,7 +78,7 @@ PartiDeGauche\ElectionDomain\Entity\PersonneCandidate:
             type: string
             length: 255
 
-PartiDeGauche\ElectionDomain\Entity\ScoreAssignment:
+PartiDeGauche\ElectionDomain\Entity\Election\ScoreAssignment:
     type: entity
     id:
         id:
@@ -90,14 +90,14 @@ PartiDeGauche\ElectionDomain\Entity\ScoreAssignment:
             class: PartiDeGauche\ElectionDomain\VO\Score
     manyToOne:
         election:
-            targetEntity: PartiDeGauche\ElectionDomain\Entity\Election
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Election\Election
             inversedBy: scores
         candidat:
-            targetEntity: PartiDeGauche\ElectionDomain\Entity\Candidat
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat
         territoire:
-            targetEntity: PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire
 
-PartiDeGauche\ElectionDomain\Entity\VoteInfoAssignment:
+PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment:
     type: entity
     id:
         id:
@@ -109,10 +109,10 @@ PartiDeGauche\ElectionDomain\Entity\VoteInfoAssignment:
             class: PartiDeGauche\ElectionDomain\VO\VoteInfo
     manyToOne:
         election:
-            targetEntity: PartiDeGauche\ElectionDomain\Entity\Election
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Election\Election
             inversedBy: voteInfos
         territoire:
-            targetEntity: PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire
 
 PartiDeGauche\ElectionDomain\VO\Score:
     type: embeddable
@@ -133,7 +133,7 @@ PartiDeGauche\ElectionDomain\VO\VoteInfo:
         votants:
             type: integer
 
-PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire:
+PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire:
     type: entity
     inheritanceType: SINGLE_TABLE
     id:
@@ -142,7 +142,7 @@ PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire:
             generator:
                 strategy: AUTO
 
-PartiDeGauche\TerritoireDomain\Entity\Commune:
+PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune:
     type: entity
     fields:
         code:
@@ -153,11 +153,11 @@ PartiDeGauche\TerritoireDomain\Entity\Commune:
             length: 255
     manyToOne:
         departement:
-            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Departement
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
             joinColumn:
                 name: territoire_id
 
-PartiDeGauche\TerritoireDomain\Entity\Departement:
+PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement:
     type: entity
     fields:
         code:
@@ -168,11 +168,11 @@ PartiDeGauche\TerritoireDomain\Entity\Departement:
             length: 255
     manyToOne:
         region:
-            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Region
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
             joinColumn:
                 name: territoire_id
 
-PartiDeGauche\TerritoireDomain\Entity\Region:
+PartiDeGauche\TerritoireDomain\Entity\Territoire\Region:
     type: entity
     fields:
         code:
@@ -182,12 +182,12 @@ PartiDeGauche\TerritoireDomain\Entity\Region:
             type: string
             length: 255
 
-PartiDeGauche\TerritoireDomain\Entity\TerritoireComposite:
+PartiDeGauche\TerritoireDomain\Entity\Territoire\TerritoireComposite:
     type: entity
     manyToOne:
         territoire1:
-            targetEntity: PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire
             joinColumn:
                 name: territoire_id
         territoire2:
-            targetEntity: PartiDeGauche\TerritoireDomain\Entity\AbstractTerritoire
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire
