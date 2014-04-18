@@ -21,13 +21,15 @@ PartiDeGauche\ElectionDomain\Entity\Echeance:
             type: string
             length: 255
             unique: true
+        secondTour:
+            type: boolean
 
 PartiDeGauche\ElectionDomain\Entity\ElectionDeListe:
     type: entity
     oneToMany:
         candidats:
             targetEntity: PartiDeGauche\ElectionDomain\Entity\ListeCandidate
-            cascade: { "persist" }
+            cascade: { }
             mappedBy: election
 
 PartiDeGauche\ElectionDomain\Entity\Election:
