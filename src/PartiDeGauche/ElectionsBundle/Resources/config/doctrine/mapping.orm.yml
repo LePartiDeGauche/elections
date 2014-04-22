@@ -40,16 +40,25 @@ PartiDeGauche\ElectionDomain\Entity\Election\Election:
             type: integer
             generator:
                 strategy: AUTO
+    uniqueConstraints:
+        echeance_circonscription:
+            columns: [ "echeance_id", "circonscription_id" ]
     manyToOne:
         echeance:
             targetEntity: PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance
+            cascade: ["persist"]
+        circonscription:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire
+            cascade: ["persist"]
     oneToMany:
         scores:
             targetEntity: PartiDeGauche\ElectionDomain\Entity\Election\ScoreAssignment
             mappedBy: election
+            cascade: ["persist"]
         voteInfos:
             targetEntity: PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
             mappedBy: election
+            cascade: ["persist"]
 
 PartiDeGauche\ElectionDomain\Entity\Election\ElectionUninominale:
     type: entity
@@ -144,6 +153,9 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire:
 
 PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune:
     type: entity
+    uniqueConstraints:
+        code_departement:
+            columns: [ "code", "territoire_id" ]
     fields:
         code:
             type: string
@@ -156,6 +168,8 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
             joinColumn:
                 name: territoire_id
+            cascade: [ "persist" ]
+            inversedBy: communes
 
 PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement:
     type: entity
@@ -163,14 +177,22 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement:
         code:
             type: string
             length: 10
+            unique: true
         nom:
             type: string
             length: 255
     manyToOne:
         region:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
+            inversedBy: departements
             joinColumn:
                 name: territoire_id
+            cascade: [ "persist" ]
+    oneToMany:
+        communes:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune
+            mappedBy: departement
+            cascade: [ "remove" ]
 
 PartiDeGauche\TerritoireDomain\Entity\Territoire\Region:
     type: entity
@@ -178,9 +200,15 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\Region:
         code:
             type: string
             length: 10
+            unique: true
         nom:
             type: string
             length: 255
+    oneToMany:
+        departements:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
+            mappedBy: region
+            cascade: [ "remove" ]
 
 PartiDeGauche\TerritoireDomain\Entity\Territoire\TerritoireComposite:
     type: entity

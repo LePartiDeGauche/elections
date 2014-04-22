@@ -1,0 +1,16 @@
+services:
+    repository.election.doctrine:
+        class:        "PartiDeGauche\ElectionsBundle\Repository\DoctrineElectionRepository"
+        arguments:    ["@doctrine.orm.entity_manager"]
+    repository.echeance.doctrine:
+        class:        "PartiDeGauche\ElectionsBundle\Repository\DoctrineEcheanceRepository"
+        arguments:    ["@doctrine.orm.entity_manager"]
+    repository.territoire.doctrine:
+        class:        "PartiDeGauche\ElectionsBundle\Repository\DoctrineTerritoireRepository"
+        arguments:    ["@doctrine.orm.entity_manager"]
+    repository.election:
+        alias: repository.election.doctrine
+    repository.echeance:
+        alias: repository.echeance.doctrine
+    repository.territoire:
+        alias: repository.territoire.doctrine

@@ -65,4 +65,3 @@ doctrine:
                 is_bundle: true
                 dir: Resources/config/doctrine
                 prefix: PartiDeGauche
-                alias: PartiDeGaucheTerritoireDomain
