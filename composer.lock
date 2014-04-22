@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "fd0a263403993d4096f98a6807290c08",
+    "hash": "837aeb4a4f673a3542db7f4f4c47cc7e",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1846,7 +1846,7 @@
         "doctrine/doctrine-migrations-bundle": 20
     },
     "platform": {
-        "php": ">=5.3.3"
+        "php": ">=5.4"
     },
     "platform-dev": [
 

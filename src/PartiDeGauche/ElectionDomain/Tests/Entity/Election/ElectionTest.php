@@ -20,9 +20,10 @@
 namespace PartiDeGauche\ElectionDomain\Tests\Entity\Election;
 
 use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
-use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 use PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate;
+use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 use PartiDeGauche\ElectionDomain\TerritoireInterface;
+use PartiDeGauche\ElectionDomain\Tests\Entity\CirconscriptionMock;
 use PartiDeGauche\ElectionDomain\VO\VoteInfo;
 
 class ElectionTest extends \PHPUnit_Framework_TestCase

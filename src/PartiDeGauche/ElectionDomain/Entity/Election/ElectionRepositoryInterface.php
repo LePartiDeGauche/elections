@@ -22,16 +22,20 @@ namespace PartiDeGauche\ElectionDomain\Entity\Election;
 use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 
-class UniqueConstraintViolation extends \Exception { }
+class UniqueConstraintViolationException extends \Exception { }
 
+/**
+ * Voir PartiDeGauche\ElectionDomain\Tests\Entity\Election
+ * \ElectionRepositoryTestTrait pour les contraintes à respecter lors d'une
+ * implémentation de cette interface.
+ */
 interface ElectionRepositoryInterface
 {
     /**
      * Ajoute une élection dans le repository.
-     *
-     * @param Election $element L'élection à ajouter.
+     * @param Election $election L'élection à ajouter.
      */
-    public function add(Election $element);
+    public function add(Election $election);
 
     /**
      * Retourne l'élection avec cette échéance et cette circonscription.
@@ -44,9 +48,9 @@ interface ElectionRepositoryInterface
 
     /**
      * Retire l'élection du repository si elle existe.
-     * @param Election  $element L'élection à retirer.
+     * @param Election  $election L'élection à retirer.
      */
-    public function remove(Election $element);
+    public function remove(Election $election);
 
     /**
      * Sauvegarde les éléments écrits dans le repository.

@@ -19,6 +19,8 @@
 
 namespace PartiDeGauche\TerritoireDomain\Entity\Territoire;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class Region extends AbstractTerritoire
 {
     /**
@@ -27,6 +29,12 @@ class Region extends AbstractTerritoire
      * @var string
      */
     private $code;
+
+    /**
+     * Les départements présents dans la région.
+     * @var ArrayCollection
+     */
+    private $departements;
 
     /**
      * Le nom de la région.
@@ -59,6 +67,7 @@ class Region extends AbstractTerritoire
 
         $this->code = (string) $code;
         $this->nom = $nom;
+        $this->departements = new ArrayCollection();
     }
 
     /**
@@ -68,6 +77,15 @@ class Region extends AbstractTerritoire
     public function getCode()
     {
         return $this->code;
+    }
+
+    /**
+     * Récupérer les départements de la géion.
+     * @return  ArrayCollection
+     */
+    public function getDepartements()
+    {
+        return $this->departements;
     }
 
     /**

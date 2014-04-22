@@ -19,6 +19,8 @@
 
 namespace PartiDeGauche\TerritoireDomain\Entity\Territoire;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class Departement extends AbstractTerritoire
 {
     /**
@@ -29,6 +31,12 @@ class Departement extends AbstractTerritoire
     private $code;
 
     /**
+     * Les communes présentent dans le département.
+     * @var Commune
+     */
+    private $communes;
+
+    /**
      * Le nom du département.
      * @var string
      */
@@ -36,7 +44,7 @@ class Departement extends AbstractTerritoire
 
     /**
      * La région du département
-     * @var Reion
+     * @var ArrayCollection
      */
     private $region;
 
@@ -67,6 +75,7 @@ class Departement extends AbstractTerritoire
         $this->code = (string) $code;
         $this->nom = $nom;
         $this->region = $region;
+        $this->communes = new ArrayCollection();
     }
 
     /**
