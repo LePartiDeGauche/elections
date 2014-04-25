@@ -78,6 +78,16 @@ trait TerritoireRepositoryTestTrait
         );
     }
 
+    public function testDoNotViolateUniqueConstraintIfTypeDifferent()
+    {
+        $region = new Region(38, 'Nimportequoi');
+        $departement = new Departement($region, 38, 'Isère');
+        $commune = new Commune($departement, 'ZE', 'Grenoble');
+
+        $this->repository->add($commune);
+        $this->repository->save();
+    }
+
     // Les codes des régions, des départements et des communes doivent être
     // uniques.
     public function testViolateUniqueCondition()
