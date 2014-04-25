@@ -193,7 +193,6 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement:
         code:
             type: string
             length: 10
-            unique: true
         nom:
             type: string
             length: 255
@@ -216,7 +215,6 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\Region:
         code:
             type: string
             length: 10
-            unique: true
         nom:
             type: string
             length: 255

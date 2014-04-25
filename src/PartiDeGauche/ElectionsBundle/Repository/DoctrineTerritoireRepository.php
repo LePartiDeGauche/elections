@@ -97,6 +97,7 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
     public function save()
     {
         try {
+            $this->checkUniqueRules();
             $this->em->flush();
             $this->em->clear();
         } catch (DoctrineException $exception) {
@@ -108,5 +109,34 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
                 $exception->getMessage()
             );
         }
+    }
+
+    private function checkUniqueRules()
+    {
+        $entities = $this->em->getUnitOfWork()->getScheduledEntityInsertions();
+
+        foreach ($entities as $entity) {
+            $repo = $this->em->getRepository(get_class($entity));
+            switch (get_class($entity)) {
+                case '\PartiDeGauche\TerritoireDomain\Entity\
+                    Territoire\Commune':
+                        $exist = $repo->findOneBy(array(
+                            'code' => $entity->getCode(),
+                            'departement' => $entity->getDepartement()
+                        ));
+                default:
+                    $exist = $repo->findOneByCode($entity->getCode());
+            }
+
+            if ($exist) {
+                throw new UniqueConstraintViolationException(
+                    'Les communes doivent être unique par code et département' .
+                    ', et les départements et régions doivent être uniques ' .
+                    'par code.'
+                );
+            }
+        }
+
+        return true;
     }
 }
