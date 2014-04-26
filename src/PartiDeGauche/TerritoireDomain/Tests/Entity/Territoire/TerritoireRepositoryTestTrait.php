@@ -105,6 +105,21 @@ trait TerritoireRepositoryTestTrait
 
         $this->repository->add($arrondissementCommunal);
         $this->repository->save();
+
+        $departement2 = new Departement(
+            $this->repository->getRegion(38), 22, 'Nimp'
+        );
+        $commune2 = new Commune($departement2, 'ZE', 'Grenoble');
+        $this->repository->add($commune2);
+        $this->repository->save();
+
+        $arrondissementCommunal2 = new ArrondissementCommunal(
+            $this->repository->getCommune(22, 'ZE'),
+            'ZE',
+            'Test'
+        );
+        $this->repository->add($arrondissementCommunal2);
+        $this->repository->save();
     }
 
     // Les codes des régions, des départements et des communes doivent être
