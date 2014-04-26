@@ -21,6 +21,7 @@ namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
 use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\ArrondissementCommunal;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
@@ -43,8 +44,13 @@ trait TerritoireRepositoryTestTrait
         $region = new Region(82, 'Rhône-Alpes');
         $departement = new Departement($region, 38, 'Isère');
         $commune = new Commune($departement, 'ZE', 'Grenoble');
+        $arrondissementCommunal = new ArrondissementCommunal(
+            $commune,
+            'ZE',
+            'Test'
+        );
 
-        $this->repository->add($commune);
+        $this->repository->add($arrondissementCommunal);
         $this->repository->save();
 
         // L'id peut avoir changer donc on teste juste le nom.
@@ -59,6 +65,11 @@ trait TerritoireRepositoryTestTrait
         $this->assertEquals(
             $commune->getNom(),
             $this->repository->getCommune(38, 'ZE')->getNom()
+        );
+        $this->assertEquals(
+            $arrondissementCommunal->getNom(),
+            $this->repository->getArrondissementCommunal($commune, 'ZE')
+                ->getNom()
         );
 
         // On teste remove
@@ -76,6 +87,9 @@ trait TerritoireRepositoryTestTrait
         $this->assertTrue(
             null == $this->repository->getCommune(38, 'ZE')
         );
+        $this->assertTrue(
+            null == $this->repository->getArrondissementCommunal($commune, 'ZE')
+        );
     }
 
     public function testDoNotViolateUniqueConstraintIfTypeDifferent()
@@ -83,8 +97,13 @@ trait TerritoireRepositoryTestTrait
         $region = new Region(38, 'Nimportequoi');
         $departement = new Departement($region, 38, 'Isère');
         $commune = new Commune($departement, 'ZE', 'Grenoble');
+        $arrondissementCommunal = new ArrondissementCommunal(
+            $commune,
+            'ZE',
+            'Test'
+        );
 
-        $this->repository->add($commune);
+        $this->repository->add($arrondissementCommunal);
         $this->repository->save();
     }
 
@@ -95,6 +114,11 @@ trait TerritoireRepositoryTestTrait
         $region = new Region(82, 'Rhône-Alpes');
         $departement = new Departement($region, 38, 'Isère');
         $commune = new Commune($departement, 'ZE', 'Grenoble');
+        $arrondissementCommunal = new ArrondissementCommunal(
+            $commune,
+            'ZE',
+            'Test'
+        );
 
         // On ajoute les 3 territoires dans le repository.
         $this->repository->add($commune);
@@ -116,6 +140,17 @@ trait TerritoireRepositoryTestTrait
         $this->repository->save();
 
         $this->repository->add(new Commune($departement, 'ZE', 'Grenoble'));
+        $this->setExpectedException(
+            'PartiDeGauche\TerritoireDomain\Entity\Territoire'
+            . '\UniqueConstraintViolationException'
+        );
+        $this->repository->save();
+
+        $this->repository->add(new ArrondissementCommunal(
+            $commune,
+            'ZE',
+            'Test'
+        ));
         $this->setExpectedException(
             'PartiDeGauche\TerritoireDomain\Entity\Territoire'
             . '\UniqueConstraintViolationException'

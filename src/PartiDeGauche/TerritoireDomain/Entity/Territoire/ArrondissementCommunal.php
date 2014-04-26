@@ -19,60 +19,55 @@
 
 namespace PartiDeGauche\TerritoireDomain\Entity\Territoire;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
-class Commune extends AbstractTerritoire
+class ArrondissementCommunal extends AbstractTerritoire
 {
     /**
-     * Les arrondissements de la commune.
-     * @var ArrayCollection
-     */
-    private $arrondissements;
-
-    /**
-     * Le code INSEE de la commune.
+     * Le code de l'arrondissement. On suit la convention 056AR01 pour
+     * arrondissement 1 de Paris, 055SR01 pour les secteurs de Marseille.
      * @var integer
      */
     private $code;
 
     /**
-     * Le département de la commune.
-     * @var Departement
+     * La commune de l'arrondissement.
+     * @var Commune
      */
-    private $departement;
+    private $commune;
 
     /**
-     * Le nom de la commune.
+     * Le nom de l'arrondissement.
      * @var string
      */
     private $nom;
 
     /**
-     * Constructeur d'objet Commune.
-     * @param Departement $departement Le département de la commune.
-     * @param integer     $code        Le code INSEE de la commune.
-     * @param string      $nom         Le nom de la commune.
+     * Constructeur d'objet ArronissementCommunal.
+     * @param Commune     $commune     La commune de l'arrondissement.
+     * @param integer     $code        Le code de l'arrondissement. On suit la
+     *                                 convention 056AR01 pour le 1er
+     *                                 arrondissement de Paris, 05SR07 pour le
+     *                                 secteur 7 de Marseille.
+     * @param string      $nom         Le nom de l'arrondissement.
      */
-    public function __construct(Departement $departement, $code, $nom)
+    public function __construct(Commune $commune, $code, $nom)
     {
         \Assert\that((string) $code)->maxLength(10);
         \Assert\that($nom)
             ->string()
             ->maxLength(
                 255,
-                'Le nom de la commune ne peut dépasser 255 caractères.'
+                'Le nom de l\'arrondissement ne peut dépasser 255 caractères.'
             )
         ;
 
-        $this->arrondissements = new ArrayCollection();
-        $this->departement = $departement;
+        $this->commune = $commune;
         $this->code = $code;
         $this->nom = $nom;
     }
 
     /**
-     * Récupérer le code INSEE de la commune.
-     * @return integer Le code INSEE de la commune.
+     * Récupérer le code INSEE de l'arrondissement.
+     * @return integer Le code INSEE de l'arrondissement.
      */
     public function getCode()
     {
@@ -80,17 +75,17 @@ class Commune extends AbstractTerritoire
     }
 
     /**
-     * Récupérer le département de la commune.
-     * @return Departement Le département de la commune.
+     * Récupérer le département de l'arrondissement.
+     * @return Departement Le département de l'arrondissement.
      */
-    public function getDepartement()
+    public function getCommune()
     {
-        return $this->departement;
+        return $this->commune;
     }
 
     /**
-     * Récupérer le nom de la commune.
-     * @return string Le nom de la commune.
+     * Récupérer le nom de l'arrondissement.
+     * @return string Le nom de l'arrondissement.
      */
     public function getNom()
     {

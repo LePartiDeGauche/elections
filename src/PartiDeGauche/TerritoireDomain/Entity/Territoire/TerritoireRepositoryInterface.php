@@ -35,6 +35,15 @@ interface TerritoireRepositoryInterface
     public function add(AbstractTerritoire $territoire);
 
     /**
+     * Récupérer un arrondissement communal en fonction de sa commune et de son
+     * code.
+     * @param  Commune $commune            La commune de l'arrondissement.
+     * @param  string  $codeArrondissement Le code de l'arrondissement
+     * @return ArrondissementCommunal      L'arrondissement.
+     */
+    public function getArrondissementCommunal($commune, $codeArrondissement);
+
+    /**
      * Récupérer une commune en fonction de son code département et son code
      * commune (INSEE).
      * @param  integer $codeDepartement Le code du département.
