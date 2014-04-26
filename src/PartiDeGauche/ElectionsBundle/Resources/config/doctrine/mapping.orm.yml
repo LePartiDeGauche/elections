@@ -167,6 +167,26 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire:
             generator:
                 strategy: AUTO
 
+PartiDeGauche\TerritoireDomain\Entity\Territoire\ArrondissementCommunal:
+    type: entity
+    uniqueConstraints:
+        code_commune:
+            columns: [ "code", "territoire_id" ]
+    fields:
+        code:
+            type: string
+            length: 10
+        nom:
+            type: string
+            length: 255
+    manyToOne:
+        commune:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune
+            joinColumn:
+                name: territoire_id
+            cascade: [ "persist" ]
+            inversedBy: arrondissements
+
 PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune:
     type: entity
     uniqueConstraints:
@@ -186,6 +206,11 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune:
                 name: territoire_id
             cascade: [ "persist" ]
             inversedBy: communes
+    oneToMany:
+        arrondissements:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\ArrondissementCommunal
+            mappedBy: commune
+            cascade: [ "remove" ]
 
 PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement:
     type: entity

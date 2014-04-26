@@ -39,6 +39,20 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
         $this->em->persist($element);
     }
 
+    public function getArrondissementCommunal($commune, $codeArrondissement)
+    {
+        return $this
+            ->em
+            ->getRepository(
+                '\PartiDeGauche\TerritoireDomain\Entity' .
+                '\Territoire\ArrondissementCommunal'
+            )
+            ->findOneBy(array(
+                'commune' => $commune,
+                'code' => $codeArrondissement,
+            ));
+    }
+
     public function getCommune($codeDepartement, $codeCommune)
     {
         $query = $this
@@ -118,17 +132,25 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
         foreach ($entities as $entity) {
             $repo = $this->em->getRepository(get_class($entity));
             switch (get_class($entity)) {
-                case '\PartiDeGauche\TerritoireDomain\Entity\
-                    Territoire\Commune':
-                        $exist = $repo->findOneBy(array(
-                            'code' => $entity->getCode(),
-                            'departement' => $entity->getDepartement()
-                        ));
+                case 'PartiDeGauche\TerritoireDomain\Entity' .
+                    '\Territoire\Commune':
+                        $exist = $this->getCommune(
+                            $entity->getDepartement()->getCode(),
+                            $entity->getCode()
+                        );
+                        break;
+                case 'PartiDeGauche\TerritoireDomain\Entity' .
+                    '\Territoire\ArrondissementCommunal' :
+                        $exist = $this->getArrondissementCommunal(
+                            $entity->getCommune(),
+                            $entity->getCode()
+                        );
+                        break;
                 default:
                     $exist = $repo->findOneByCode($entity->getCode());
             }
 
-            if ($exist) {
+            if (null !== $exist) {
                 throw new UniqueConstraintViolationException(
                     'Les communes doivent être unique par code et département' .
                     ', et les départements et régions doivent être uniques ' .
