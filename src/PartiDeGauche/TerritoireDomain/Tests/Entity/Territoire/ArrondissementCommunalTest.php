@@ -40,7 +40,6 @@ class ArrondissementCommunalTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-
     public function testHasDepartementAndCodeAndNom()
     {
         $region = new Region(82, 'Rhône-Alpes');

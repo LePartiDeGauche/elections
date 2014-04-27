@@ -34,7 +34,6 @@ class CommuneTest extends \PHPUnit_Framework_TestCase
         $commune = new Commune($departement, 'ZE', 'Grenoble');
     }
 
-
     public function testHasDepartementAndCodeAndNom()
     {
         $region = new Region(82, 'Rhône-Alpes');

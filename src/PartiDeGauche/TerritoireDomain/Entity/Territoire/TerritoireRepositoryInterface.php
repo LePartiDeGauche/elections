@@ -37,9 +37,9 @@ interface TerritoireRepositoryInterface
     /**
      * Récupérer un arrondissement communal en fonction de sa commune et de son
      * code.
-     * @param  Commune $commune            La commune de l'arrondissement.
-     * @param  string  $codeArrondissement Le code de l'arrondissement
-     * @return ArrondissementCommunal      L'arrondissement.
+     * @param  Commune                $commune            La commune de l'arrondissement.
+     * @param  string                 $codeArrondissement Le code de l'arrondissement
+     * @return ArrondissementCommunal L'arrondissement.
      */
     public function getArrondissementCommunal($commune, $codeArrondissement);
 
@@ -48,27 +48,27 @@ interface TerritoireRepositoryInterface
      * commune (INSEE).
      * @param  integer $codeDepartement Le code du département.
      * @param  integer $codeCommune     Le code INSEE de la commune.
-     * @return Commune                  La commune avec ces attributs.
+     * @return Commune La commune avec ces attributs.
      */
     public function getCommune($codeDepartement, $codeCommune);
 
     /**
      * Récupérer un département en fonction de son code.
-     * @param  integer      $code Le code du département.
-     * @return Departement        Le département avec ce code.
+     * @param  integer     $code Le code du département.
+     * @return Departement Le département avec ce code.
      */
     public function getDepartement($code);
 
     /**
      * Récupérer une région en fonction de son code.
      * @param  integer $code Le code de la région.
-     * @return Region        La région avec ce département.
+     * @return Region  La région avec ce département.
      */
     public function getRegion($code);
 
     /**
      * Retirer un territoire donné du epository.
-     * @param  AbstractTerritoire $territoire Le territoire à retirer.
+     * @param AbstractTerritoire $territoire Le territoire à retirer.
      */
     public function remove(AbstractTerritoire $territoire);
 

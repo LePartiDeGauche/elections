@@ -42,12 +42,12 @@ class ArrondissementCommunal extends AbstractTerritoire
 
     /**
      * Constructeur d'objet ArronissementCommunal.
-     * @param Commune     $commune     La commune de l'arrondissement.
-     * @param integer     $code        Le code de l'arrondissement. On suit la
-     *                                 convention 056AR01 pour le 1er
-     *                                 arrondissement de Paris, 05SR07 pour le
-     *                                 secteur 7 de Marseille.
-     * @param string      $nom         Le nom de l'arrondissement.
+     * @param Commune $commune La commune de l'arrondissement.
+     * @param integer $code    Le code de l'arrondissement. On suit la
+     *                         convention 056AR01 pour le 1er
+     *                         arrondissement de Paris, 05SR07 pour le
+     *                         secteur 7 de Marseille.
+     * @param string  $nom     Le nom de l'arrondissement.
      */
     public function __construct(Commune $commune, $code, $nom)
     {

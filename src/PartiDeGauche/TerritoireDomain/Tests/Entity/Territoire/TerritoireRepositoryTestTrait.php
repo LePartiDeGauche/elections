@@ -19,8 +19,6 @@
 
 namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
-use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\ArrondissementCommunal;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;

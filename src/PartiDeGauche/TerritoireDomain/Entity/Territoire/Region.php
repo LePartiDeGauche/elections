@@ -80,8 +80,8 @@ class Region extends AbstractTerritoire
     }
 
     /**
-     * Récupérer les départements de la géion.
-     * @return  ArrayCollection
+     * Récupérer les départements de la région.
+     * @return ArrayCollection
      */
     public function getDepartements()
     {
