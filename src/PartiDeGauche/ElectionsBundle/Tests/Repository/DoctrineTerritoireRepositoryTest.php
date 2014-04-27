@@ -30,7 +30,7 @@ class DoctrineTerritoireRepositoryTest extends WebTestCase
     public function setUp()
     {
         $c = $this->container->get('doctrine.dbal.default_connection');
-        $c->transactional(function($c) {
+        $c->transactional(function ($c) {
             $sm = $c->getSchemaManager();
             $tables = $sm->listTables();
 

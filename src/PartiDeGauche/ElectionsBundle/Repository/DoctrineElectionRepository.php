@@ -35,7 +35,6 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
         $this->em = $em;
     }
 
-
     public function add(Election $element)
     {
         $this

@@ -19,10 +19,8 @@
 
 namespace PartiDeGauche\ElectionsBundle\Repository;
 
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\EcheanceRepositoryInterface;
-use PartiDeGauche\ElectionDomain\Entity\Echeance\UniqueConstraintViolationException;
 
 class DoctrineEcheanceRepository implements EcheanceRepositoryInterface
 {
@@ -52,7 +50,7 @@ class DoctrineEcheanceRepository implements EcheanceRepositoryInterface
 
     /**
      * Retire l'élection du repository si elle existe.
-     * @param Election  $element L'élection à retirer.
+     * @param Election $element L'élection à retirer.
      */
     public function remove(Echeance $element)
     {

@@ -99,7 +99,7 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
 
     /**
      * Retire l'élection du repository si elle existe.
-     * @param Election  $element L'élection à retirer.
+     * @param Election $element L'élection à retirer.
      */
     public function remove(AbstractTerritoire $element)
     {
