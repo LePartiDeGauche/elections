@@ -19,9 +19,7 @@
 
 namespace PartiDeGauche\ElectionDomain\Entity\Candidat;
 
-use Doctrine\ORM\Mapping as ORM;
 use PartiDeGauche\ElectionDomain\CandidatInterface;
-
 
 abstract class Candidat implements CandidatInterface
 {

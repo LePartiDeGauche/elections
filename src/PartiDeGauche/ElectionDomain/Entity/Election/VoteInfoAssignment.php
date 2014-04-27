@@ -21,8 +21,6 @@ namespace PartiDeGauche\ElectionDomain\Entity\Election;
 
 use PartiDeGauche\ElectionDomain\VO\VoteInfo;
 use PartiDeGauche\ElectionDomain\TerritoireInterface;
-use PartiDeGauche\ElectionDomain\CandidatInterface;
-
 
 class VoteInfoAssignment
 {

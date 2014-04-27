@@ -121,7 +121,7 @@ abstract class Election
      * sur la circonscription.
      * @param  CandidatInterface   $candidat   Le candidat.
      * @param  TerritoireInterface $territoire Le territoire.
-     * @return Score                           Le score du candidat.
+     * @return Score               Le score du candidat.
      */
     public function getScoreCandidat(CandidatInterface $candidat,
         TerritoireInterface $territoire = null)
@@ -196,9 +196,9 @@ abstract class Election
      * suffrages exprimés est déjà réglé dans l'élection, le pourcentage est
      * mis à jour automatiquement. Sinon, pourcentage et voix sont effacés et
      * remplacés par cette donnée.
-     * @param integer             $voix        Le nombre de voix du candidat.
-     * @param CandidatInterface   $candidat    Le candidat dont il s'agit.
-     * @param TerritoireInterface $territoire  Le territoire du score.
+     * @param integer             $voix       Le nombre de voix du candidat.
+     * @param CandidatInterface   $candidat   Le candidat dont il s'agit.
+     * @param TerritoireInterface $territoire Le territoire du score.
      */
     public function setVoixCandidat($voix, CandidatInterface $candidat,
         TerritoireInterface $territoire = null)

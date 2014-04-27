@@ -21,7 +21,6 @@ namespace PartiDeGauche\ElectionDomain\Tests\Entity\Candidat;
 
 use PartiDeGauche\ElectionDomain\CandidatInterface;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
 use PartiDeGauche\ElectionDomain\Entity\Candidat\ListeCandidate;
 use PartiDeGauche\ElectionDomain\Tests\Entity\CirconscriptionMock;
 use PartiDeGauche\ElectionDomain\Tests\Entity\Election\ElectionMock;

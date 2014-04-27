@@ -41,14 +41,14 @@ interface ElectionRepositoryInterface
      * Retourne l'élection avec cette échéance et cette circonscription.
      * @param  Echeance                 $echeance        L'échéance.
      * @param  CirconscriptionInterface $circonscription La circonscription.
-     * @return Election                                  L'élection ou NULL.
+     * @return Election                 L'élection ou NULL.
      */
     public function get(Echeance $echeance,
         CirconscriptionInterface $circonscription);
 
     /**
      * Retire l'élection du repository si elle existe.
-     * @param Election  $election L'élection à retirer.
+     * @param Election $election L'élection à retirer.
      */
     public function remove(Election $election);
 
@@ -57,4 +57,3 @@ interface ElectionRepositoryInterface
      */
     public function save();
 }
-

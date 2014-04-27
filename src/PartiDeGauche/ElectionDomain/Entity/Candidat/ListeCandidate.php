@@ -37,7 +37,7 @@ class ListeCandidate extends Candidat
 
     /**
      * Constructeur d'objet personne.
-     * @param string $nom    Le nom de la liste.
+     * @param string $nom Le nom de la liste.
      */
     public function __construct(Election $election, $nom)
     {

@@ -24,7 +24,6 @@ use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\EcheanceRepositoryInterface;
 use PartiDeGauche\ElectionDomain\Entity\Election\ElectionRepositoryInterface;
 use PartiDeGauche\ElectionDomain\Entity\Election\ElectionUninominale;
-use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
 /**
  * Le repository doit être vidé au moyen d'une fonction setUp avant chaque

@@ -55,8 +55,8 @@ class Echeance
 
     /**
      * Constructeur d'objet Echeance.
-     * @param DateTime $date La date de l'échance.
-     * @param string   $type Le type de l'échéance.
+     * @param DateTime $date       La date de l'échance.
+     * @param string   $type       Le type de l'échéance.
      * @param boolean  $secondTour Si l'échéance est un second tour.
      */
     public function __construct(\DateTime $date, $type,

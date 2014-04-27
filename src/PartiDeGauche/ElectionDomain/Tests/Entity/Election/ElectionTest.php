@@ -19,7 +19,6 @@
 
 namespace PartiDeGauche\ElectionDomain\Tests\Entity\Election;
 
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
 use PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 use PartiDeGauche\ElectionDomain\TerritoireInterface;

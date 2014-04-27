@@ -19,8 +19,6 @@
 
 namespace PartiDeGauche\ElectionDomain\Entity\Candidat;
 
-use Doctrine\ORM\Mapping as ORM;
-
 class PersonneCandidate extends Candidat
 {
     /**

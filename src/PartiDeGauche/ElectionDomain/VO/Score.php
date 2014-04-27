@@ -19,10 +19,6 @@
 
 namespace PartiDeGauche\ElectionDomain\VO;
 
-use PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat;
-use PartiDeGauche\ElectionDomain\Entity\Election\Election;
-use PartiDeGauche\ElectionDomain\TerritoireInterface;
-
 class Score
 {
     /**
@@ -40,7 +36,7 @@ class Score
     /**
      * Créer un objet Score.
      * @param  integer $pourcentage Le score en pourcentage des exprimés.
-     * @return Score               Un nouvel object Score.
+     * @return Score   Un nouvel object Score.
      */
     public static function fromPourcentage($pourcentage)
     {
@@ -55,7 +51,7 @@ class Score
      * Créer un objet Score.
      * @param  integer $pourcentage Le score en pourcentage des exprimés.
      * @param  integer $exprimes    Le nombre de suffrages exprimés.
-     * @return Score               Un nouvel object Score.
+     * @return Score   Un nouvel object Score.
      */
     public static function fromPourcentageAndExprimes($pourcentage, $exprimes)
     {
@@ -70,7 +66,7 @@ class Score
     /**
      * Créer un objet Score contenant juste un nombre de voix.
      * @param  integer $voix Le nombre de voix.
-     * @return Score         Un nouvel object Score.
+     * @return Score   Un nouvel object Score.
      */
     public static function fromVoix($voix)
     {
@@ -86,7 +82,7 @@ class Score
      * Créer un objets Score.
      * @param  integer $voix     Le nombre de voix fait à l'élection.
      * @param  integer $exprimes Le nombre de suffrage exprimés à l'élection.
-     * @return Score            Un nouvel object Score.
+     * @return Score   Un nouvel object Score.
      */
     public static function fromVoixAndExprimes($voix, $exprimes)
     {

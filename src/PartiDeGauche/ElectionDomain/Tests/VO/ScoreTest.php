@@ -17,7 +17,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionDomain\Tests;
+namespace PartiDeGauche\ElectionDomain\Tests\VO;
 
 use PartiDeGauche\ElectionDomain\VO\Score;
 
