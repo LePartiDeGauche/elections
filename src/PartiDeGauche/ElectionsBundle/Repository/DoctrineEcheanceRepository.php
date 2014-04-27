@@ -36,14 +36,17 @@ class DoctrineEcheanceRepository implements EcheanceRepositoryInterface
         $this->em->persist($element);
     }
 
-    public function get($nom)
+    public function get(\DateTime $date, $type)
     {
         return $this
             ->em
             ->getRepository(
                 '\PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance'
             )
-            ->findOneByNom($nom)
+            ->findOneBy(array(
+                'date' => $date,
+                'type' => $type,
+            ))
         ;
     }
 

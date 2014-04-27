@@ -30,13 +30,14 @@ PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance:
             type: integer
             generator:
                 strategy: AUTO
+    uniqueConstraints:
+        date_type:
+            columns: [ "date", "type" ]
     fields:
         date:
             type: date
-        nom:
-            type: string
-            length: 255
-            unique: true
+        type:
+            type: integer
         secondTour:
             type: boolean
 
