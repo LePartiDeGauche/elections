@@ -32,6 +32,7 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
     public function __construct($em)
     {
         $this->em = $em;
+        $em->getConnection()->getConfiguration()->setSQLLogger(null);
     }
 
     public function add(AbstractTerritoire $element)
@@ -154,7 +155,9 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
                 throw new UniqueConstraintViolationException(
                     'Les communes doivent être unique par code et département' .
                     ', et les départements et régions doivent être uniques ' .
-                    'par code.'
+                    'par code. Il existe déjà un territoire ' .
+                    $exist->getNom() . ', impossible de le remplacer par ' .
+                    $entity->getNom()
                 );
             }
         }
