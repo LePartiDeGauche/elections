@@ -64,7 +64,8 @@ trait ElectionRepositoryTestTrait
 
     public function testAddAndGet()
     {
-        $echeance = new Echeance(new \DateTime, $this->getEcheanceNom());
+        $date = new \DateTime();
+        $echeance = new Echeance($date, Echeance::CANTONALES);
         $circonscription = $this->circonscription1;
         $election = new ElectionUninominale($echeance, $circonscription);
 
@@ -86,7 +87,7 @@ trait ElectionRepositoryTestTrait
         // échéance
         $this->assertEquals(
             $echeance,
-            $this->echeanceRepository->get($this->getEcheanceNom())
+            $this->echeanceRepository->get($date, Echeance::CANTONALES)
         );
 
         // La circonscription doit être automatiquement enregistrée et
@@ -100,7 +101,8 @@ trait ElectionRepositoryTestTrait
 
     public function testRemove()
     {
-        $echeance = new Echeance(new \DateTime, $this->getEcheanceNom());
+        $date = new \DateTime();
+        $echeance = new Echeance($date, Echeance::CANTONALES);
         $circonscription = $this->circonscription1;
         $circonscription2 = $this->circonscription2;
         $election = new ElectionUninominale($echeance, $circonscription);
@@ -125,15 +127,16 @@ trait ElectionRepositoryTestTrait
         $this->echeanceRepository->save();
 
         $this->assertNull(
-            $this->echeanceRepository->get($this->getEcheanceNom())
+            $this->echeanceRepository->get($date, Echeance::CANTONALES)
         );
     }
 
     // Il ne peut y avoir qu'une élection par échéance et par circonscription.
     public function testViolateUniqueCondition()
     {
-        $echeance = new Echeance(new \DateTime, $this->getEcheanceNom());
-        $echeance2 = new Echeance(new \DateTime, $this->getEcheanceNom());
+        $date = new \DateTime();
+        $echeance = new Echeance($date, Echeance::CANTONALES);
+        $echeance2 = new Echeance($date, Echeance::CANTONALES);
         $circonscription = $this->circonscription1;
         $election = new ElectionUninominale($echeance, $circonscription);
         $election2 = new ElectionUninominale($echeance, $circonscription);
@@ -163,15 +166,5 @@ trait ElectionRepositoryTestTrait
             . '\UniqueConstraintViolationException'
         );
         $this->echeanceRepository->save();
-    }
-
-    // générer un nom d'échéance aléatoire
-    private function getEcheanceNom()
-    {
-        if (!isset($this->echeanceNom)) {
-            $this->echeanceNom = 'test' . uniqid();
-        }
-
-        return $this->echeanceNom;
     }
 }

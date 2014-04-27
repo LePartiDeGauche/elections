@@ -23,13 +23,14 @@ use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 
 class EcheanceTest extends \PHPUnit_Framework_TestCase
 {
-    public function testHasDateAndNomAndTour()
+    public function testHasDateAndTypeAndTour()
     {
         $date = new \DateTime();
-        $echeance = new Echeance($date, 'Nom de l\'élection', true);
+        $echeance = new Echeance($date, Echeance::CANTONALES, true);
 
         $this->assertEquals($date, $echeance->getDate());
-        $this->assertEquals('Nom de l\'élection', $echeance->getNom());
+        $this->assertEquals('Cantonales ' . $date->format('Y'),
+            $echeance->getNom());
         $this->assertTrue($echeance->isSecondTour());
     }
 

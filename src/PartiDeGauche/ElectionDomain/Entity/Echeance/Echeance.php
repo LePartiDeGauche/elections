@@ -23,6 +23,12 @@ class Echeance
 {
     const PREMIER_TOUR = false;
     const SECOND_TOUR = true;
+    const MUNICIPALES = 1;
+    const CANTONALES = 2;
+    const REGIONALES = 3;
+    const LEGISLATIVES = 4;
+    const PRESIDENTIELLE = 5;
+    const EUROPEENNES = 6;
 
     /**
      * @var integer
@@ -36,10 +42,10 @@ class Echeance
     private $date;
 
     /**
-     * Le nom de l'échéance.
-     * @var string
+     * Le type de l'échéance (législative, présidentielle, etc)
+     * @var integer
      */
-    private $nom;
+    private $type;
 
     /**
      * Est-ce que l'échance est un second tour.
@@ -50,18 +56,28 @@ class Echeance
     /**
      * Constructeur d'objet Echeance.
      * @param DateTime $date La date de l'échance.
-     * @param string   $nom  Le nom de l'échance.
+     * @param string   $type Le type de l'échéance.
+     * @param boolean  $secondTour Si l'échéance est un second tour.
      */
-    public function __construct(\DateTime $date, $nom,
+    public function __construct(\DateTime $date, $type,
         $secondTour = self::PREMIER_TOUR)
     {
-        \Assert\that($nom)
-            ->string('Le nom de la commune doit être en toutes lettres.');
+        \Assert\that($type)
+            ->inArray(array(
+                self::MUNICIPALES,
+                self::CANTONALES,
+                self::REGIONALES,
+                self::LEGISLATIVES,
+                self::PRESIDENTIELLE,
+                self::EUROPEENNES,
+            ))
+        ;
         \Assert\that($secondTour)
-            ->boolean();
+            ->boolean()
+        ;
 
         $this->date = $date;
-        $this->nom = $nom;
+        $this->type = $type;
         $this->secondTour = $secondTour;
     }
 
@@ -80,7 +96,36 @@ class Echeance
      */
     public function getNom()
     {
-        return $this->nom;
+        switch ($this->type) {
+            case self::MUNICIPALES:
+                $echeance = 'Municipales';
+                break;
+            case self::CANTONALES:
+                $echeance = 'Cantonales';
+                break;
+            case self::REGIONALES:
+                $echeance = 'Regionales';
+                break;
+            case self::LEGISLATIVES:
+                $echeance = 'Législatives';
+                break;
+            case self::PRESIDENTIELLE:
+                $echeance = 'Présidentielle';
+                break;
+            case self::EUROPEENNES:
+                $echeance = 'Européennes'
+        }
+
+        return $echeance . ' ' .$this->date->format('Y');
+    }
+
+    /**
+     * Récupérer le type de l'élection.
+     * @return int Le type de l'élection.
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**

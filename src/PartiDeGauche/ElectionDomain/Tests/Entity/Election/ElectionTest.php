@@ -30,7 +30,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanHaveCandidat()
     {
-        $echeance = new Echeance(new \DateTime, 'Nom de l\'échéance');
+        $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
         $circonscription = new CirconscriptionMock();
         $election = new ElectionMock($echeance, $circonscription);
 
@@ -42,7 +42,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
 
     public function testHasEcheanceAndCirconscription()
     {
-        $echeance = new Echeance(new \DateTime, 'Nom de l\'échéance');
+        $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
         $circonscription = new CirconscriptionMock();
         $election = new ElectionMock($echeance, $circonscription);
 
@@ -52,7 +52,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
 
     public function testPourcentageByCandidatAndTerritoire()
     {
-        $echeance = new Echeance(new \DateTime, 'Nom de l\'échéance');
+        $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
         $circonscription = new CirconscriptionMock();
         $territoire = new TerritoireMock();
         $candidat = new PersonneCandidate('Naël', 'Ferret');
@@ -81,7 +81,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
 
     public function testVoixByCandidatAndTerritoire()
     {
-        $echeance = new Echeance(new \DateTime, 'Nom de l\'échéance');
+        $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
         $circonscription = new CirconscriptionMock();
         $territoire = new TerritoireMock();
         $candidat = new PersonneCandidate('Naël', 'Ferret');
@@ -110,7 +110,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
 
     public function testVoteInfoByTerritoire()
     {
-        $echeance = new Echeance(new \DateTime, 'Nom de l\'échéance');
+        $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
         $circonscription = new CirconscriptionMock();
         $election = new ElectionMock($echeance, $circonscription);
 
@@ -127,7 +127,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
 
     public function testVoteInfoDefault()
     {
-        $echeance = new Echeance(new \DateTime, 'Nom de l\'échéance');
+        $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
         $circonscription = new CirconscriptionMock();
         $election = new ElectionMock($echeance, $circonscription);
 
@@ -138,7 +138,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
 
     public function testVoteInfoDefaultParamIsCirconscription()
     {
-        $echeance = new Echeance(new \DateTime, 'Nom de l\'échéance');
+        $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
         $circonscription = new CirconscriptionMock();
         $election = new ElectionMock($echeance, $circonscription);
 

@@ -30,7 +30,7 @@ class ListeCandidateTest extends \PHPUnit_Framework_TestCase
 {
     public function testHasNomAndElection()
     {
-        $echeance = new Echeance(new \DateTime, 'Nom de l\'échéance');
+        $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
         $circonscription = new CirconscriptionMock();
         $election = new ElectionMock($echeance, $circonscription);
         $listeCandidate = new ListeCandidate($election, 'Liste FdG');
@@ -41,7 +41,7 @@ class ListeCandidateTest extends \PHPUnit_Framework_TestCase
 
     public function testIsCandidat()
     {
-        $echeance = new Echeance(new \DateTime, 'Nom de l\'échéance');
+        $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
         $circonscription = new CirconscriptionMock();
         $election = new ElectionMock($echeance, $circonscription);
         $listeCandidate = new ListeCandidate($election, 'Liste FdG');
@@ -55,7 +55,7 @@ class ListeCandidateTest extends \PHPUnit_Framework_TestCase
             '\InvalidArgumentException'
         );
 
-        $echeance = new Echeance(new \DateTime, 'Nom de l\'échéance');
+        $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
         $circonscription = new CirconscriptionMock();
         $election = new ElectionMock($echeance, $circonscription);
         $listeCandidate = new ListeCandidate($election, 12);

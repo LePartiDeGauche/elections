@@ -36,10 +36,11 @@ interface EcheanceRepositoryInterface
 
     /**
      * Récupérer une échéance par son nom.
-     * @param  string   $nom    Le nom de l'échéance.
+     * @param  string   $date   La date de l'échéance.
+     * @param  integer  $type   Le type de l'échéance.
      * @return Ecehance         L'échéance portant ce nom.
      */
-    public function get($nom);
+    public function get(\DateTime $date, $type);
 
     /**
      * Retire l'élection du repository si elle existe.
