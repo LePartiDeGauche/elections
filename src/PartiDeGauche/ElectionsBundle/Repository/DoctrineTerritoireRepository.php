@@ -165,9 +165,14 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
             switch (get_class($entity)) {
                 case 'PartiDeGauche\TerritoireDomain\Entity' .
                     '\Territoire\Commune' :
-                case 'PartiDeGauche\TerritoireDomain\Entity' .
-                    '\Territoire\getCirconscriptionLegislative' :
                         $exist = $this->getCommune(
+                            $entity->getDepartement()->getCode(),
+                            $entity->getCode()
+                        );
+                        break;
+                case 'PartiDeGauche\TerritoireDomain\Entity' .
+                    '\Territoire\CirconscriptionLegislative' :
+                        $exist = $this->getCirconscriptionLegislative(
                             $entity->getDepartement()->getCode(),
                             $entity->getCode()
                         );
