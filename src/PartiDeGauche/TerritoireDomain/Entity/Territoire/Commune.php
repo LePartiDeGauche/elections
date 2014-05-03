@@ -65,6 +65,15 @@ class Commune extends AbstractTerritoire
     }
 
     /**
+     * Récupérer les éventuels arrondissements de la communes.
+     * @return ArrondissementCommunal Les arrondissements.
+     */
+    public function getArrondissements()
+    {
+        return $this->arrondissements;
+    }
+
+    /**
      * Récupérer le code INSEE de la commune.
      * @return integer Le code INSEE de la commune.
      */

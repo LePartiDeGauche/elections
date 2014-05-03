@@ -24,6 +24,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Region extends AbstractTerritoire
 {
     /**
+     * La circonscription européenne de la région.
+     * @var CirconscriptionEuropeenne
+     */
+    private $circonscriptionEuropeenne;
+
+    /**
      * Le code de la région. Peut-être composé de lettres pour les
      * région d'outre-mer.
      * @var string
@@ -62,6 +68,11 @@ class Region extends AbstractTerritoire
         $this->code = (string) $code;
         $this->nom = $nom;
         $this->departements = new ArrayCollection();
+    }
+
+    public function getCirconscriptionEuropeenne()
+    {
+        return $this->circonscriptionEuropeenne;
     }
 
     /**

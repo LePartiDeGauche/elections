@@ -31,14 +31,20 @@ class Departement extends AbstractTerritoire
     private $code;
 
     /**
+     * Les circonscriptions législatives présentent dans le département.
+     * @var ArrayCollection
+     */
+    private $circonscriptionsLegislatives;
+
+    /**
      * Les communes présentent dans le département.
-     * @var Commune
+     * @var ArrayCollection
      */
     private $communes;
 
     /**
      * La région du département
-     * @var ArrayCollection
+     * @var Region
      */
     private $region;
 
@@ -70,6 +76,7 @@ class Departement extends AbstractTerritoire
         $this->nom = $nom;
         $this->region = $region;
         $this->communes = new ArrayCollection();
+        $this->circonscriptionsLegislatives = new ArrayCollection();
     }
 
     /**
@@ -79,6 +86,24 @@ class Departement extends AbstractTerritoire
     public function getCode()
     {
         return $this->code;
+    }
+
+    /**
+     * Récupérer les circonscriptions législatives.
+     * @return ArrayCollection Les circonscriptions législatives du département.
+     */
+    public function getCirconscriptionsLegislatives()
+    {
+        return $this->circonscriptionsLegislatives;
+    }
+
+    /**
+     * Récupérer les communes du département.
+     * @return ArrayCollection Les communes du département.
+     */
+    public function getCommunes()
+    {
+        return $this->communes;
     }
 
     /**

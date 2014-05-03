@@ -19,6 +19,8 @@
 
 namespace PartiDeGauche\TerritoireDomain\Entity\Territoire;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class Pays extends AbstractTerritoire
 {
     /**

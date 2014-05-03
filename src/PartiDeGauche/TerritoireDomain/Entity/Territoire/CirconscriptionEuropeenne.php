@@ -19,6 +19,29 @@
 
 namespace PartiDeGauche\TerritoireDomain\Entity\Territoire;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class CirconscriptionEuropeenne extends AbstractTerritoire
 {
+    /**
+     * Les régions composant la circonscription.
+     * @var ArrayCollection
+     */
+    protected $regions;
+
+    public function __construct($nom)
+    {
+        parent::__construct($nom);
+
+        $this->regions = new ArrayCollection();
+    }
+
+    /**
+     * Récupérer les régions composant la circonscription européenne.
+     * @return ArrayCollection Les régions composant la circonscription/
+     */
+    public function getRegions()
+    {
+        return $this->regions;
+    }
 }
