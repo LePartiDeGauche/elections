@@ -17,32 +17,28 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\TerritoireDomain\Entity\Territoire;
+namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionLegislative;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
 
-abstract class AbstractTerritoire implements CirconscriptionInterface
+class CirconscriptionLegislativeTest extends \PHPUnit_Framework_TestCase
 {
-    private $id;
+    public function testHasDepartementAndCode()
+    {
+        $departement = new DepartementMock('TestDep');
+        $circo = new CirconscriptionLegislative($departement, 12);
 
-    protected $nom;
+        $this->assertEquals($departement, $circo->getDepartement());
+        $this->assertEquals(12, $circo->getCode());
+        $this->assertEquals('Circonscription 12 - TestDep', $circo->getNom());
+    }
+}
 
-    public function __construct($nom = null)
+class DepartementMock extends Departement
+{
+    public function __construct($nom)
     {
         $this->nom = $nom;
-    }
-
-    /**
-     * Récupérer le nom du territoire.
-     * @return string Le nom du territoire.
-     */
-    public function getNom()
-    {
-        return $this->nom;
-    }
-
-    public function __toString()
-    {
-        return $this->getNom();
     }
 }

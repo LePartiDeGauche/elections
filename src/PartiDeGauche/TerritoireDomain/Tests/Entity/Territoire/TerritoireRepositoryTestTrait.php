@@ -20,6 +20,8 @@
 namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\ArrondissementCommunal;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionLegislative;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
@@ -47,8 +49,12 @@ trait TerritoireRepositoryTestTrait
             'ZE',
             'Test'
         );
+        $circonscriptionLeg = new CirconscriptionLegislative($departement, 2);
+        $circonscriptionEur = new CirconscriptionEuropeenne('Sud-Ouest');
 
         $this->repository->add($arrondissementCommunal);
+        $this->repository->add($circonscriptionLeg);
+        $this->repository->add($circonscriptionEur);
         $this->repository->save();
 
         // L'id peut avoir changer donc on teste juste le nom.
@@ -68,6 +74,17 @@ trait TerritoireRepositoryTestTrait
             $arrondissementCommunal->getNom(),
             $this->repository->getArrondissementCommunal($commune, 'ZE')
                 ->getNom()
+        );
+        $this->assertEquals(
+            $circonscriptionLeg->getCode(),
+            $this->repository->getCirconscriptionLegislative(38, 2)
+                ->getCode()
+        );
+        $this->assertEquals(
+            $circonscriptionEur->getNom(),
+            $this->repository->getCirconscriptionEuropeenne(
+                'Sud-Ouest'
+            )->getNom()
         );
 
         // On teste remove

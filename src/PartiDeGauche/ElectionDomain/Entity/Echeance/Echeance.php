@@ -113,7 +113,7 @@ class Echeance
                 $echeance = 'Présidentielle';
                 break;
             case self::EUROPEENNES:
-                $echeance = 'Européennes'
+                $echeance = 'Européennes';
         }
 
         return $echeance . ' ' .$this->date->format('Y');

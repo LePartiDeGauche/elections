@@ -17,32 +17,16 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\TerritoireDomain\Entity\Territoire;
+namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays;
 
-abstract class AbstractTerritoire implements CirconscriptionInterface
+class PaysTest extends \PHPUnit_Framework_TestCase
 {
-    private $id;
-
-    protected $nom;
-
-    public function __construct($nom = null)
+    public function testHasNom()
     {
-        $this->nom = $nom;
-    }
+        $pays = new Pays('France');
 
-    /**
-     * Récupérer le nom du territoire.
-     * @return string Le nom du territoire.
-     */
-    public function getNom()
-    {
-        return $this->nom;
-    }
-
-    public function __toString()
-    {
-        return $this->getNom();
+        $this->assertEquals('France', $pays->getNom());
     }
 }

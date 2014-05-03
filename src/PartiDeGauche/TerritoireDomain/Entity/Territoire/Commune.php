@@ -42,12 +42,6 @@ class Commune extends AbstractTerritoire
     private $departement;
 
     /**
-     * Le nom de la commune.
-     * @var string
-     */
-    private $nom;
-
-    /**
      * Constructeur d'objet Commune.
      * @param Departement $departement Le département de la commune.
      * @param integer     $code        Le code INSEE de la commune.
@@ -86,14 +80,5 @@ class Commune extends AbstractTerritoire
     public function getDepartement()
     {
         return $this->departement;
-    }
-
-    /**
-     * Récupérer le nom de la commune.
-     * @return string Le nom de la commune.
-     */
-    public function getNom()
-    {
-        return $this->nom;
     }
 }

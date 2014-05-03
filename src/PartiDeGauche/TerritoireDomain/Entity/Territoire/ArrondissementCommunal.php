@@ -35,12 +35,6 @@ class ArrondissementCommunal extends AbstractTerritoire
     private $commune;
 
     /**
-     * Le nom de l'arrondissement.
-     * @var string
-     */
-    private $nom;
-
-    /**
      * Constructeur d'objet ArronissementCommunal.
      * @param Commune $commune La commune de l'arrondissement.
      * @param integer $code    Le code de l'arrondissement. On suit la
@@ -81,14 +75,5 @@ class ArrondissementCommunal extends AbstractTerritoire
     public function getCommune()
     {
         return $this->commune;
-    }
-
-    /**
-     * Récupérer le nom de l'arrondissement.
-     * @return string Le nom de l'arrondissement.
-     */
-    public function getNom()
-    {
-        return $this->nom;
     }
 }

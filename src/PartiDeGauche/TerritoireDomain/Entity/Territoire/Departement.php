@@ -37,12 +37,6 @@ class Departement extends AbstractTerritoire
     private $communes;
 
     /**
-     * Le nom du département.
-     * @var string
-     */
-    private $nom;
-
-    /**
      * La région du département
      * @var ArrayCollection
      */
@@ -85,15 +79,6 @@ class Departement extends AbstractTerritoire
     public function getCode()
     {
         return $this->code;
-    }
-
-    /**
-     * Récupérer le nom du département.
-     * @return string Le nom du département.
-     */
-    public function getNom()
-    {
-        return $this->nom;
     }
 
     /**

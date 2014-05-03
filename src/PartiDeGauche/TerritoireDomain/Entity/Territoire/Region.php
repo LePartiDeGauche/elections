@@ -37,12 +37,6 @@ class Region extends AbstractTerritoire
     private $departements;
 
     /**
-     * Le nom de la région.
-     * @var string
-     */
-    private $nom;
-
-    /**
      * Constructeur d'objet département.
      * @param string $code Le code de la région.
      * @param string $nom  Le nom de la région.
@@ -86,14 +80,5 @@ class Region extends AbstractTerritoire
     public function getDepartements()
     {
         return $this->departements;
-    }
-
-    /**
-     * Récupérer le nom de la région.
-     * @return string Le nom de la région.
-     */
-    public function getNom()
-    {
-        return $this->nom;
     }
 }

@@ -44,6 +44,21 @@ interface TerritoireRepositoryInterface
     public function getArrondissementCommunal($commune, $codeArrondissement);
 
     /**
+     * Récupérer une circonscription européenne.
+     * @param  string                   $nom Le nom de la circonscription.
+     * @return CirconscriptionEuropenne La circonscription.
+     */
+    public function getCirconscriptionEuropeenne($nom);
+
+    /**
+     * Récupérer une circonscription législative.
+     * @param  integer                    $codeDepartement Le numéro du département.
+     * @param  integer                    $code            Le numéro de la circo dans le département.
+     * @return CirconscriptionLegislative La circo.
+     */
+    public function getCirconscriptionLegislative($codeDepartement, $code);
+
+    /**
      * Récupérer une commune en fonction de son code département et son code
      * commune (INSEE).
      * @param  integer $codeDepartement Le code du département.

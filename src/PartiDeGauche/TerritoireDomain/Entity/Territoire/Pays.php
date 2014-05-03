@@ -19,30 +19,14 @@
 
 namespace PartiDeGauche\TerritoireDomain\Entity\Territoire;
 
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
-
-abstract class AbstractTerritoire implements CirconscriptionInterface
+class Pays extends AbstractTerritoire
 {
-    private $id;
-
-    protected $nom;
-
-    public function __construct($nom = null)
+    /**
+     * Créer un nouvel objet Pays.
+     * @param string $nom Le nom du Pays.
+     */
+    public function __construct($nom = 'France')
     {
         $this->nom = $nom;
-    }
-
-    /**
-     * Récupérer le nom du territoire.
-     * @return string Le nom du territoire.
-     */
-    public function getNom()
-    {
-        return $this->nom;
-    }
-
-    public function __toString()
-    {
-        return $this->getNom();
     }
 }
