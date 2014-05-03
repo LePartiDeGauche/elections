@@ -22,7 +22,9 @@
         "sensio/framework-extra-bundle": "~3.0",
         "sensio/generator-bundle": "~2.3",
         "incenteev/composer-parameter-handler": "~2.0",
-        "beberlei/assert": "~2.0"
+        "beberlei/assert": "~2.0",
+        "sonata-project/admin-bundle": "~2.2.10",
+        "sonata-project/doctrine-orm-admin-bundle": "~2.2"
     },
     "scripts": {
         "post-install-cmd": [

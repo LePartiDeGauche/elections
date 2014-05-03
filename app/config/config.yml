@@ -4,7 +4,7 @@ imports:
 
 framework:
     #esi:             ~
-    #translator:      { fallback: "%locale%" }
+    translator:      { fallback: "%locale%" }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -65,3 +65,13 @@ doctrine:
                 is_bundle: true
                 dir: Resources/config/doctrine
                 prefix: PartiDeGauche
+
+# Sonata admin configuration
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        sonata.admin.block.admin_list:
+            contexts:   [admin]
+sonata_admin:
+    title:      Administration application élection
+    title_logo: bundles/partidegaucheelectionsadmin/img/logoPG.png

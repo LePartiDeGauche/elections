@@ -1,0 +1,61 @@
+services:
+    sonata.admin.circonscription_europeenne:
+        class: PartiDeGauche\ElectionsAdminBundle\Admin\CirconscriptionEuropeenneAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Territoire", label: "Circonscriptions européennes" }
+        arguments:
+            - ~
+            - PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne
+            - ~
+        calls:
+            - [ setTranslationDomain, [PartiDeGaucheElectionsAdminBundle]]
+    sonata.admin.region:
+        class: PartiDeGauche\ElectionsAdminBundle\Admin\RegionAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Territoire", label: "Régions" }
+        arguments:
+            - ~
+            - PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
+            - ~
+        calls:
+            - [ setTranslationDomain, [PartiDeGaucheElectionsAdminBundle]]
+    sonata.admin.departement:
+        class: PartiDeGauche\ElectionsAdminBundle\Admin\DepartementAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Territoire", label: "Départements" }
+        arguments:
+            - ~
+            - PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
+            - ~
+        calls:
+            - [ setTranslationDomain, [PartiDeGaucheElectionsAdminBundle]]
+    sonata.admin.circonscription_legislative:
+        class: PartiDeGauche\ElectionsAdminBundle\Admin\CirconscriptionLegislativeAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Territoire", label: "Circonscriptions législatives" }
+        arguments:
+            - ~
+            - PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionLegislative
+            - ~
+        calls:
+            - [ setTranslationDomain, [PartiDeGaucheElectionsAdminBundle]]
+    sonata.admin.commune:
+        class: PartiDeGauche\ElectionsAdminBundle\Admin\CommuneAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Territoire", label: "Communes" }
+        arguments:
+            - ~
+            - PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune
+            - ~
+        calls:
+            - [ setTranslationDomain, [PartiDeGaucheElectionsAdminBundle]]
+    sonata.admin.arrondissement_communal:
+        class: PartiDeGauche\ElectionsAdminBundle\Admin\ArrondissementCommunalAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Territoire", label: "Arrondissements communaux" }
+        arguments:
+            - ~
+            - PartiDeGauche\TerritoireDomain\Entity\Territoire\ArrondissementCommunal
+            - ~
+        calls:
+            - [ setTranslationDomain, [PartiDeGaucheElectionsAdminBundle]]
