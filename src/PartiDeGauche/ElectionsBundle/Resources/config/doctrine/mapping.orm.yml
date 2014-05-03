@@ -188,6 +188,33 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\ArrondissementCommunal:
             cascade: [ "persist" ]
             inversedBy: arrondissements
 
+PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionLegislative:
+    type: entity
+    uniqueConstraints:
+        code_departement:
+            columns: [ "code", "territoire_id" ]
+    fields:
+        code:
+            type: string
+            length: 10
+    manyToOne:
+        departement:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
+            joinColumn:
+                name: territoire_id
+            cascade: [ "persist" ]
+            inversedBy: communes
+
+PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne:
+    type: entity
+    uniqueConstraints:
+        code_departement:
+            columns: [ "code", "territoire_id" ]
+    fields:
+        nom:
+            type: string
+            length: 255
+
 PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune:
     type: entity
     uniqueConstraints:
