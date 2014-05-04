@@ -21,8 +21,6 @@ namespace PartiDeGauche\ElectionsAdminBundle\Admin\Territoire;
 
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
-use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Sonata\AdminBundle\Form\FormMapper;
 
 class RegionAdmin extends Admin
 {
@@ -35,6 +33,7 @@ class RegionAdmin extends Admin
             ->addIdentifier('nom')
             ->add('code')
             ->add('circonscriptionEuropeenne')
+            ->add('departements')
         ;
     }
 }

@@ -21,15 +21,13 @@ namespace PartiDeGauche\ElectionsAdminBundle\Admin\Territoire;
 
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
-use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Sonata\AdminBundle\Form\FormMapper;
 
 class CommuneAdmin extends Admin
 {
     protected $baseRouteName = 'commune';
     protected $baseRoutePattern = 'commune';
 
-   protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
             ->add('nom')
