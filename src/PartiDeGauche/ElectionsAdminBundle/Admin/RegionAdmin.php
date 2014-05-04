@@ -32,8 +32,9 @@ class RegionAdmin extends Admin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('nom')
+            ->addIdentifier('nom')
             ->add('code')
+            ->add('circonscriptionEuropeenne')
         ;
     }
 }
