@@ -32,6 +32,7 @@ class CirconscriptionEuropeenneAdmin extends Admin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
+            ->add('code')
             ->add('nom')
         ;
     }

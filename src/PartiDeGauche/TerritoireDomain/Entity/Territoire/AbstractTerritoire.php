@@ -43,6 +43,6 @@ abstract class AbstractTerritoire implements CirconscriptionInterface
 
     public function __toString()
     {
-        return $this->getNom();
+        return $this->getNom() ? $this->getNom() : '';
     }
 }

@@ -211,6 +211,9 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne:
         code_departement:
             columns: [ "code", "territoire_id" ]
     fields:
+        code:
+            type: string
+            length: 10
         nom:
             type: string
             length: 255

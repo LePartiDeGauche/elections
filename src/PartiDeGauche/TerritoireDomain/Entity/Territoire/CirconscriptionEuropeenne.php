@@ -24,16 +24,32 @@ use Doctrine\Common\Collections\ArrayCollection;
 class CirconscriptionEuropeenne extends AbstractTerritoire
 {
     /**
+     * Code de la circo.
+     * @var integer
+     */
+    protected $code;
+
+    /**
      * Les régions composant la circonscription.
      * @var ArrayCollection
      */
     protected $regions;
 
-    public function __construct($nom)
+    public function __construct($code, $nom)
     {
-        parent::__construct($nom);
+        $this->nom = $nom;
+        $this->code = $code;
 
         $this->regions = new ArrayCollection();
+    }
+
+    /**
+     * Récupérer le code de la circo.
+     * @return integer Le code.
+     */
+    public function getCode()
+    {
+        return $this->code;
     }
 
     /**

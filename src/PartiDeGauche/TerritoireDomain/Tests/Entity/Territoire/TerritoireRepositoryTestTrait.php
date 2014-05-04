@@ -50,7 +50,7 @@ trait TerritoireRepositoryTestTrait
             'Test'
         );
         $circonscriptionLeg = new CirconscriptionLegislative($departement, 2);
-        $circonscriptionEur = new CirconscriptionEuropeenne('Sud-Ouest');
+        $circonscriptionEur = new CirconscriptionEuropeenne(1, 'Sud-Ouest');
 
         $this->repository->add($arrondissementCommunal);
         $this->repository->add($circonscriptionLeg);
