@@ -17,24 +17,23 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionsAdminBundle\Admin;
+namespace PartiDeGauche\ElectionsAdminBundle\Admin\Territoire;
 
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 
-class RegionAdmin extends Admin
+class CirconscriptionEuropeenneAdmin extends Admin
 {
-    protected $baseRouteName = 'region';
-    protected $baseRoutePattern = 'region';
+    protected $baseRouteName = 'circonscription_europeenne';
+    protected $baseRoutePattern = 'circonscription_europeenne';
 
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->addIdentifier('nom')
             ->add('code')
-            ->add('circonscriptionEuropeenne')
+            ->add('nom')
         ;
     }
 }
