@@ -36,9 +36,12 @@ class ScoreAssignment
         return $this->candidat;
     }
 
-    public function __construct(Score $score = null, Election $election,
-        CandidatInterface $candidat, TerritoireInterface $territoire)
-    {
+    public function __construct(
+        Election $election,
+        CandidatInterface $candidat,
+        TerritoireInterface $territoire,
+        Score $score = null
+    ) {
         $this->scoreVO = $score;
         $this->candidat = $candidat;
         $this->election = $election;

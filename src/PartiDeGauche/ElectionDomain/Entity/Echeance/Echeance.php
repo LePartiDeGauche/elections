@@ -59,9 +59,11 @@ class Echeance
      * @param string   $type       Le type de l'échéance.
      * @param boolean  $secondTour Si l'échéance est un second tour.
      */
-    public function __construct(\DateTime $date, $type,
-        $secondTour = self::PREMIER_TOUR)
-    {
+    public function __construct(
+        \DateTime $date,
+        $type,
+        $secondTour = self::PREMIER_TOUR
+    ) {
         \Assert\that($type)
             ->inArray(array(
                 self::MUNICIPALES,

@@ -164,32 +164,32 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
             $repo = $this->em->getRepository(get_class($entity));
             switch (get_class($entity)) {
                 case 'PartiDeGauche\TerritoireDomain\Entity' .
-                    '\Territoire\Commune' :
-                        $exist = $this->getCommune(
-                            $entity->getDepartement()->getCode(),
-                            $entity->getCode()
-                        );
-                        break;
+                '\Territoire\Commune':
+                    $exist = $this->getCommune(
+                        $entity->getDepartement()->getCode(),
+                        $entity->getCode()
+                    );
+                    break;
                 case 'PartiDeGauche\TerritoireDomain\Entity' .
-                    '\Territoire\CirconscriptionLegislative' :
-                        $exist = $this->getCirconscriptionLegislative(
-                            $entity->getDepartement()->getCode(),
-                            $entity->getCode()
-                        );
-                        break;
+                '\Territoire\CirconscriptionLegislative':
+                    $exist = $this->getCirconscriptionLegislative(
+                        $entity->getDepartement()->getCode(),
+                        $entity->getCode()
+                    );
+                    break;
                 case 'PartiDeGauche\TerritoireDomain\Entity' .
-                    '\Territoire\ArrondissementCommunal' :
-                        $exist = $this->getArrondissementCommunal(
-                            $entity->getCommune(),
-                            $entity->getCode()
-                        );
-                        break;
+                '\Territoire\ArrondissementCommunal':
+                    $exist = $this->getArrondissementCommunal(
+                        $entity->getCommune(),
+                        $entity->getCode()
+                    );
+                    break;
                 case 'PartiDeGauche\TerritoireDomain\Entity' .
-                    '\Territoire\CirconscriptionEuropeenne' :
-                        $exist = $this->getCirconscriptionEuropeenne(
-                            $entity->getNom()
-                        );
-                        break;
+                '\Territoire\CirconscriptionEuropeenne':
+                    $exist = $this->getCirconscriptionEuropeenne(
+                        $entity->getNom()
+                    );
+                    break;
                 default:
                     $exist = $repo->findOneByCode($entity->getCode());
             }

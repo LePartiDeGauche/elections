@@ -19,8 +19,8 @@
 
 namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
-use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\TerritoireComposite;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 
 class TerritoireCompositeTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,7 +51,6 @@ class TerritoireCompositeTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertTrue($territoire instanceof AbstractTerritoire);
-
     }
 
     public function testUnionAndIntersection()
@@ -73,8 +72,4 @@ class TerritoireCompositeTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNotEquals($territoireA, $territoireB);
     }
-}
-
-class TerritoireMock extends AbstractTerritoire
-{
 }

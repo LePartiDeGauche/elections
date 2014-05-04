@@ -17,32 +17,14 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionDomain\Tests\Entity\Echeance;
+namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
-use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
 
-class EcheanceTest extends \PHPUnit_Framework_TestCase
+class DepartementMock extends Departement
 {
-    public function testHasDateAndTypeAndTour()
+    public function __construct($nom)
     {
-        $date = new \DateTime();
-        $echeance = new Echeance($date, Echeance::CANTONALES, true);
-
-        $this->assertEquals($date, $echeance->getDate());
-        $this->assertEquals(
-            'Cantonales ' . $date->format('Y'),
-            $echeance->getNom()
-        );
-        $this->assertTrue($echeance->isSecondTour());
-    }
-
-    public function testNomIsString()
-    {
-        $this->setExpectedException(
-            '\InvalidArgumentException'
-        );
-
-        $date = new \DateTime();
-        $echeance = new Echeance($date, 12);
+        $this->nom = $nom;
     }
 }

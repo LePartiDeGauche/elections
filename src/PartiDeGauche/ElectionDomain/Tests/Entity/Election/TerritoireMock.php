@@ -17,45 +17,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionDomain\Entity\Election;
+namespace PartiDeGauche\ElectionDomain\Tests\Entity\Election;
 
-use PartiDeGauche\ElectionDomain\VO\VoteInfo;
 use PartiDeGauche\ElectionDomain\TerritoireInterface;
 
-class VoteInfoAssignment
+class TerritoireMock implements TerritoireInterface
 {
-    private $id;
-    private $election;
-    private $territoire;
-    private $voteInfoVO;
-
-    public function __construct(
-        Election $election,
-        TerritoireInterface $territoire,
-        VoteInfo $voteInfo = null
-    ) {
-        $this->voteInfoVO = $voteInfo;
-        $this->election = $election;
-        $this->territoire = $territoire;
-    }
-
-    public function getElection()
-    {
-        return $this->election;
-    }
-
-    public function getTerritoire()
-    {
-        return $this->territoire;
-    }
-
-    public function getVoteInfoVO()
-    {
-        return $this->voteInfoVO;
-    }
-
-    public function setVoteInfoVO(VoteInfo $voteInfo)
-    {
-        $this->voteInfoVO = $voteInfo;
-    }
 }

@@ -19,8 +19,6 @@
 
 namespace PartiDeGauche\ElectionDomain\Entity\Echeance;
 
-class UniqueConstraintViolationException extends \Exception { }
-
 /**
  * Voir PartiDeGauche\ElectionDomain\Tests\Entity\Echeance
  * \EcheanceRepositoryTestTrait pour les contraintes que à respecter en

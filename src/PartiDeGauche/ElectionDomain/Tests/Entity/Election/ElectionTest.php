@@ -21,7 +21,6 @@ namespace PartiDeGauche\ElectionDomain\Tests\Entity\Election;
 
 use PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
-use PartiDeGauche\ElectionDomain\TerritoireInterface;
 use PartiDeGauche\ElectionDomain\Tests\Entity\CirconscriptionMock;
 use PartiDeGauche\ElectionDomain\VO\VoteInfo;
 
@@ -149,8 +148,4 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
         $actual = $election->getVoteInfo($circonscription);
         $this->assertEquals($voteInfo, $actual);
     }
-}
-
-class TerritoireMock implements TerritoireInterface
-{
 }

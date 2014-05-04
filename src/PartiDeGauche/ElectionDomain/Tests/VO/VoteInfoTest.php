@@ -34,7 +34,7 @@ class VoteInfoTest extends \PHPUnit_Framework_TestCase
 
     public function testExprimesIsInteger()
     {
-       $this->setExpectedException(
+        $this->setExpectedException(
             '\InvalidArgumentException'
         );
 
@@ -70,7 +70,7 @@ class VoteInfoTest extends \PHPUnit_Framework_TestCase
 
     public function testInscritsIsInteger()
     {
-       $this->setExpectedException(
+        $this->setExpectedException(
             '\InvalidArgumentException'
         );
 
@@ -79,7 +79,7 @@ class VoteInfoTest extends \PHPUnit_Framework_TestCase
 
     public function testVotantsIsInteger()
     {
-       $this->setExpectedException(
+        $this->setExpectedException(
             '\InvalidArgumentException'
         );
 

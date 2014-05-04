@@ -122,7 +122,9 @@ trait TerritoireRepositoryTestTrait
         $this->repository->save();
 
         $departement2 = new Departement(
-            $this->repository->getRegion(38), 22, 'Nimp'
+            $this->repository->getRegion(38),
+            22,
+            'Nimp'
         );
         $commune2 = new Commune($departement2, 'ZE', 'Grenoble');
         $this->repository->add($commune2);

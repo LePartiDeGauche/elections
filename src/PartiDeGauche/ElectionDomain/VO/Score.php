@@ -111,5 +111,4 @@ class Score
     {
         return $this->voix;
     }
-
 }

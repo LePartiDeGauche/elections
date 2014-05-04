@@ -19,8 +19,6 @@
 
 namespace PartiDeGauche\TerritoireDomain\Entity\Territoire;
 
-class UniqueConstraintViolationException extends \Exception { }
-
 /**
  * Voir PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire
  * \TerritoireRepositoryTestTrait pour les contraintes à respecter lors de

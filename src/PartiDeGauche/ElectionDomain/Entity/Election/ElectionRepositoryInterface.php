@@ -22,8 +22,6 @@ namespace PartiDeGauche\ElectionDomain\Entity\Election;
 use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 
-class UniqueConstraintViolationException extends \Exception { }
-
 /**
  * Voir PartiDeGauche\ElectionDomain\Tests\Entity\Election
  * \ElectionRepositoryTestTrait pour les contraintes à respecter lors d'une
@@ -43,8 +41,10 @@ interface ElectionRepositoryInterface
      * @param  CirconscriptionInterface $circonscription La circonscription.
      * @return Election                 L'élection ou NULL.
      */
-    public function get(Echeance $echeance,
-        CirconscriptionInterface $circonscription);
+    public function get(
+        Echeance $echeance,
+        CirconscriptionInterface $circonscription
+    );
 
     /**
      * Retire l'élection du repository si elle existe.

@@ -69,9 +69,10 @@ abstract class Election
      * Constructeur d'objet élections.
      * @param Echeance $echeance L'échéance de l'élection.
      */
-    public function __construct(Echeance $echeance,
-        CirconscriptionInterface $circonscription)
-    {
+    public function __construct(
+        Echeance $echeance,
+        CirconscriptionInterface $circonscription
+    ) {
         $this->candidats = new ArrayCollection();
 
         $this->echeance = $echeance;
@@ -123,9 +124,10 @@ abstract class Election
      * @param  TerritoireInterface $territoire Le territoire.
      * @return Score               Le score du candidat.
      */
-    public function getScoreCandidat(CandidatInterface $candidat,
-        TerritoireInterface $territoire = null)
-    {
+    public function getScoreCandidat(
+        CandidatInterface $candidat,
+        TerritoireInterface $territoire = null
+    ) {
         if (null === $territoire) {
             $territoire = $this->circonscription;
         }
@@ -159,9 +161,11 @@ abstract class Election
      * @param CandidatInterface   $candidat    Le candidat dont il s'agit.
      * @param TerritoireInterface $territoire  Le territoire du score.
      */
-    public function setPourcentageCandidat($pourcentage,
-        CandidatInterface $candidat, TerritoireInterface $territoire = null)
-    {
+    public function setPourcentageCandidat(
+        $pourcentage,
+        CandidatInterface $candidat,
+        TerritoireInterface $territoire = null
+    ) {
         if (!in_array($candidat, $this->getCandidats())) {
             $this->addCandidat($candidat);
         }
@@ -183,8 +187,10 @@ abstract class Election
             $score = Score::fromPourcentage($pourcentage);
         }
 
-        $scoreAssignment = $this->getScoreAssignmentCandidat($candidat,
-            $territoire);
+        $scoreAssignment = $this->getScoreAssignmentCandidat(
+            $candidat,
+            $territoire
+        );
         $scoreAssignment->setScoreVO($score);
 
         return;
@@ -200,9 +206,11 @@ abstract class Election
      * @param CandidatInterface   $candidat   Le candidat dont il s'agit.
      * @param TerritoireInterface $territoire Le territoire du score.
      */
-    public function setVoixCandidat($voix, CandidatInterface $candidat,
-        TerritoireInterface $territoire = null)
-    {
+    public function setVoixCandidat(
+        $voix,
+        CandidatInterface $candidat,
+        TerritoireInterface $territoire = null
+    ) {
         if (!in_array($candidat, $this->getCandidats())) {
             $this->addCandidat($candidat);
         }
@@ -223,8 +231,10 @@ abstract class Election
             $score = Score::fromVoix($voix);
         }
 
-        $scoreAssignment = $this->getScoreAssignmentCandidat($candidat,
-            $territoire);
+        $scoreAssignment = $this->getScoreAssignmentCandidat(
+            $candidat,
+            $territoire
+        );
         $scoreAssignment->setScoreVO($score);
     }
 
@@ -232,9 +242,10 @@ abstract class Election
      * Mettre à jour les informations sur le vote.
      * @param VoteInfo $voteInfo Les informations sur le vote.
      */
-    public function setVoteInfo(VoteInfo $voteInfo,
-        TerritoireInterface $territoire = null)
-    {
+    public function setVoteInfo(
+        VoteInfo $voteInfo,
+        TerritoireInterface $territoire = null
+    ) {
         if (null === $territoire) {
             $territoire = $this->circonscription;
         }
@@ -243,9 +254,10 @@ abstract class Election
         $voteAssigment->setVoteInfoVO($voteInfo);
     }
 
-    private function getScoreAssignmentCandidat(CandidatInterface $candidat,
-        TerritoireInterface $territoire)
-    {
+    private function getScoreAssignmentCandidat(
+        CandidatInterface $candidat,
+        TerritoireInterface $territoire
+    ) {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('candidat', $candidat))
             ->andWhere(Criteria::expr()->eq('territoire', $territoire))
@@ -256,7 +268,7 @@ abstract class Election
         }
 
         $scoreAssignment =
-            new ScoreAssignment(null, $this, $candidat, $territoire);
+            new ScoreAssignment($this, $candidat, $territoire);
         $this->scores[] = $scoreAssignment;
 
         return $scoreAssignment;
@@ -272,7 +284,7 @@ abstract class Election
             return $array[0];
         }
 
-        $voteInfoAssignment = new VoteInfoAssignment(null, $this, $territoire);
+        $voteInfoAssignment = new VoteInfoAssignment($this, $territoire);
         $this->voteInfos[] = $voteInfoAssignment;
 
         return $voteInfoAssignment;

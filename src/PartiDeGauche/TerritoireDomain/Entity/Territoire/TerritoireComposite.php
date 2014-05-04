@@ -43,9 +43,11 @@ class TerritoireComposite extends AbstractTerritoire
      * @param AbstractTerritoire $territoire1 Le premier territoire.
      * @param AbstractTerritoire $territoire2 Le second territoire.
      */
-    public function __construct($type, AbstractTerritoire $territoire1,
-        AbstractTerritoire $territoire2)
-    {
+    public function __construct(
+        $type,
+        AbstractTerritoire $territoire1,
+        AbstractTerritoire $territoire2
+    ) {
         if (!in_array($type, array(self::UNION, self::INTERSECTION))) {
             throw new \InvalidArgumentException();
         }

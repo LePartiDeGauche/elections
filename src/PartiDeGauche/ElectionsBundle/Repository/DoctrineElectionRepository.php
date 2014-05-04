@@ -42,9 +42,10 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
             ->persist($element);
     }
 
-    public function get(Echeance $echeance,
-        CirconscriptionInterface $circonscription)
-    {
+    public function get(
+        Echeance $echeance,
+        CirconscriptionInterface $circonscription
+    ) {
         return $this
             ->em
             ->getRepository(

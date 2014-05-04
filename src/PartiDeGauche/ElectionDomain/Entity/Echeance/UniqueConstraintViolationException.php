@@ -17,32 +17,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PartiDeGauche\ElectionDomain\Tests\Entity\Echeance;
+namespace PartiDeGauche\ElectionDomain\Entity\Echeance;
 
-use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
-
-class EcheanceTest extends \PHPUnit_Framework_TestCase
+class UniqueConstraintViolationException extends \Exception
 {
-    public function testHasDateAndTypeAndTour()
-    {
-        $date = new \DateTime();
-        $echeance = new Echeance($date, Echeance::CANTONALES, true);
-
-        $this->assertEquals($date, $echeance->getDate());
-        $this->assertEquals(
-            'Cantonales ' . $date->format('Y'),
-            $echeance->getNom()
-        );
-        $this->assertTrue($echeance->isSecondTour());
-    }
-
-    public function testNomIsString()
-    {
-        $this->setExpectedException(
-            '\InvalidArgumentException'
-        );
-
-        $date = new \DateTime();
-        $echeance = new Echeance($date, 12);
-    }
 }

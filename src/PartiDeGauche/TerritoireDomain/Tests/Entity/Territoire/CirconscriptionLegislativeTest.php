@@ -20,7 +20,6 @@
 namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionLegislative;
-use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
 
 class CirconscriptionLegislativeTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,13 +31,5 @@ class CirconscriptionLegislativeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($departement, $circo->getDepartement());
         $this->assertEquals(12, $circo->getCode());
         $this->assertEquals('Circonscription 12 - TestDep', $circo->getNom());
-    }
-}
-
-class DepartementMock extends Departement
-{
-    public function __construct($nom)
-    {
-        $this->nom = $nom;
     }
 }
