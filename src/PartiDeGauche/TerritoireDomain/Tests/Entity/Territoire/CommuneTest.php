@@ -19,7 +19,6 @@
 
 namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
@@ -48,15 +47,6 @@ class CommuneTest extends \PHPUnit_Framework_TestCase
             new Departement(new Region(82, 'Rhône-Alpes'), 38, 'Isère'),
             $commune->getDepartement()
         );
-    }
-
-    public function testIsCirconscription()
-    {
-        $region = new Region(82, 'Rhône-Alpes');
-        $departement = new Departement($region, 38, 'Isère');
-        $commune = new Commune($departement, 185, 'Grenoble');
-
-        $this->assertTrue($commune instanceof CirconscriptionInterface);
     }
 
     public function testIsTerritoire()

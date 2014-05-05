@@ -19,14 +19,12 @@
 
 namespace PartiDeGauche\ElectionsBundle\Repository;
 
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException
-    as DoctrineException;
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException as DoctrineException;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 use PartiDeGauche\ElectionDomain\Entity\Election\Election;
 use PartiDeGauche\ElectionDomain\Entity\Election\ElectionRepositoryInterface;
-use PartiDeGauche\ElectionDomain\Entity\Election
-    \UniqueConstraintViolationException;
+use PartiDeGauche\ElectionDomain\Entity\Election\UniqueConstraintViolationException;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 
 class DoctrineElectionRepository implements ElectionRepositoryInterface
 {
@@ -44,7 +42,7 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
 
     public function get(
         Echeance $echeance,
-        CirconscriptionInterface $circonscription
+        AbstractTerritoire $circonscription
     ) {
         return $this
             ->em

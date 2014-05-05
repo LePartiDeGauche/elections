@@ -20,7 +20,6 @@
 namespace PartiDeGauche\ElectionsBundle\Tests\Repository;
 
 use PartiDeGauche\ElectionDomain\Tests\Entity\ElectionRepositoryTestTrait;
-use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DoctrineElectionRepositoryTest extends WebTestCase
@@ -38,9 +37,6 @@ class DoctrineElectionRepositoryTest extends WebTestCase
                 $c->query('DELETE FROM ' . $table->getName());
             }
         });
-
-        $this->circonscription1 = new Region(11, 'Île-de-France');
-        $this->circonscription2 = new Region(24, 'Centre');
     }
 
     public function __construct()

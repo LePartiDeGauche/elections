@@ -19,11 +19,11 @@
 
 namespace PartiDeGauche\ElectionDomain\Tests\Entity;
 
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\EcheanceRepositoryInterface;
 use PartiDeGauche\ElectionDomain\Entity\Election\ElectionRepositoryInterface;
 use PartiDeGauche\ElectionDomain\Entity\Election\ElectionUninominale;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
 /**
  * Le repository doit être vidé au moyen d'une fonction setUp avant chaque
@@ -31,22 +31,6 @@ use PartiDeGauche\ElectionDomain\Entity\Election\ElectionUninominale;
  */
 trait ElectionRepositoryTestTrait
 {
-    /**
-     * Pour ne pas introduire de dépendance avec PartiDeGauche\TerritoireDomain
-     * la class de test utilisant ce trait doit fournir elle-même les objets
-     * utilisés comme paramêtre CirconscriptionInterface des élections testées.
-     * @var CirconscriptionInterface
-     */
-    protected $circonscription1;
-
-    /**
-     * Pour ne pas introduire de dépendance avec PartiDeGauche\TerritoireDomain
-     * la class de test utilisant ce trait doit fournir elle-même les objets
-     * utilisés comme paramêtre CirconscriptionInterface des élections testées.
-     * @var CirconscriptionInterface
-     */
-    protected $circonscription2;
-
     /**
      * Le repository echeance que l'on teste. Doit être configuré par la classe
      * de test utilisant le trait.
@@ -65,7 +49,7 @@ trait ElectionRepositoryTestTrait
     {
         $date = new \DateTime();
         $echeance = new Echeance($date, Echeance::CANTONALES);
-        $circonscription = $this->circonscription1;
+        $circonscription = new Region(11, 'Île-de-France');
         $election = new ElectionUninominale($echeance, $circonscription);
 
         $this->electionRepository->add($election);
@@ -102,8 +86,8 @@ trait ElectionRepositoryTestTrait
     {
         $date = new \DateTime();
         $echeance = new Echeance($date, Echeance::CANTONALES);
-        $circonscription = $this->circonscription1;
-        $circonscription2 = $this->circonscription2;
+        $circonscription = new Region(11, 'Île-de-France');
+        $circonscription2 = new Region(38, 'Jesaisplus');
         $election = new ElectionUninominale($echeance, $circonscription);
         $election2 = new ElectionUninominale($echeance, $circonscription2);
         $election3 = new ElectionUninominale($echeance, $circonscription);
@@ -136,7 +120,7 @@ trait ElectionRepositoryTestTrait
         $date = new \DateTime();
         $echeance = new Echeance($date, Echeance::CANTONALES);
         $echeance2 = new Echeance($date, Echeance::CANTONALES);
-        $circonscription = $this->circonscription1;
+        $circonscription = new Region(11, 'Île-de-France');
         $election = new ElectionUninominale($echeance, $circonscription);
         $election2 = new ElectionUninominale($echeance, $circonscription);
 

@@ -22,11 +22,10 @@ namespace PartiDeGauche\ElectionDomain\Entity\Election;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use PartiDeGauche\ElectionDomain\CandidatInterface;
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
-use PartiDeGauche\ElectionDomain\TerritoireInterface;
 use PartiDeGauche\ElectionDomain\VO\Score;
 use PartiDeGauche\ElectionDomain\VO\VoteInfo;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 
 abstract class Election
 {
@@ -43,7 +42,7 @@ abstract class Election
 
     /**
      * La circonscription de l'élection.
-     * @var CirconscriptionInterface
+     * @var AbstractTerritoire
      */
     private $circonscription;
 
@@ -71,7 +70,7 @@ abstract class Election
      */
     public function __construct(
         Echeance $echeance,
-        CirconscriptionInterface $circonscription
+        AbstractTerritoire $circonscription
     ) {
         $this->candidats = new ArrayCollection();
 
@@ -101,7 +100,7 @@ abstract class Election
 
     /**
      * Récupérer la circonscription de l'élection.
-     * @return CirconscriptionInterface La circonscription de l'élection.
+     * @return AbstractTerritoire La circonscription de l'élection.
      */
     public function getCirconscription()
     {
@@ -120,13 +119,13 @@ abstract class Election
     /**
      * Récupérer le score d'un candidat sur un territoire ou par défaut
      * sur la circonscription.
-     * @param  CandidatInterface   $candidat   Le candidat.
-     * @param  TerritoireInterface $territoire Le territoire.
-     * @return Score               Le score du candidat.
+     * @param  CandidatInterface  $candidat   Le candidat.
+     * @param  AbstractTerritoire $territoire Le territoire.
+     * @return Score              Le score du candidat.
      */
     public function getScoreCandidat(
         CandidatInterface $candidat,
-        TerritoireInterface $territoire = null
+        AbstractTerritoire $territoire = null
     ) {
         if (null === $territoire) {
             $territoire = $this->circonscription;
@@ -141,7 +140,7 @@ abstract class Election
      * Récupérer les informations sur le vote.
      * @return VoteInfo Les informations sur le vote.
      */
-    public function getVoteInfo(TerritoireInterface $territoire = null)
+    public function getVoteInfo(AbstractTerritoire $territoire = null)
     {
         if (null === $territoire) {
             $territoire = $this->circonscription;
@@ -157,14 +156,14 @@ abstract class Election
      * déjà réglé dans l'élection, le nombre de voix est mis à jour
      * automatiquement. Sinon, pourcentage et voix sont effacés et remplacés
      * par cette donnée.
-     * @param float               $pourcentage Le nombre de voix du candidat.
-     * @param CandidatInterface   $candidat    Le candidat dont il s'agit.
-     * @param TerritoireInterface $territoire  Le territoire du score.
+     * @param float              $pourcentage Le nombre de voix du candidat.
+     * @param CandidatInterface  $candidat    Le candidat dont il s'agit.
+     * @param AbstractTerritoire $territoire  Le territoire du score.
      */
     public function setPourcentageCandidat(
         $pourcentage,
         CandidatInterface $candidat,
-        TerritoireInterface $territoire = null
+        AbstractTerritoire $territoire = null
     ) {
         if (!in_array($candidat, $this->getCandidats())) {
             $this->addCandidat($candidat);
@@ -202,14 +201,14 @@ abstract class Election
      * suffrages exprimés est déjà réglé dans l'élection, le pourcentage est
      * mis à jour automatiquement. Sinon, pourcentage et voix sont effacés et
      * remplacés par cette donnée.
-     * @param integer             $voix       Le nombre de voix du candidat.
-     * @param CandidatInterface   $candidat   Le candidat dont il s'agit.
-     * @param TerritoireInterface $territoire Le territoire du score.
+     * @param integer            $voix       Le nombre de voix du candidat.
+     * @param CandidatInterface  $candidat   Le candidat dont il s'agit.
+     * @param AbstractTerritoire $territoire Le territoire du score.
      */
     public function setVoixCandidat(
         $voix,
         CandidatInterface $candidat,
-        TerritoireInterface $territoire = null
+        AbstractTerritoire $territoire = null
     ) {
         if (!in_array($candidat, $this->getCandidats())) {
             $this->addCandidat($candidat);
@@ -244,7 +243,7 @@ abstract class Election
      */
     public function setVoteInfo(
         VoteInfo $voteInfo,
-        TerritoireInterface $territoire = null
+        AbstractTerritoire $territoire = null
     ) {
         if (null === $territoire) {
             $territoire = $this->circonscription;
@@ -256,7 +255,7 @@ abstract class Election
 
     private function getScoreAssignmentCandidat(
         CandidatInterface $candidat,
-        TerritoireInterface $territoire
+        AbstractTerritoire $territoire
     ) {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('candidat', $candidat))
@@ -274,7 +273,7 @@ abstract class Election
         return $scoreAssignment;
     }
 
-    private function getVoteInfoAssignment(TerritoireInterface $territoire)
+    private function getVoteInfoAssignment(AbstractTerritoire $territoire)
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('territoire', $territoire))

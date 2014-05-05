@@ -19,9 +19,7 @@
 
 namespace PartiDeGauche\TerritoireDomain\Entity\Territoire;
 
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
-
-abstract class AbstractTerritoire implements CirconscriptionInterface
+abstract class AbstractTerritoire
 {
     private $id;
 

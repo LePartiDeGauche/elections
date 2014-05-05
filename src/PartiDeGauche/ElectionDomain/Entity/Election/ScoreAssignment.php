@@ -21,7 +21,7 @@ namespace PartiDeGauche\ElectionDomain\Entity\Election;
 
 use PartiDeGauche\ElectionDomain\CandidatInterface;
 use PartiDeGauche\ElectionDomain\VO\Score;
-use PartiDeGauche\ElectionDomain\TerritoireInterface;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 
 class ScoreAssignment
 {
@@ -39,7 +39,7 @@ class ScoreAssignment
     public function __construct(
         Election $election,
         CandidatInterface $candidat,
-        TerritoireInterface $territoire,
+        AbstractTerritoire $territoire,
         Score $score = null
     ) {
         $this->scoreVO = $score;

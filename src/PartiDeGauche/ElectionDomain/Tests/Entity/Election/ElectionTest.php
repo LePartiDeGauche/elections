@@ -21,7 +21,7 @@ namespace PartiDeGauche\ElectionDomain\Tests\Entity\Election;
 
 use PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
-use PartiDeGauche\ElectionDomain\Tests\Entity\CirconscriptionMock;
+use PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire\TerritoireMock;
 use PartiDeGauche\ElectionDomain\VO\VoteInfo;
 
 class ElectionTest extends \PHPUnit_Framework_TestCase
@@ -29,7 +29,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
     public function testCanHaveCandidat()
     {
         $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
-        $circonscription = new CirconscriptionMock();
+        $circonscription = new TerritoireMock();
         $election = new ElectionMock($echeance, $circonscription);
 
         $candidat = new PersonneCandidate('Naël', 'Ferret');
@@ -41,7 +41,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
     public function testHasEcheanceAndCirconscription()
     {
         $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
-        $circonscription = new CirconscriptionMock();
+        $circonscription = new TerritoireMock();
         $election = new ElectionMock($echeance, $circonscription);
 
         $this->assertEquals($echeance, $election->getEcheance());
@@ -51,7 +51,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
     public function testPourcentageByCandidatAndTerritoire()
     {
         $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
-        $circonscription = new CirconscriptionMock();
+        $circonscription = new TerritoireMock();
         $territoire = new TerritoireMock();
         $candidat = new PersonneCandidate('Naël', 'Ferret');
         $election = new ElectionMock($echeance, $circonscription);
@@ -80,7 +80,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
     public function testVoixByCandidatAndTerritoire()
     {
         $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
-        $circonscription = new CirconscriptionMock();
+        $circonscription = new TerritoireMock();
         $territoire = new TerritoireMock();
         $candidat = new PersonneCandidate('Naël', 'Ferret');
         $election = new ElectionMock($echeance, $circonscription);
@@ -109,7 +109,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
     public function testVoteInfoByTerritoire()
     {
         $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
-        $circonscription = new CirconscriptionMock();
+        $circonscription = new TerritoireMock();
         $election = new ElectionMock($echeance, $circonscription);
 
         $voteInfo1 = new VoteInfo(1000, 500, 499);
@@ -126,7 +126,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
     public function testVoteInfoDefault()
     {
         $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
-        $circonscription = new CirconscriptionMock();
+        $circonscription = new TerritoireMock();
         $election = new ElectionMock($echeance, $circonscription);
 
         $voteInfo = new VoteInfo(1000, 500, 499);
@@ -137,7 +137,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
     public function testVoteInfoDefaultParamIsCirconscription()
     {
         $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
-        $circonscription = new CirconscriptionMock();
+        $circonscription = new TerritoireMock();
         $election = new ElectionMock($echeance, $circonscription);
 
         $voteInfo = new VoteInfo(1000, 500, 499);

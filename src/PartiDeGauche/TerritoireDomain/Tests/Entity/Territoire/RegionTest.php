@@ -19,7 +19,6 @@
 
 namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
@@ -38,13 +37,6 @@ class RegionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(11, $region->getCode());
         $this->assertEquals('Île-de-France', $region->getNom());
-    }
-
-    public function testIsCirconscription()
-    {
-        $region = new Region(11, 'Île-de-France');
-
-        $this->assertTrue($region instanceof CirconscriptionInterface);
     }
 
     public function testIsTerritoire()

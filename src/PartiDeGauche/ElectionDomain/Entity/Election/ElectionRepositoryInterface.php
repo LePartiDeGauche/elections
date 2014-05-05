@@ -19,8 +19,9 @@
 
 namespace PartiDeGauche\ElectionDomain\Entity\Election;
 
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
+use PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 
 /**
  * Voir PartiDeGauche\ElectionDomain\Tests\Entity\Election
@@ -37,13 +38,13 @@ interface ElectionRepositoryInterface
 
     /**
      * Retourne l'élection avec cette échéance et cette circonscription.
-     * @param  Echeance                 $echeance        L'échéance.
-     * @param  CirconscriptionInterface $circonscription La circonscription.
-     * @return Election                 L'élection ou NULL.
+     * @param  Echeance           $echeance        L'échéance.
+     * @param  AbstractTerritoire $circonscription La circonscription.
+     * @return Election           L'élection ou NULL.
      */
     public function get(
         Echeance $echeance,
-        CirconscriptionInterface $circonscription
+        AbstractTerritoire $circonscription
     );
 
     /**

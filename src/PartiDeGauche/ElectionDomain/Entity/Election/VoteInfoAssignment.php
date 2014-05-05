@@ -20,7 +20,7 @@
 namespace PartiDeGauche\ElectionDomain\Entity\Election;
 
 use PartiDeGauche\ElectionDomain\VO\VoteInfo;
-use PartiDeGauche\ElectionDomain\TerritoireInterface;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 
 class VoteInfoAssignment
 {
@@ -31,7 +31,7 @@ class VoteInfoAssignment
 
     public function __construct(
         Election $election,
-        TerritoireInterface $territoire,
+        AbstractTerritoire $territoire,
         VoteInfo $voteInfo = null
     ) {
         $this->voteInfoVO = $voteInfo;

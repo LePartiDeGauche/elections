@@ -19,7 +19,6 @@
 
 namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
-use PartiDeGauche\ElectionDomain\CirconscriptionInterface;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
@@ -50,18 +49,6 @@ class DepartementTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(92, $departement->getCode());
         $this->assertEquals('Hauts-de-Seine', $departement->getNom());
         $this->assertEquals($region, $departement->getRegion());
-    }
-
-    public function testIsCirconscription()
-    {
-        $region = new Region(11, 'Île-de-France');
-        $departement = new Departement(
-            $region,
-            92,
-            'Hauts-de-Seine'
-        );
-
-        $this->assertTrue($departement instanceof CirconscriptionInterface);
     }
 
     public function testIsTerritoire()

@@ -22,7 +22,7 @@ namespace PartiDeGauche\ElectionDomain\Tests\Entity\Candidat;
 use PartiDeGauche\ElectionDomain\CandidatInterface;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 use PartiDeGauche\ElectionDomain\Entity\Candidat\ListeCandidate;
-use PartiDeGauche\ElectionDomain\Tests\Entity\CirconscriptionMock;
+use PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire\TerritoireMock;
 use PartiDeGauche\ElectionDomain\Tests\Entity\Election\ElectionMock;
 
 class ListeCandidateTest extends \PHPUnit_Framework_TestCase
@@ -30,7 +30,7 @@ class ListeCandidateTest extends \PHPUnit_Framework_TestCase
     public function testHasNomAndElection()
     {
         $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
-        $circonscription = new CirconscriptionMock();
+        $circonscription = new TerritoireMock();
         $election = new ElectionMock($echeance, $circonscription);
         $listeCandidate = new ListeCandidate($election, 'Liste FdG');
 
@@ -41,7 +41,7 @@ class ListeCandidateTest extends \PHPUnit_Framework_TestCase
     public function testIsCandidat()
     {
         $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
-        $circonscription = new CirconscriptionMock();
+        $circonscription = new TerritoireMock();
         $election = new ElectionMock($echeance, $circonscription);
         $listeCandidate = new ListeCandidate($election, 'Liste FdG');
 
@@ -55,7 +55,7 @@ class ListeCandidateTest extends \PHPUnit_Framework_TestCase
         );
 
         $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
-        $circonscription = new CirconscriptionMock();
+        $circonscription = new TerritoireMock();
         $election = new ElectionMock($echeance, $circonscription);
         $listeCandidate = new ListeCandidate($election, 12);
     }
