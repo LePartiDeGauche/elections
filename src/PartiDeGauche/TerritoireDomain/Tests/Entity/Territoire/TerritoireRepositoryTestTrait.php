@@ -153,7 +153,7 @@ trait TerritoireRepositoryTestTrait
         );
 
         // On ajoute les 3 territoires dans le repository.
-        $this->repository->add($commune);
+        $this->repository->add($arrondissementCommunal);
         $this->repository->save();
 
         // On test les contraintes d'unicité une à une.

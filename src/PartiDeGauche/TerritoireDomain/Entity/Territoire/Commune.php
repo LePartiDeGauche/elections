@@ -60,8 +60,20 @@ class Commune extends AbstractTerritoire
 
         $this->arrondissements = new ArrayCollection();
         $this->departement = $departement;
+        $departement->addCommune($this);
         $this->code = $code;
         $this->nom = $nom;
+    }
+
+    /**
+     * @internal
+     * @param ArrondissementCommunal $arrondissement L'arrondissement.
+     */
+    public function addArrondissement(ArrondissementCommunal $arrondissement)
+    {
+        if (!$this->arrondissements->contains($arrondissement)) {
+            $this->arrondissements[] = $arrondissement;
+        }
     }
 
     /**

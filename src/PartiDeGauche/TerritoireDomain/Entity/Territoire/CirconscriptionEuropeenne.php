@@ -44,6 +44,17 @@ class CirconscriptionEuropeenne extends AbstractTerritoire
     }
 
     /**
+     * @internal
+     * @param Region $region La région à ajouter.
+     */
+    public function addRegion(Region $region)
+    {
+        if (!$this->regions->contains($region)) {
+            $this->regions[] = $region;
+        }
+    }
+
+    /**
      * Récupérer le code de la circo.
      * @return integer Le code.
      */

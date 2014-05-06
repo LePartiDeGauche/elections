@@ -51,12 +51,14 @@ class ArrondissementCommunalTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals('Test', $arrondissementCommunal->getNom());
-
         $this->assertEquals('ZE', $arrondissementCommunal->getCode());
-
         $this->assertEquals(
             $commune,
             $arrondissementCommunal->getCommune()
+        );
+        $this->assertContains(
+            $arrondissementCommunal,
+            $commune->getArrondissements()
         );
     }
 

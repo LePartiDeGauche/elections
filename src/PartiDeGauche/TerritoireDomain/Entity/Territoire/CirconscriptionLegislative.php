@@ -42,6 +42,7 @@ class CirconscriptionLegislative extends AbstractTerritoire
     {
         $this->code = (int) $code;
         $this->departement = $departement;
+        $departement->addCirconscriptionLegislative($this);
     }
 
     /**

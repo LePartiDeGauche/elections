@@ -55,6 +55,7 @@ class ArrondissementCommunal extends AbstractTerritoire
         ;
 
         $this->commune = $commune;
+        $commune->addArrondissement($this);
         $this->code = $code;
         $this->nom = $nom;
     }

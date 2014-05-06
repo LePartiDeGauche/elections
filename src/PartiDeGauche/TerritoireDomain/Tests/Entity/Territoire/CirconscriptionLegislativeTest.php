@@ -20,16 +20,23 @@
 namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionLegislative;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
 class CirconscriptionLegislativeTest extends \PHPUnit_Framework_TestCase
 {
     public function testHasDepartementAndCode()
     {
-        $departement = new DepartementMock('TestDep');
+        $region = new Region(82, 'Rhône-Alpes');
+        $departement = new Departement($region, 38, 'Isère');
         $circo = new CirconscriptionLegislative($departement, 12);
 
         $this->assertEquals($departement, $circo->getDepartement());
         $this->assertEquals(12, $circo->getCode());
-        $this->assertEquals('Circonscription 12 - TestDep', $circo->getNom());
+        $this->assertEquals('Circonscription 12 - Isère', $circo->getNom());
+        $this->assertContains(
+            $circo,
+            $departement->getCirconscriptionsLegislatives()
+        );
     }
 }

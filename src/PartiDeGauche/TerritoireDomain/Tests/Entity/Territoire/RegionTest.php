@@ -20,10 +20,22 @@
 namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
 class RegionTest extends \PHPUnit_Framework_TestCase
 {
+    public function testCirconscriptionEuropeenne()
+    {
+        $region = new Region(11, 'Île-de-France');
+        $circo = new CirconscriptionEuropeenne(1, 'Île-de-France');
+
+        $region->setCirconscriptionEuropeenne($circo);
+
+        $this->assertEquals($circo, $region->getCirconscriptionEuropeenne());
+        $this->assertContains($region, $circo->getRegions());
+    }
+
     public function testCodeIsStringMax4()
     {
         $this->setExpectedException('\InvalidArgumentException');

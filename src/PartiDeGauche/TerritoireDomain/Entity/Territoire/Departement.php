@@ -75,8 +75,32 @@ class Departement extends AbstractTerritoire
         $this->code = (string) $code;
         $this->nom = $nom;
         $this->region = $region;
+        $region->addDepartement($this);
         $this->communes = new ArrayCollection();
         $this->circonscriptionsLegislatives = new ArrayCollection();
+    }
+
+    /**
+     * @internal
+     * @param Commune $commune La commune à ajouter
+     */
+    public function addCirconscriptionLegislative(
+        CirconscriptionLegislative $circonscription
+    ) {
+        if (!$this->circonscriptionsLegislatives->contains($circonscription)) {
+            $this->circonscriptionsLegislatives[] = $circonscription;
+        }
+    }
+
+    /**
+     * @internal
+     * @param Commune $commune La commune à ajouter
+     */
+    public function addCommune(Commune $commune)
+    {
+        if (!$this->communes->contains($commune)) {
+            $this->communes[] = $commune;
+        }
     }
 
     /**

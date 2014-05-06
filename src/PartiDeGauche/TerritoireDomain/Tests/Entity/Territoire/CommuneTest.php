@@ -40,13 +40,12 @@ class CommuneTest extends \PHPUnit_Framework_TestCase
         $commune = new Commune($departement, 185, 'Grenoble');
 
         $this->assertEquals('Grenoble', $commune->getNom());
-
         $this->assertEquals(185, $commune->getCode());
-
         $this->assertEquals(
-            new Departement(new Region(82, 'Rhône-Alpes'), 38, 'Isère'),
+            $departement,
             $commune->getDepartement()
         );
+        $this->assertContains($commune, $departement->getCommunes());
     }
 
     public function testIsTerritoire()

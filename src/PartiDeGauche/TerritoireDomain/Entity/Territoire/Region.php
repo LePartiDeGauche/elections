@@ -70,6 +70,22 @@ class Region extends AbstractTerritoire
         $this->departements = new ArrayCollection();
     }
 
+    /**
+     * @internal
+     * Pour mettre à jour les relations entre les entités.
+     * @param Departement $departement Le département à ajouter
+     */
+    public function addDepartement(Departement $departement)
+    {
+        if (!$this->departements->contains($departement)) {
+            $this->departements[] = $departement;
+        }
+    }
+
+    /**
+     * Récupérer la circonscriptions européennes de la réion.
+     * @return CirconscriptionEuropeenne La circonscription européenne.
+     */
     public function getCirconscriptionEuropeenne()
     {
         return $this->circonscriptionEuropeenne;
@@ -91,5 +107,24 @@ class Region extends AbstractTerritoire
     public function getDepartements()
     {
         return $this->departements;
+    }
+
+    /**
+     * Régler la circonscription européenne.
+     * @param CirconscriptionEuropeenne $circonscription La circonscription
+     */
+    public function setCirconscriptionEuropeenne(
+        CirconscriptionEuropeenne $circonscription
+    ) {
+        if (!$this->circonscriptionEuropeenne) {
+            $this->circonscriptionEuropeenne = $circonscription;
+            $circonscription->addRegion($this);
+
+            return $this;
+        }
+
+        throw new Exception(
+            'On ne peut pas changer la circonscription européenne d\'une région'
+        );
     }
 }

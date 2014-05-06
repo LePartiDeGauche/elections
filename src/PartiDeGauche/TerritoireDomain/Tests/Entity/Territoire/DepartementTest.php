@@ -49,6 +49,7 @@ class DepartementTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(92, $departement->getCode());
         $this->assertEquals('Hauts-de-Seine', $departement->getNom());
         $this->assertEquals($region, $departement->getRegion());
+        $this->assertContains($departement, $region->getDepartements());
     }
 
     public function testIsTerritoire()
