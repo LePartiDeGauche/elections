@@ -32,7 +32,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
         $circonscription = new TerritoireMock();
         $election = new ElectionMock($echeance, $circonscription);
 
-        $candidat = new PersonneCandidate('Naël', 'Ferret');
+        $candidat = new PersonneCandidate('FG', 'Naël', 'Ferret');
         $election->addCandidat($candidat);
 
         $this->assertContains($candidat, $election->getCandidats());
@@ -53,7 +53,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
         $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
         $circonscription = new TerritoireMock();
         $territoire = new TerritoireMock();
-        $candidat = new PersonneCandidate('Naël', 'Ferret');
+        $candidat = new PersonneCandidate('FG', 'Naël', 'Ferret');
         $election = new ElectionMock($echeance, $circonscription);
 
         $election->setPourcentageCandidat(33.33, $candidat);
@@ -82,7 +82,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
         $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
         $circonscription = new TerritoireMock();
         $territoire = new TerritoireMock();
-        $candidat = new PersonneCandidate('Naël', 'Ferret');
+        $candidat = new PersonneCandidate('FG', 'Naël', 'Ferret');
         $election = new ElectionMock($echeance, $circonscription);
 
         $election->setVoixCandidat(1000, $candidat);

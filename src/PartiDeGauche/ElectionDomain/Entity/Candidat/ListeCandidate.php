@@ -39,13 +39,14 @@ class ListeCandidate extends Candidat
      * Constructeur d'objet personne.
      * @param string $nom Le nom de la liste.
      */
-    public function __construct(Election $election, $nom)
+    public function __construct(Election $election, $nuance, $nom)
     {
         \Assert\that($nom)->string();
 
         $this->election = $election;
         $election->addCandidat($this);
         $this->nom = $nom;
+        $this->nuance = (string) $nuance;
     }
 
     /**

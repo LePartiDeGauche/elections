@@ -32,8 +32,9 @@ class ListeCandidateTest extends \PHPUnit_Framework_TestCase
         $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
         $circonscription = new TerritoireMock();
         $election = new ElectionMock($echeance, $circonscription);
-        $listeCandidate = new ListeCandidate($election, 'Liste FdG');
+        $listeCandidate = new ListeCandidate($election, 'FG', 'Liste FdG');
 
+        $this->assertEquals('FG', $listeCandidate->getNuance());
         $this->assertEquals('Liste FdG', (string) $listeCandidate);
         $this->assertEquals($election, $listeCandidate->getElection());
     }
@@ -43,7 +44,7 @@ class ListeCandidateTest extends \PHPUnit_Framework_TestCase
         $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
         $circonscription = new TerritoireMock();
         $election = new ElectionMock($echeance, $circonscription);
-        $listeCandidate = new ListeCandidate($election, 'Liste FdG');
+        $listeCandidate = new ListeCandidate($election, 'FG', 'Liste FdG');
 
         $this->assertTrue($listeCandidate instanceof CandidatInterface);
     }
@@ -57,6 +58,6 @@ class ListeCandidateTest extends \PHPUnit_Framework_TestCase
         $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
         $circonscription = new TerritoireMock();
         $election = new ElectionMock($echeance, $circonscription);
-        $listeCandidate = new ListeCandidate($election, 12);
+        $listeCandidate = new ListeCandidate($election, 'FG', 12);
     }
 }

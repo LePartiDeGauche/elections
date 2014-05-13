@@ -24,4 +24,15 @@ use PartiDeGauche\ElectionDomain\CandidatInterface;
 abstract class Candidat implements CandidatInterface
 {
     private $id;
+
+    /**
+     * La nuance ministérielle du candidat.
+     * @var string
+     */
+    protected $nuance;
+
+    public function getNuance()
+    {
+        return $this->nuance;
+    }
 }

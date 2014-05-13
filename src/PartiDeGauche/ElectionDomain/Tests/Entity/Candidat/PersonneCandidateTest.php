@@ -26,14 +26,15 @@ class PersonneCandidateTest extends \PHPUnit_Framework_TestCase
 {
     public function testHasNomAndPrenom()
     {
-        $personneCandidate = new PersonneCandidate('Naël', 'Ferret');
+        $personneCandidate = new PersonneCandidate('FG', 'Naël', 'Ferret');
 
+        $this->assertEquals('FG', $personneCandidate->getNuance());
         $this->assertEquals('Naël Ferret', (string) $personneCandidate);
     }
 
     public function testIsCandidat()
     {
-        $personneCandidate = new PersonneCandidate('Naël', 'Ferret');
+        $personneCandidate = new PersonneCandidate('FG', 'Naël', 'Ferret');
 
         $this->assertTrue($personneCandidate instanceof CandidatInterface);
     }
@@ -44,7 +45,7 @@ class PersonneCandidateTest extends \PHPUnit_Framework_TestCase
             '\InvalidArgumentException'
         );
 
-        $personneCandidate = new PersonneCandidate('Naël', 42);
+        $personneCandidate = new PersonneCandidate('FG', 'Naël', 42);
     }
 
     public function testPrenomIsString()
@@ -53,6 +54,6 @@ class PersonneCandidateTest extends \PHPUnit_Framework_TestCase
             '\InvalidArgumentException'
         );
 
-        $personneCandidate = new PersonneCandidate(42, 'Ferret');
+        $personneCandidate = new PersonneCandidate('FG', 42, 'Ferret');
     }
 }

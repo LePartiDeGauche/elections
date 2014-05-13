@@ -22,6 +22,10 @@ PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat:
             type: integer
             generator:
                 strategy: AUTO
+    fields:
+        nuance:
+            type: string
+            length: 255
 
 PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance:
     type: entity

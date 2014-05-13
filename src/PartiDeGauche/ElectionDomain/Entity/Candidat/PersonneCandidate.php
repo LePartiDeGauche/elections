@@ -38,13 +38,14 @@ class PersonneCandidate extends Candidat
      * @param string $prenom Le prénom de la personne.
      * @param string $nom    Le nom de la personne.
      */
-    public function __construct($prenom, $nom)
+    public function __construct($nuance, $prenom, $nom)
     {
         \Assert\that($prenom)->string();
         \Assert\that($nom)->string();
 
         $this->prenom = $prenom;
         $this->nom = $nom;
+        $this->nuance = (string) $nuance;
     }
 
     public function __toString()
