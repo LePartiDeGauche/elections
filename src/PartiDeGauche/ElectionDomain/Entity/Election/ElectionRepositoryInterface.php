@@ -21,6 +21,7 @@ namespace PartiDeGauche\ElectionDomain\Entity\Election;
 
 use PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
+use PartiDeGauche\ElectionDomain\VO\Score;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 
 /**
@@ -45,6 +46,23 @@ interface ElectionRepositoryInterface
     public function get(
         Echeance $echeance,
         AbstractTerritoire $circonscription
+    );
+
+    /**
+     * Récupérer le score d'un candidat sur un ou des territoires données à une
+     * échéance donnée. S'il n'est pas disponible, il doit être calculé à partir
+     * d'échelons plus petit. Seuls le sommage des communes pour obtenir le
+     * score des départements et des départements pour obtenir le score des
+     * régions est disponible.
+     * @param  Echeance $echeance   L'échéance.
+     * @param  mixed    $territoire Un AbstractTerritoire ou un tableau.
+     * @param  mixed    $candidat   Le candidat ou un tableau, ou une specification.
+     * @return Score    Le score.
+     */
+    public function getScore(
+        Echeance $echeance,
+        $territoire,
+        $candidat
     );
 
     /**

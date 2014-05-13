@@ -21,6 +21,7 @@ namespace PartiDeGauche\ElectionDomain\Entity\Echeance;
 
 class Echeance
 {
+
     const PREMIER_TOUR = false;
     const SECOND_TOUR = true;
     const MUNICIPALES = 1;

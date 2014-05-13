@@ -19,11 +19,17 @@
 
 namespace PartiDeGauche\ElectionDomain\Tests\Entity;
 
+use PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate;
+use PartiDeGauche\ElectionDomain\Entity\Candidat\Specification\CandidatNuanceSpecification;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\EcheanceRepositoryInterface;
 use PartiDeGauche\ElectionDomain\Entity\Election\ElectionRepositoryInterface;
 use PartiDeGauche\ElectionDomain\Entity\Election\ElectionUninominale;
+use PartiDeGauche\ElectionDomain\VO\Score;
+use PartiDeGauche\ElectionDomain\VO\VoteInfo;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
 
 /**
  * Le repository doit être vidé au moyen d'une fonction setUp avant chaque
@@ -44,6 +50,13 @@ trait ElectionRepositoryTestTrait
      * @var ElectionRepositoryInterface
      */
     protected $electionRepository;
+
+    /**
+     * Le repository territoire dans lequel stocker les territoires où ont
+     * lieu les élections.
+     * @var TerritoireRepositoryInterface
+     */
+    protected $territoireRepository;
 
     public function testAddAndGet()
     {
@@ -112,6 +125,149 @@ trait ElectionRepositoryTestTrait
         $this->assertNull(
             $this->echeanceRepository->get($date, Echeance::CANTONALES)
         );
+    }
+
+    public function testSetAndGetScoreSurCirconscription()
+    {
+        $date = new \DateTime();
+        $echeance = new Echeance($date, Echeance::CANTONALES);
+        $circonscription = new Region(11, 'Île-de-France');
+        $election = new ElectionUninominale($echeance, $circonscription);
+
+        $candidat = new PersonneCandidate('FG', 'Naël', 'Ferret');
+        $election->addCandidat($candidat);
+
+        $voteInfo = new VoteInfo(1000, 900, 800);
+        $election->setVoteInfo($voteInfo);
+        $election->setVoixCandidat(400, $candidat);
+
+        $this->electionRepository->add($election);
+        $this->electionRepository->save();
+
+        $score = $this->electionRepository->getScore(
+            $echeance,
+            $circonscription,
+            $candidat
+        );
+
+        $this->assertEquals(400, $score->toVoix());
+    }
+
+    public function testSetSurCircoAndGetOtherScore()
+    {
+        $date = new \DateTime();
+        $echeance = new Echeance($date, Echeance::CANTONALES);
+        $circonscription = new Region(11, 'Île-de-France');
+        $election = new ElectionUninominale($echeance, $circonscription);
+
+        $candidat = new PersonneCandidate('FG', 'Naël', 'Ferret');
+        $election->addCandidat($candidat);
+
+        $voteInfo = new VoteInfo(1000, 900, 800);
+        $election->setVoteInfo($voteInfo);
+        $election->setVoixCandidat(400, $candidat);
+
+        $this->electionRepository->add($election);
+        $this->electionRepository->save();
+
+        $region = new Region(38, 'Jesaisplus');
+        $this->territoireRepository->add($region);
+        $this->territoireRepository->save();
+        $score = $this->electionRepository->getScore(
+            $echeance,
+            $region,
+            $candidat
+        );
+
+        $this->assertEquals(null, $score);
+    }
+
+    public function testSetSurCircoAndGetHigher()
+    {
+        $date = new \DateTime();
+        $echeance = new Echeance($date, Echeance::CANTONALES);
+        $region = new Region(11, 'Île-de-France');
+        $departement = new Departement($region, 93, 'Seine-Saint-Denis');
+        $departement2 = new Departement($region, 92, 'Hauts-de-Seine');
+        $commune2 = new Commune($departement2, 20, 'Jesaispas');
+        $this->territoireRepository->add($departement);
+        $this->territoireRepository->add($commune2);
+        $this->territoireRepository->add($region);
+        $election = new ElectionUninominale($echeance, $departement);
+        $election2 = new ElectionUninominale($echeance, $commune2);
+
+        $candidat = new PersonneCandidate('FG', 'Naël', 'Ferret');
+        $election->addCandidat($candidat);
+        $candidat2 = new PersonneCandidate('PG', 'Lea', 'Ferret');
+        $election2->addCandidat($candidat2);
+
+        $voteInfo1 = new VoteInfo(1000, 900, 800);
+        $election->setVoteInfo($voteInfo1);
+        $voteInfo2 = new VoteInfo(100, 90, 80);
+        $election2->setVoteInfo($voteInfo2);
+        $election->setVoixCandidat(400, $candidat);
+        $election2->setVoixCandidat(50, $candidat2);
+
+        $this->electionRepository->add($election);
+        $this->electionRepository->add($election2);
+        $this->electionRepository->save();
+
+        $score = $this->electionRepository->getScore(
+            $echeance,
+            $region,
+            array($candidat, $candidat2)
+        );
+
+        $this->assertEquals(450, $score->toVoix());
+
+        $score = $this->electionRepository->getScore(
+            $echeance,
+            $region,
+            new CandidatNuanceSpecification(array(
+                'FG',
+                'PG',
+            ))
+        );
+
+        $this->assertEquals(450, $score->toVoix());
+    }
+
+    public function testSetSurSmallerAndGetCircoScore()
+    {
+        $date = new \DateTime();
+        $echeance = new Echeance($date, Echeance::CANTONALES);
+        $region = new Region(11, 'Île-de-France');
+        $departement = new Departement($region, 93, 'Seine-Saint-Denis');
+        $departement2 = new Departement($region, 92, 'Hauts-de-Seine');
+        $commune2 = new Commune($departement2, 20, 'Jesaispas');
+        $this->territoireRepository->add($departement);
+        $this->territoireRepository->add($commune2);
+        $this->territoireRepository->add($region);
+        $election = new ElectionUninominale($echeance, $region);
+
+        $candidat = new PersonneCandidate('FG', 'Naël', 'Ferret');
+        $election->addCandidat($candidat);
+
+        $voteInfo1 = new VoteInfo(1000, 900, 800);
+        $election->setVoteInfo($voteInfo1, $departement);
+        $voteInfo2 = new VoteInfo(100, 90, 80);
+        $election->setVoteInfo($voteInfo2, $commune2);
+        $election->setVoixCandidat(400, $candidat, $departement);
+        $election->setVoixCandidat(50, $candidat, $commune2);
+
+        $this->electionRepository->add($election);
+        $this->electionRepository->save();
+
+        $this->assertContains($departement, $region->getDepartements());
+        $this->assertContains($departement2, $region->getDepartements());
+
+        $score = $this->electionRepository->getScore(
+            $echeance,
+            $region,
+            $candidat
+        );
+
+        $this->assertEquals(450, $score->toVoix());
     }
 
     // Il ne peut y avoir qu'une élection par échéance et par circonscription.

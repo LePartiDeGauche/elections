@@ -86,6 +86,7 @@ PartiDeGauche\ElectionDomain\Entity\Election\ElectionUninominale:
     manyToMany:
         candidats:
             targetEntity: PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate
+            cascade: ["persist"]
 
 PartiDeGauche\ElectionDomain\Entity\Candidat\ListeCandidate:
     type: entity
@@ -97,6 +98,7 @@ PartiDeGauche\ElectionDomain\Entity\Candidat\ListeCandidate:
         election:
             targetEntity: PartiDeGauche\ElectionDomain\Entity\Election\ElectionDeListe
             inversedBy: candidats
+            cascade: ["persist"]
 
 PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate:
     type: entity

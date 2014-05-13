@@ -50,7 +50,7 @@ class DoctrineElectionRepositoryTest extends WebTestCase
         $this->echeanceRepository =
             $client->getContainer()->get('repository.echeance');
 
-        $this->circonscriptionRepository =
+        $this->territoireRepository =
             $client->getContainer()->get('repository.territoire');
     }
 }
