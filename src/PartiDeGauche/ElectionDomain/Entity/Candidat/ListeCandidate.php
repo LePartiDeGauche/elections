@@ -24,12 +24,6 @@ use PartiDeGauche\ElectionDomain\Entity\Election\Election;
 class ListeCandidate extends Candidat
 {
     /**
-     * L'élection à laquelle la liste était candidate.
-     * @var Election
-     */
-    private $election;
-
-    /**
      * Le nom de la liste.
      * @var string
      */
@@ -56,14 +50,5 @@ class ListeCandidate extends Candidat
     public function __toString()
     {
         return $this->nom;
-    }
-
-    /**
-     * Récupérer l'élection à laquelle participait la liste.
-     * @return Election L'élection à laquelle participait la liste.
-     */
-    public function getElection()
-    {
-        return $this->election;
     }
 }

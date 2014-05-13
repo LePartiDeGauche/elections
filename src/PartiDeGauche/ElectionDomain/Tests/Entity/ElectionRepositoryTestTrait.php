@@ -134,7 +134,7 @@ trait ElectionRepositoryTestTrait
         $circonscription = new Region(11, 'Île-de-France');
         $election = new ElectionUninominale($echeance, $circonscription);
 
-        $candidat = new PersonneCandidate('FG', 'Naël', 'Ferret');
+        $candidat = new PersonneCandidate($election, 'FG', 'Naël', 'Ferret');
         $election->addCandidat($candidat);
 
         $voteInfo = new VoteInfo(1000, 900, 800);
@@ -160,7 +160,7 @@ trait ElectionRepositoryTestTrait
         $circonscription = new Region(11, 'Île-de-France');
         $election = new ElectionUninominale($echeance, $circonscription);
 
-        $candidat = new PersonneCandidate('FG', 'Naël', 'Ferret');
+        $candidat = new PersonneCandidate($election, 'FG', 'Naël', 'Ferret');
         $election->addCandidat($candidat);
 
         $voteInfo = new VoteInfo(1000, 900, 800);
@@ -196,9 +196,9 @@ trait ElectionRepositoryTestTrait
         $election = new ElectionUninominale($echeance, $departement);
         $election2 = new ElectionUninominale($echeance, $commune2);
 
-        $candidat = new PersonneCandidate('FG', 'Naël', 'Ferret');
+        $candidat = new PersonneCandidate($election, 'FG', 'Naël', 'Ferret');
         $election->addCandidat($candidat);
-        $candidat2 = new PersonneCandidate('PG', 'Lea', 'Ferret');
+        $candidat2 = new PersonneCandidate($election2, 'PG', 'Lea', 'Ferret');
         $election2->addCandidat($candidat2);
 
         $voteInfo1 = new VoteInfo(1000, 900, 800);
@@ -245,7 +245,7 @@ trait ElectionRepositoryTestTrait
         $this->territoireRepository->add($region);
         $election = new ElectionUninominale($echeance, $region);
 
-        $candidat = new PersonneCandidate('FG', 'Naël', 'Ferret');
+        $candidat = new PersonneCandidate($election, 'FG', 'Naël', 'Ferret');
         $election->addCandidat($candidat);
 
         $voteInfo1 = new VoteInfo(1000, 900, 800);

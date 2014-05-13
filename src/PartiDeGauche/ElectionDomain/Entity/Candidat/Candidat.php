@@ -26,6 +26,21 @@ abstract class Candidat implements CandidatInterface
     private $id;
 
     /**
+     * L'élection à laquelle le candidat participait.
+     * @var Election
+     */
+    protected $election;
+
+    /**
+     * Récupérer l'élection à laquelle participait la liste.
+     * @return Election L'élection à laquelle participait la liste.
+     */
+    public function getElection()
+    {
+        return $this->election;
+    }
+
+    /**
      * La nuance ministérielle du candidat.
      * @var string
      */

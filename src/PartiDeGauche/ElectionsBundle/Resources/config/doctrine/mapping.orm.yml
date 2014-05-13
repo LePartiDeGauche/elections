@@ -26,6 +26,11 @@ PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat:
         nuance:
             type: string
             length: 255
+    manyToOne:
+        election:
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Election\Election
+            inversedBy: candidats
+            cascade: ["persist"]
 
 PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance:
     type: entity
@@ -44,14 +49,6 @@ PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance:
             type: integer
         secondTour:
             type: boolean
-
-PartiDeGauche\ElectionDomain\Entity\Election\ElectionDeListe:
-    type: entity
-    oneToMany:
-        candidats:
-            targetEntity: PartiDeGauche\ElectionDomain\Entity\Candidat\ListeCandidate
-            cascade: { }
-            mappedBy: election
 
 PartiDeGauche\ElectionDomain\Entity\Election\Election:
     type: entity
@@ -81,12 +78,21 @@ PartiDeGauche\ElectionDomain\Entity\Election\Election:
             mappedBy: election
             cascade: ["persist"]
 
+PartiDeGauche\ElectionDomain\Entity\Election\ElectionDeListe:
+    type: entity
+    oneToMany:
+        candidats:
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Candidat\ListeCandidate
+            cascade: ["persist"]
+            mappedBy: election
+
 PartiDeGauche\ElectionDomain\Entity\Election\ElectionUninominale:
     type: entity
-    manyToMany:
+    oneToMany:
         candidats:
             targetEntity: PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate
             cascade: ["persist"]
+            mappedBy: election
 
 PartiDeGauche\ElectionDomain\Entity\Candidat\ListeCandidate:
     type: entity
@@ -94,11 +100,6 @@ PartiDeGauche\ElectionDomain\Entity\Candidat\ListeCandidate:
         nom:
             type: string
             length: 255
-    manyToOne:
-        election:
-            targetEntity: PartiDeGauche\ElectionDomain\Entity\Election\ElectionDeListe
-            inversedBy: candidats
-            cascade: ["persist"]
 
 PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate:
     type: entity

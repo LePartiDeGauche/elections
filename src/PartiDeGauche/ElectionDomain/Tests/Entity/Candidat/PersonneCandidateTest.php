@@ -21,39 +21,70 @@ namespace PartiDeGauche\ElectionDomain\Tests\Entity\Candidat;
 
 use PartiDeGauche\ElectionDomain\CandidatInterface;
 use PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate;
+use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
+use PartiDeGauche\ElectionDomain\Tests\Entity\Election\ElectionMock;
+use PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire\TerritoireMock;
 
 class PersonneCandidateTest extends \PHPUnit_Framework_TestCase
 {
-    public function testHasNomAndPrenom()
+    public function testHasNomAndPrenomAndElection()
     {
-        $personneCandidate = new PersonneCandidate('FG', 'Naël', 'Ferret');
+        $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
+        $circonscription = new TerritoireMock();
+        $election = new ElectionMock($echeance, $circonscription);
+        $personneCandidate = new PersonneCandidate(
+            $election,
+            'FG',
+            'Naël',
+            'Ferret'
+        );
 
         $this->assertEquals('FG', $personneCandidate->getNuance());
         $this->assertEquals('Naël Ferret', (string) $personneCandidate);
+        $this->assertEquals($election, $personneCandidate->getElection());
     }
 
     public function testIsCandidat()
     {
-        $personneCandidate = new PersonneCandidate('FG', 'Naël', 'Ferret');
+        $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
+        $circonscription = new TerritoireMock();
+        $election = new ElectionMock($echeance, $circonscription);
+        $personneCandidate = new PersonneCandidate(
+            $election,
+            'FG',
+            'Naël',
+            'Ferret'
+        );
 
         $this->assertTrue($personneCandidate instanceof CandidatInterface);
     }
 
     public function testNomIsString()
     {
+        $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
+        $circonscription = new TerritoireMock();
+        $election = new ElectionMock($echeance, $circonscription);
         $this->setExpectedException(
             '\InvalidArgumentException'
         );
 
-        $personneCandidate = new PersonneCandidate('FG', 'Naël', 42);
+        $personneCandidate = new PersonneCandidate($election,'FG', 'Naël', 42);
     }
 
     public function testPrenomIsString()
     {
+        $echeance = new Echeance(new \DateTime, Echeance::CANTONALES);
+        $circonscription = new TerritoireMock();
+        $election = new ElectionMock($echeance, $circonscription);
         $this->setExpectedException(
             '\InvalidArgumentException'
         );
 
-        $personneCandidate = new PersonneCandidate('FG', 42, 'Ferret');
+        $personneCandidate = new PersonneCandidate(
+            $election,
+            'FG',
+            42,
+            'Ferret'
+        );
     }
 }
