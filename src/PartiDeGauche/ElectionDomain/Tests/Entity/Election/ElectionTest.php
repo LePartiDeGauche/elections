@@ -56,6 +56,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
         $election = new ElectionMock($echeance, $circonscription);
         $candidat = new PersonneCandidate($election, 'FG', 'Naël', 'Ferret');
 
+        $election->addCandidat($candidat);
         $election->setPourcentageCandidat(33.33, $candidat);
         $score = $election->getScoreCandidat($candidat);
         $this->assertEquals(33.33, $score->toPourcentage());
@@ -85,6 +86,7 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
         $election = new ElectionMock($echeance, $circonscription);
         $candidat = new PersonneCandidate($election, 'FG', 'Naël', 'Ferret');
 
+        $election->addCandidat($candidat);
         $election->setVoixCandidat(1000, $candidat);
         $score = $election->getScoreCandidat($candidat);
         $this->assertEquals(1000, $score->toVoix());
