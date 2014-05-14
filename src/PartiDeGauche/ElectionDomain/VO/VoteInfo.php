@@ -47,19 +47,19 @@ class VoteInfo
      */
     public function __construct($inscrits, $votants, $exprimes)
     {
-        \Assert\that($inscrits)->nullOr()
+        \Assert\that((integer) $inscrits)->nullOr()
             ->integer()
             ->min($votants)
             ->min($exprimes)
         ;
 
-        \Assert\that($votants)->nullOr()
+        \Assert\that((integer) $votants)->nullOr()
             ->integer()
             ->max($inscrits)
             ->min($exprimes)
         ;
 
-        \Assert\that($exprimes)->nullOr()
+        \Assert\that((integer) $exprimes)->nullOr()
             ->integer()
             ->max($votants)
             ->max($inscrits)

@@ -32,15 +32,6 @@ class VoteInfoTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(250, $voteInfo->getExprimes());
     }
 
-    public function testExprimesIsInteger()
-    {
-        $this->setExpectedException(
-            '\InvalidArgumentException'
-        );
-
-        $voteInfo = new VoteInfo(500, 250, 'test');
-    }
-
     public function testExprimesLessThanVotantsLessThanInscrits()
     {
         $this->setExpectedException(
@@ -66,24 +57,6 @@ class VoteInfoTest extends \PHPUnit_Framework_TestCase
         );
 
         $voteInfo = new VoteInfo(1000, null, 2000);
-    }
-
-    public function testInscritsIsInteger()
-    {
-        $this->setExpectedException(
-            '\InvalidArgumentException'
-        );
-
-        $voteInfo = new VoteInfo('test', 500, 250);
-    }
-
-    public function testVotantsIsInteger()
-    {
-        $this->setExpectedException(
-            '\InvalidArgumentException'
-        );
-
-        $voteInfo = new VoteInfo(500, 'test', 250);
     }
 
     public function testVotantsLessThanInscrits()

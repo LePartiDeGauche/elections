@@ -65,7 +65,7 @@ class Echeance
         $type,
         $secondTour = self::PREMIER_TOUR
     ) {
-        \Assert\that($type)
+        \Assert\that((integer) $type)
             ->inArray(array(
                 self::MUNICIPALES,
                 self::CANTONALES,
@@ -80,8 +80,8 @@ class Echeance
         ;
 
         $this->date = $date;
-        $this->type = $type;
-        $this->secondTour = $secondTour;
+        $this->type = (integer) $type;
+        $this->secondTour = (boolean) $secondTour;
     }
 
     /**
@@ -138,5 +138,14 @@ class Echeance
     public function isSecondTour()
     {
         return $this->secondTour;
+    }
+
+    /**
+     * Afficher l'échéance sous forme de chaîne de caractères.
+     * @return string [description]
+     */
+    public function __toString()
+    {
+        return $this->getNom();
     }
 }
