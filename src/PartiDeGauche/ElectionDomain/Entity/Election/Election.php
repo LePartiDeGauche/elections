@@ -166,7 +166,10 @@ abstract class Election
         AbstractTerritoire $territoire = null
     ) {
         if (!in_array($candidat, $this->getCandidats())) {
-            $this->addCandidat($candidat);
+            throw new Exception(
+                'Le candidat doit déjà participer à l\'élection'
+                . 'avant d\'avoir un score'
+            );
         }
 
         if (null === $territoire) {
@@ -211,7 +214,10 @@ abstract class Election
         AbstractTerritoire $territoire = null
     ) {
         if (!in_array($candidat, $this->getCandidats())) {
-            $this->addCandidat($candidat);
+            throw new Exception(
+                'Le candidat doit déjà participer à l\'élection'
+                . 'avant d\'avoir un score'
+            );
         }
 
         if (null === $territoire) {
