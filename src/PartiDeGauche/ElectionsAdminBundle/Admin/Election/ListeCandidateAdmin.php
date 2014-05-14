@@ -31,8 +31,9 @@ class ListeCandidateAdmin extends Admin
     {
         $listMapper
             ->addIdentifier('nom')
-            ->add('election.echeance')
             ->add('nuance')
+            ->add('election.echeance')
+            ->add('election.circonscription')
         ;
     }
 }
