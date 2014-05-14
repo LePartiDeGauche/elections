@@ -17,13 +17,13 @@
 services:
     repository.election.doctrine:
         class:        "PartiDeGauche\ElectionsBundle\Repository\DoctrineElectionRepository"
-        arguments:    ["@doctrine.orm.entity_manager"]
+        arguments:    ["@doctrine"]
     repository.echeance.doctrine:
         class:        "PartiDeGauche\ElectionsBundle\Repository\DoctrineEcheanceRepository"
-        arguments:    ["@doctrine.orm.entity_manager"]
+        arguments:    ["@doctrine"]
     repository.territoire.doctrine:
         class:        "PartiDeGauche\ElectionsBundle\Repository\DoctrineTerritoireRepository"
-        arguments:    ["@doctrine.orm.entity_manager"]
+        arguments:    ["@doctrine"]
     repository.election:
         alias: repository.election.doctrine
     repository.echeance:

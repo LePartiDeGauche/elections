@@ -33,9 +33,9 @@ use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
 class DoctrineElectionRepository implements ElectionRepositoryInterface
 {
-    public function __construct($em)
+    public function __construct($doctrine)
     {
-        $this->em = $em;
+        $this->em = $doctrine->getManager();
     }
 
     public function add(Election $element)

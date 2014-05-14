@@ -24,9 +24,9 @@ use PartiDeGauche\ElectionDomain\Entity\Echeance\EcheanceRepositoryInterface;
 
 class DoctrineEcheanceRepository implements EcheanceRepositoryInterface
 {
-    public function __construct($em)
+    public function __construct($doctrine)
     {
-        $this->em = $em;
+        $this->em = $doctrine->getManager();
     }
 
     public function add(Echeance $element)

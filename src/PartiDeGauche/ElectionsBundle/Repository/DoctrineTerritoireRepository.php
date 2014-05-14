@@ -27,10 +27,10 @@ use PartiDeGauche\TerritoireDomain\Entity\Territoire\UniqueConstraintViolationEx
 
 class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
 {
-    public function __construct($em)
+    public function __construct($doctrine)
     {
-        $this->em = $em;
-        $em->getConnection()->getConfiguration()->setSQLLogger(null);
+        $this->em = $doctrine->getManager();
+        $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
     }
 
     public function add(AbstractTerritoire $element)
@@ -173,7 +173,6 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
         try {
             $this->checkUniqueRules();
             $this->em->flush();
-            $this->em->clear();
         } catch (DoctrineException $exception) {
             throw new UniqueConstraintViolationException(
                 $exception->getMessage()
