@@ -3,6 +3,13 @@ parti_de_gauche_elections:
     type:     annotation
     prefix:   /
 
+#login
+login_check:
+    path: /login_check
+
+logout:
+    path:   /logout
+
 # Sonata admin
 admin:
     resource: '@SonataAdminBundle/Resources/config/routing/sonata_admin.xml'

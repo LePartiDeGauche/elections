@@ -8,3 +8,6 @@ parameters:
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    admin_user:        admin
+    admin_password:    password
