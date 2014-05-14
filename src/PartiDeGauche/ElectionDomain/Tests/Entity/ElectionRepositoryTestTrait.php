@@ -205,6 +205,8 @@ trait ElectionRepositoryTestTrait
         $election->addCandidat($candidat);
         $candidat2 = new PersonneCandidate($election2, 'PG', 'Lea', 'Ferret');
         $election2->addCandidat($candidat2);
+        $candidat3 = new PersonneCandidate($election2, 'FG', 'Leo', 'Ferret');
+        $election2->addCandidat($candidat3);
 
         $voteInfo1 = new VoteInfo(1000, 900, 800);
         $election->setVoteInfo($voteInfo1);
@@ -212,6 +214,7 @@ trait ElectionRepositoryTestTrait
         $election2->setVoteInfo($voteInfo2);
         $election->setVoixCandidat(400, $candidat);
         $election2->setVoixCandidat(50, $candidat2);
+        $election2->setVoixCandidat(10, $candidat3);
 
         $this->electionRepository->add($election);
         $this->electionRepository->add($election2);
@@ -220,10 +223,10 @@ trait ElectionRepositoryTestTrait
         $score = $this->electionRepository->getScore(
             $echeance,
             $region,
-            array($candidat, $candidat2)
+            array($candidat, $candidat2, $candidat3)
         );
 
-        $this->assertEquals(450, $score->toVoix());
+        $this->assertEquals(460, $score->toVoix());
 
         $score = $this->electionRepository->getScore(
             $echeance,
@@ -234,7 +237,7 @@ trait ElectionRepositoryTestTrait
             ))
         );
 
-        $this->assertEquals(450, $score->toVoix());
+        $this->assertEquals(460, $score->toVoix());
     }
 
     public function testSetSurSmallerAndGetCircoScore()

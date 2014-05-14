@@ -85,7 +85,7 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
 
         $score = $this->doScoreQuery($echeance, $territoire, $candidat);
         if ($score) {
-            return $score->getScoreVo();
+            return $score;
         }
 
         if ($territoire instanceof Region) {
@@ -94,9 +94,7 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
             return $this->getScore($echeance, $departements, $candidat);
         }
         if ($territoire instanceof Departement) {
-            $communes = $territoire->getCommunes()->toArray();
-
-            return $this->getScore($echeance, $communes, $candidat);
+            return $this->doDepartementQuery($echeance, $territoire, $candidat);
         }
     }
 
@@ -120,24 +118,26 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
         }
     }
 
-    private function doScoreQuery(
+    private function doDepartementQuery(
         Echeance $echeance,
-        $territoire,
+        Departement $territoire,
         $candidat
     ) {
         $query = $this
             ->em
             ->createQuery(
-                'SELECT score
+                'SELECT SUM(score.scoreVO.voix)
                 FROM
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune
+                    territoire,
                     PartiDeGauche\ElectionDomain\Entity\Election\ScoreAssignment
                     score
                 JOIN score.election election
-                WHERE election.echeance = :echeance
-                    AND score.territoire = :territoire
-                    AND
-                        score.candidat
-                        IN (' . $this->getCandidatSubquery($candidat) . ')'
+                WHERE territoire.departement  = :territoire
+                    AND score.territoire = territoire
+                    AND score.candidat
+                        IN (' . $this->getCandidatSubquery($candidat) . ')
+                    AND election.echeance = :echeance'
             )
             ->setParameters(array(
                 'echeance' => $echeance,
@@ -150,7 +150,43 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
             $query->setParameter('candidat', $candidat);
         }
 
-        return $query->getOneOrNullResult();
+        $result = $query->getSingleScalarResult();
+
+        return $result ? Score::fromVoix($result) : null;
+    }
+
+    private function doScoreQuery(
+        Echeance $echeance,
+        $territoire,
+        $candidat
+    ) {
+        $query = $this
+            ->em
+            ->createQuery(
+                'SELECT SUM(score.scoreVO.voix)
+                FROM
+                    PartiDeGauche\ElectionDomain\Entity\Election\ScoreAssignment
+                    score
+                JOIN score.election election
+                WHERE  score.territoire  = :territoire
+                    AND score.candidat
+                        IN (' . $this->getCandidatSubquery($candidat) . ')
+                    AND election.echeance = :echeance'
+            )
+            ->setParameters(array(
+                'echeance' => $echeance,
+                'territoire' => $territoire,
+            ))
+        ;
+        if ($candidat instanceof CandidatNuanceSpecification) {
+            $query->setParameter('nuances', $candidat->getNuances());
+        } else {
+            $query->setParameter('candidat', $candidat);
+        }
+
+        $result = $query->getSingleScalarResult();
+
+        return $result ? Score::fromVoix($result) : null;
     }
 
     private function getCandidatSubquery($candidat)
