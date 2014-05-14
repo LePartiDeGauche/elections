@@ -73,6 +73,12 @@ interface TerritoireRepositoryInterface
     public function getDepartement($code);
 
     /**
+     * Récupérer la France.
+     * @return Pays La France.
+     */
+    public function getPays();
+
+    /**
      * Récupérer une région en fonction de son code.
      * @param  integer $code Le code de la région.
      * @return Region  La région avec ce département.

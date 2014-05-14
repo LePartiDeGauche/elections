@@ -280,6 +280,13 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement:
             mappedBy: departement
             cascade: [ "remove" ]
 
+PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays:
+    type: entity
+    fields:
+        nom:
+            type: string
+            length: 255
+
 PartiDeGauche\TerritoireDomain\Entity\Territoire\Region:
     type: entity
     fields:

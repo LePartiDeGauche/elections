@@ -86,6 +86,10 @@ trait TerritoireRepositoryTestTrait
                 'Sud-Ouest'
             )->getNom()
         );
+        $this->assertEquals(
+            'France',
+            $this->repository->getPays()->getNom()
+        );
 
         // On teste remove
         $this->repository->remove($this->repository->getRegion(82));

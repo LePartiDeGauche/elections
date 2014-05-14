@@ -19,13 +19,11 @@
 
 namespace PartiDeGauche\ElectionsBundle\Repository;
 
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException
-    as DoctrineException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException as DoctrineException;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
-use PartiDeGauche\TerritoireDomain\Entity\Territoire
-    \TerritoireRepositoryInterface;
-use PartiDeGauche\TerritoireDomain\Entity\Territoire
-    \UniqueConstraintViolationException;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\TerritoireRepositoryInterface;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\UniqueConstraintViolationException;
 
 class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
 {
@@ -115,6 +113,37 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
         ;
     }
 
+    public function getPays()
+    {
+        $pays = $this
+            ->em
+            ->getRepository(
+                '\PartiDeGauche\TerritoireDomain\Entity\Territoire'
+                . '\Pays'
+            )
+            ->findOneByNom('France')
+        ;
+
+        if (!$pays) {
+            $entities = $this->em->getUnitOfWork()->getScheduledEntityInsertions();
+
+            foreach ($entities as $entity) {
+                if ($entity instanceof Pays) {
+                    $pays = $entity;
+                    break;
+                }
+            }
+        }
+
+        if (!$pays) {
+            $pays = new Pays();
+            $this->add($pays);
+        }
+
+        return $pays;
+
+    }
+
     public function getRegion($code)
     {
         return $this
@@ -189,6 +218,10 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
                     $exist = $this->getCirconscriptionEuropeenne(
                         $entity->getNom()
                     );
+                    break;
+                case 'PartiDeGauche\TerritoireDomain\Entity' .
+                '\Territoire\Pays':
+                    $exist = $repo->findOneByNom('France');
                     break;
                 default:
                     $exist = $repo->findOneByCode($entity->getCode());
