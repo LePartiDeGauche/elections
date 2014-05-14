@@ -86,6 +86,11 @@ trait ElectionRepositoryTestTrait
             $this->echeanceRepository->get($date, Echeance::CANTONALES)
         );
 
+        $this->assertContains(
+            $echeance,
+            $this->echeanceRepository->getAll()
+        );
+
         // La circonscription doit être automatiquement enregistrée et
         // accessible par getCirconscription()
         $this->assertEquals(
@@ -179,7 +184,7 @@ trait ElectionRepositoryTestTrait
             $candidat
         );
 
-        $this->assertEquals(null, $score);
+        $this->assertTrue(null === $score);
     }
 
     public function testSetSurCircoAndGetHigher()

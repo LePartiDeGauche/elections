@@ -19,6 +19,8 @@
 
 namespace PartiDeGauche\ElectionDomain\Entity\Echeance;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Voir PartiDeGauche\ElectionDomain\Tests\Entity\Echeance
  * \EcheanceRepositoryTestTrait pour les contraintes que à respecter en
@@ -39,6 +41,12 @@ interface EcheanceRepositoryInterface
      * @return Echeance L'échéance portant ce nom.
      */
     public function get(\DateTime $date, $type);
+
+    /**
+     * Récupérer toutes les échéances connues.
+     * @return ArrayCollection Toutes les échéances connues.
+     */
+    public function getAll();
 
     /**
      * Retire l'élection du repository si elle existe.

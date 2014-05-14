@@ -48,6 +48,17 @@ class DoctrineEcheanceRepository implements EcheanceRepositoryInterface
         ;
     }
 
+    public function getAll()
+    {
+        return $this
+            ->em
+            ->getRepository(
+                '\PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance'
+            )
+            ->findAll()
+        ;
+    }
+
     /**
      * Retire l'élection du repository si elle existe.
      * @param Election $element L'élection à retirer.
