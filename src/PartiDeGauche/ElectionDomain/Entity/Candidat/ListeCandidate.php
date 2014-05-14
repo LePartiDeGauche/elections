@@ -46,8 +46,17 @@ class ListeCandidate extends Candidat
      * Retourne le nom de l'élection.
      * @return string Le nom de l'élection.
      */
-    public function __toString()
+    public function getNom()
     {
         return $this->nom;
+    }
+
+    /**
+     * Retourne le nom de l'élection.
+     * @return string Le nom de l'élection.
+     */
+    public function __toString()
+    {
+        return $this->getNom();
     }
 }
