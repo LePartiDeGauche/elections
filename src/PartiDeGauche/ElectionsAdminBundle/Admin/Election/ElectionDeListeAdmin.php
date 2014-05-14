@@ -22,17 +22,17 @@ namespace PartiDeGauche\ElectionsAdminBundle\Admin\Election;
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 
-class ElectionAdmin extends Admin
+class ElectionDeListeAdmin extends Admin
 {
-    protected $baseRouteName = 'election';
-    protected $baseRoutePattern = 'election';
+    protected $baseRouteName = 'election_de_liste';
+    protected $baseRoutePattern = 'election_de_liste';
 
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
             ->addIdentifier('echeance')
             ->add('circonscription')
-            ->add('candidats')
+            ->add('candidats', 'array')
         ;
     }
 }

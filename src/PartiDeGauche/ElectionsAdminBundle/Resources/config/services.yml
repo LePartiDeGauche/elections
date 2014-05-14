@@ -69,13 +69,44 @@ services:
             - ~
         calls:
             - [ setTranslationDomain, [PartiDeGaucheElectionsAdminBundle]]
-    sonata.admin.election.election:
-        class: PartiDeGauche\ElectionsAdminBundle\Admin\Election\ElectionAdmin
+    sonata.admin.election.election_uninominale:
+        class: PartiDeGauche\ElectionsAdminBundle\Admin\Election\ElectionUninominaleAdmin
         tags:
-            - { name: sonata.admin, manager_type: orm, group: "Élections", label: "Élections" }
+            - { name: sonata.admin, manager_type: orm, group: "Élections", label: "Élections uninominales" }
         arguments:
             - ~
-            - PartiDeGauche\ElectionDomain\Entity\Election\Election
+            - PartiDeGauche\ElectionDomain\Entity\Election\ElectionUninominale
+            - ~
+        calls:
+            - [ setTranslationDomain, [PartiDeGaucheElectionsAdminBundle]]
+    sonata.admin.election.election_de_liste:
+        class: PartiDeGauche\ElectionsAdminBundle\Admin\Election\ElectionDeListeAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Élections", label: "Élections de listes" }
+        arguments:
+            - ~
+            - PartiDeGauche\ElectionDomain\Entity\Election\ElectionDeListe
+            - ~
+        calls:
+            - [ setTranslationDomain, [PartiDeGaucheElectionsAdminBundle]]
+
+    sonata.admin.election.liste_candidate:
+        class: PartiDeGauche\ElectionsAdminBundle\Admin\Election\ListeCandidateAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Élections", label: "Listes candidates" }
+        arguments:
+            - ~
+            - PartiDeGauche\ElectionDomain\Entity\Candidat\ListeCandidate
+            - ~
+        calls:
+            - [ setTranslationDomain, [PartiDeGaucheElectionsAdminBundle]]
+    sonata.admin.election.personne_candiate:
+        class: PartiDeGauche\ElectionsAdminBundle\Admin\Election\PersonneCandidateAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Élections", label: "Personnes candidates" }
+        arguments:
+            - ~
+            - PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate
             - ~
         calls:
             - [ setTranslationDomain, [PartiDeGaucheElectionsAdminBundle]]
