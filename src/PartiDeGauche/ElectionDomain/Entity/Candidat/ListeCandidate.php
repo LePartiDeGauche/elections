@@ -38,7 +38,6 @@ class ListeCandidate extends Candidat
         \Assert\that($nom)->string();
 
         $this->election = $election;
-        $election->addCandidat($this);
         $this->nom = $nom;
         $this->nuance = (string) $nuance;
     }
