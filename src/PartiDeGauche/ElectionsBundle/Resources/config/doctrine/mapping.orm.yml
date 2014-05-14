@@ -26,11 +26,6 @@ PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat:
         nuance:
             type: string
             length: 255
-    manyToOne:
-        election:
-            targetEntity: PartiDeGauche\ElectionDomain\Entity\Election\Election
-            inversedBy: candidats
-            cascade: ["persist"]
 
 PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance:
     type: entity
@@ -100,6 +95,11 @@ PartiDeGauche\ElectionDomain\Entity\Candidat\ListeCandidate:
         nom:
             type: string
             length: 255
+    manyToOne:
+        election:
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Election\ElectionDeListe
+            inversedBy: candidats
+            cascade: ["persist"]
 
 PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate:
     type: entity
@@ -110,6 +110,12 @@ PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate:
         prenom:
             type: string
             length: 255
+            nullable: true
+    manyToOne:
+        election:
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Election\ElectionUninominale
+            inversedBy: candidats
+            cascade: ["persist"]
 
 PartiDeGauche\ElectionDomain\Entity\Election\ScoreAssignment:
     type: entity
@@ -127,6 +133,7 @@ PartiDeGauche\ElectionDomain\Entity\Election\ScoreAssignment:
             inversedBy: scores
         candidat:
             targetEntity: PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat
+            cascade: ["persist"]
         territoire:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire
 
