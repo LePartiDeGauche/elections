@@ -42,7 +42,7 @@ class PersonneCandidate extends Candidat
      */
     public function __construct(Election $election, $nuance, $prenom, $nom)
     {
-        \Assert\that($prenom)->string();
+        \Assert\that($prenom)->nullOr()->string();
         \Assert\that($nom)->string();
 
         $this->election = $election;
@@ -51,8 +51,15 @@ class PersonneCandidate extends Candidat
         $this->nuance = (string) $nuance;
     }
 
+    public function getNom()
+    {
+        return $this->prenom 
+            . ($this->prenom && $this->nom ? ' ' : '')
+            . $this->nom;
+    }
+
     public function __toString()
     {
-        return $this->prenom . ' ' . $this->nom;
+        return $this->getNom();
     }
 }
