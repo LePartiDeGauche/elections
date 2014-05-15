@@ -28,8 +28,8 @@ class ResultatController extends Controller
 {
 
     private $nuancess = array(
-        array('FG', 'LCOP', 'LCOM' ,'LPG', 'LFG'),
         array('EXG', 'LEXG'),
+        array('FG', 'LCOP', 'LCOM' ,'LPG', 'LFG'),
         array('SOC', 'LSOC', 'LUG'),
         array('VEC', 'LVEC'),
         array('AUT', 'LAUT'),
