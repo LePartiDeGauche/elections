@@ -17,6 +17,13 @@
  #}
 
 {% extends 'PartiDeGaucheElectionsBundle::layout.html.twig' %}
+
+{% macro pourcentage(valeur, total) %}
+  {{ valeur and total ? ((valeur/total) * 100)|number_format(2) ~ '%' : 'NA' }}
+{% endmacro %}
+
+{% import _self as format %}
+
 {% block content %}
   <div class="row">
     <div clas="col-md-12">
@@ -30,14 +37,47 @@
               </th>
             {% endfor %}
           </tr>
-          {% for nuance, score in resultats|first %}
+          <tr>
+            <th>Inscrits</th>
+            {% for echeance in resultats %}
+              <td>
+                {{ echeance.inscrits }}
+              </td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Votants</th>
+            {% for echeance in resultats %}
+              <td>
+                {{ echeance.votants }}
+              </td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Votants/Inscrits</th>
+            {% for echeance in resultats %}
+              <td>
+                {{ format.pourcentage(echeance.votants, echeance.inscrits) }}
+              </td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Exprimés</th>
+            {% for echeance in resultats %}
+              <td>
+                {{ echeance.exprimes }}
+              </td>
+            {% endfor %}
+          </tr>
+          {% for nuance, score in (resultats|first)|slice(3) %}
             <tr>
               <th>
                 {{ nuance }}
               </th>
               {% for echeance in resultats %}
                 <td>
-                  {{ echeance[nuance] }}
+                  {{ echeance[nuance].toVoix|default('NA') }}<br/>
+                  {{ format.pourcentage(echeance[nuance].toVoix, echeance.exprimes) }}
                 </td>
               {% endfor %}
             <tr>

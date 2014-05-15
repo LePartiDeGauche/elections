@@ -103,6 +103,14 @@ class ResultatController extends Controller
         $result = array();
         foreach ($this->get('repository.echeance')->getAll() as $echeance) {
             $result[$echeance->getNom()] = array();
+            $voteInfo = $this
+                ->get('repository.election')
+                ->getVoteInfo($echeance, $territoire)
+            ;
+            $result[$echeance->getNom()]['inscrits'] = $voteInfo->getInscrits();
+            $result[$echeance->getNom()]['votants'] = $voteInfo->getVotants();
+            $result[$echeance->getNom()]['exprimes'] = $voteInfo->getExprimes();
+
             foreach ($this->nuancess as $nuances) {
                 $score =
                     $this
@@ -113,8 +121,7 @@ class ResultatController extends Controller
                             new CandidatNuanceSpecification($nuances)
                         )
                     ;
-                $result[$echeance->getNom()][$nuances[0]] =
-                    ($score ? $score->toVoix() : null);
+                $result[$echeance->getNom()][$nuances[0]] = $score;
             }
         }
 

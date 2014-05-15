@@ -27,15 +27,19 @@ use PartiDeGauche\ElectionDomain\Entity\Election\Election;
 use PartiDeGauche\ElectionDomain\Entity\Election\ElectionRepositoryInterface;
 use PartiDeGauche\ElectionDomain\Entity\Election\UniqueConstraintViolationException;
 use PartiDeGauche\ElectionDomain\VO\Score;
+use PartiDeGauche\ElectionDomain\VO\VoteInfo;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
 class DoctrineElectionRepository implements ElectionRepositoryInterface
 {
+    private $cache = array();
+
     public function __construct($doctrine)
     {
         $this->em = $doctrine->getManager();
+        $this->cache['getVoteInfo'] = new \SplObjectStorage();
     }
 
     public function add(Election $element)
@@ -66,34 +70,94 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
         $territoire,
         $candidat
     ) {
-
-        if (is_array($territoire) || $territoire instanceof \ArrayAccess
-            || $territoire instanceof \IteratorAggregate) {
+        if (
+            is_array($territoire)
+            || $territoire instanceof \ArrayAccess
+            || $territoire instanceof \IteratorAggregate
+        ) {
             $score = 0;
             foreach ($territoire as $division) {
                 $scoreVO = $this->getScore($echeance, $division, $candidat);
-                if ($scoreVO) {
-                    $score += $scoreVO->toVoix();
+                $score += $scoreVO->toVoix();
+            }
+            if (!$score) {
+                return new Score();
+            }
+            $score = Score::fromVoix($score);
+        }
+
+        if (!isset($score) || !$score) {
+            $score = $this->doScoreQuery($echeance, $territoire, $candidat);
+        }
+
+        if (!$score) {
+            if ($territoire instanceof Region) {
+                $score = $this->doScoreRegionQuery($echeance, $territoire, $candidat);
+            }
+            if ($territoire instanceof Departement) {
+                $score = $this->doScoreDepartementQuery($echeance, $territoire, $candidat);
+            }
+        }
+
+        return $score ?
+            Score::fromVoixAndExprimes(
+                $score->toVoix(),
+                $this->getVoteInfo($echeance, $territoire)->getExprimes()
+            )
+            : new Score();
+    }
+
+    public function getVoteInfo(Echeance $echeance, $territoire)
+    {
+        if (
+            is_array($territoire)
+            || $territoire instanceof \ArrayAccess
+            || $territoire instanceof \IteratorAggregate
+        ) {
+            $exprimes = 0;
+            $votants = 0;
+            $inscrits = 0;
+            foreach ($territoire as $division) {
+                $voteInfoVO = $this->getVoteInfo($echeance, $division);
+                if ($voteInfoVO) {
+                    $exprimes += $voteInfoVO->getExprimes();
+                    $votants += $voteInfoVO->getVotants();
+                    $inscrits += $voteInfoVO->getInscrits();
                 }
             }
-            if ($score) {
-                return Score::fromVoix($score);
+            if (!$exprimes && !$votants && !$inscrits) {
+                return new VoteInfo(null, null, null);
             }
-
-            return null;
+            $voteInfo = new VoteInfo($inscrits, $votants, $exprimes);
         }
 
-        $score = $this->doScoreQuery($echeance, $territoire, $candidat);
-        if ($score) {
-            return $score;
+        if (
+            isset($this->cache['getVoteInfo'][$echeance])
+            && isset($this->cache['getVoteInfo'][$echeance][$territoire])
+        ) {
+            return $this->cache['getVoteInfo'][$echeance][$territoire];
         }
 
-        if ($territoire instanceof Region) {
-            return $this->doRegionQuery($echeance, $territoire, $candidat);
+        if (!isset($voteInfo) || !$voteInfo || !$voteInfo->getExprimes()) {
+            $voteInfo = $this->doVoteInfoQuery($echeance, $territoire);
         }
-        if ($territoire instanceof Departement) {
-            return $this->doDepartementQuery($echeance, $territoire, $candidat);
+
+        if (!$voteInfo || !$voteInfo->getExprimes()) {
+            if ($territoire instanceof Region) {
+                $voteInfo =  $this->doVoteInfoRegionQuery($echeance, $territoire);
+            }
+            if ($territoire instanceof Departement) {
+                $voteInfo = $this->doVoteInfoDepartementQuery($echeance, $territoire);
+            }
+            }
         }
+
+        if (!isset($this->cache['getVoteInfo'][$echeance])) {
+            $this->cache['getVoteInfo'][$echeance] = new \SplObjectStorage();
+        }
+        $this->cache['getVoteInfo'][$echeance][$territoire] = $voteInfo;
+
+        return $voteInfo;
     }
 
     public function remove(Election $element)
@@ -114,9 +178,11 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
                 $exception->getMessage()
             );
         }
+
+        $this->cache['getVoteInfo'] = new \SplObjectStorage;
     }
 
-    private function doDepartementQuery(
+    private function doScoreDepartementQuery(
         Echeance $echeance,
         Departement $territoire,
         $candidat
@@ -153,7 +219,7 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
         return $result ? Score::fromVoix($result) : null;
     }
 
-    private function doRegionQuery(
+    private function doScoreRegionQuery(
         Echeance $echeance,
         Region $territoire,
         $candidat
@@ -273,6 +339,163 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
         $result = $query->getSingleScalarResult();
 
         return $result ? Score::fromVoix($result) : null;
+    }
+
+    private function doVoteInfoDepartementQuery(
+        Echeance $echeance,
+        Departement $territoire
+    ) {
+        $query = $this
+            ->em
+            ->createQuery(
+                'SELECT
+                    SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
+                    SUM(voteInfo.voteInfoVO.votants) AS votants,
+                    SUM(voteInfo.voteInfVO.inscrits) AS inscrits
+                FROM
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune
+                    territoire,
+                    PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
+                    voteInfo
+                JOIN voteInfo.election election
+                WHERE territoire.departement  = :territoire
+                    AND voteInfo.territoire = territoire
+                    AND voteInfo.candidat
+                        IN (' . $this->getCandidatSubquery($candidat) . ')
+                    AND election.echeance = :echeance'
+            )
+            ->setParameters(array(
+                'echeance' => $echeance,
+                'territoire' => $territoire,
+            ))
+        ;
+
+        $result = $query->getSingleResult();
+
+        return !empty($result) ? new VoteInfo(
+            $result['inscrits'],
+            $result['votants'],
+            $result['exprimes']
+        ) : new VoteInfo(null, null, null);
+    }
+
+    private function doVoteInfoRegionQuery(
+        Echeance $echeance,
+        Region $territoire
+    ) {
+
+        $query = $this
+            ->em
+            ->createQuery(
+                'SELECT
+                    SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
+                    SUM(voteInfo.voteInfoVO.votants) AS votants,
+                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits,
+                    territoire.id
+                FROM
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
+                    departement,
+                    PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
+                    voteInfo
+                JOIN voteInfo.election election
+                JOIN voteInfo.territoire territoire
+                WHERE departement.region  = :territoire
+                AND voteInfo.territoire = departement
+                AND election.echeance = :echeance'
+            )
+                        ->setParameters(array(
+                'echeance' => $echeance,
+                'territoire' => $territoire,
+            ))
+        ;
+
+        $departementsAcResultats = $query->getResult();
+
+        $result = $departementsAcResultats[0];
+
+        $departementsAcResultats = array_map(function ($line) {
+            return $line['id'];
+        }, $departementsAcResultats);
+        $departementsAcResultats = array_filter($departementsAcResultats, function ($element) {
+            return ($element);
+        });
+
+        $query = $this
+            ->em
+            ->createQuery(
+                'SELECT
+                    SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
+                    SUM(voteInfo.voteInfoVO.votants) AS votants,
+                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits
+                FROM
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
+                    departement,
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune
+                    commune,
+                    PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
+                    voteInfo
+                JOIN voteInfo.election election
+                JOIN voteInfo.territoire territoire
+                WHERE departement.region  = :territoire
+                    ' . (
+                        empty($departementsAcResultats) ? ''
+                        : 'AND departement NOT IN (:departementsAcResultats)'
+                    ) . '
+                    AND (
+                        commune.departement = departement
+                        AND voteInfo.territoire = commune
+                    )
+                    AND election.echeance = :echeance'
+            )
+            ->setParameters(array(
+                'echeance' => $echeance,
+                'territoire' => $territoire
+            ))
+        ;
+        if (!empty($departementsAcResultats)) {
+            $query->setParameter('departementsAcResultats', $departementsAcResultats);
+        }
+
+        $result2 = $query->getSingleResult();
+
+        return !empty($result) || !empty($result2) ? new VoteInfo(
+            $result['inscrits'] + $result2['inscrits'],
+            $result['votants'] + $result2['votants'],
+            $result['exprimes'] + $result2['exprimes']
+        ) : new VoteInfo(null, null, null);
+    }
+
+    private function doVoteInfoQuery(
+        Echeance $echeance,
+        $territoire
+    ) {
+        $query = $this
+            ->em
+            ->createQuery(
+                'SELECT
+                    SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
+                    SUM(voteInfo.voteInfoVO.votants) AS votants,
+                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits
+                FROM
+                    PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
+                    voteInfo
+                JOIN voteInfo.election election
+                WHERE  voteInfo.territoire  = :territoire
+                    AND election.echeance = :echeance'
+            )
+            ->setParameters(array(
+                'echeance' => $echeance,
+                'territoire' => $territoire,
+            ))
+        ;
+
+        $result = $query->getSingleResult();
+
+        return !empty($result) ? new VoteInfo(
+            $result['inscrits'],
+            $result['votants'],
+            $result['exprimes']
+        ) : new VoteInfo(null, null, null);
     }
 
     private function getCandidatSubquery($candidat, $n = 0)

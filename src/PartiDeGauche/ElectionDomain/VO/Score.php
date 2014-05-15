@@ -89,7 +89,10 @@ class Score
         $score = new self();
 
         $score->voix = $voix;
-        $score->pourcentage = ($voix / $exprimes) * 100;
+
+        if ($exprimes) {
+            $score->pourcentage = ($voix / $exprimes) * 100;
+        }
 
         return $score;
     }

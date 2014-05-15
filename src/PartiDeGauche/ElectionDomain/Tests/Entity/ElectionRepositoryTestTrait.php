@@ -156,6 +156,7 @@ trait ElectionRepositoryTestTrait
         );
 
         $this->assertEquals(400, $score->toVoix());
+        $this->assertTrue(abs(50 - $score->toPourcentage()) < 0.001);
     }
 
     public function testSetSurCircoAndGetOtherScore()
@@ -184,7 +185,8 @@ trait ElectionRepositoryTestTrait
             $candidat
         );
 
-        $this->assertTrue(null === $score);
+        $this->assertTrue(null === $score->toVoix());
+        $this->assertTrue(null === $score->toPourcentage());
     }
 
     public function testSetSurCircoAndGetHigher()
@@ -227,6 +229,7 @@ trait ElectionRepositoryTestTrait
         );
 
         $this->assertEquals(460, $score->toVoix());
+        $this->assertTrue(abs(52.27 - $score->toPourcentage()) < 0.01);
 
         $score = $this->electionRepository->getScore(
             $echeance,
@@ -238,6 +241,7 @@ trait ElectionRepositoryTestTrait
         );
 
         $this->assertEquals(460, $score->toVoix());
+        $this->assertTrue(abs(52.27 - $score->toPourcentage()) < 0.01);
     }
 
     public function testSetSurSmallerAndGetCircoScore()
@@ -276,6 +280,7 @@ trait ElectionRepositoryTestTrait
         );
 
         $this->assertEquals(450, $score->toVoix());
+        $this->assertTrue(abs(51.13 - $score->toPourcentage()) < 0.01);
 
         // prendre directement les résultats du département s'ils sont dispo
         // et ne pas tenir compte de ceux de la commune
@@ -291,6 +296,7 @@ trait ElectionRepositoryTestTrait
         );
 
         $this->assertEquals(460, $score->toVoix());
+        $this->assertTrue(abs(51.68 - $score->toPourcentage()) < 0.01);
     }
 
     // Il ne peut y avoir qu'une élection par échéance et par circonscription.

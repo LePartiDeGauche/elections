@@ -22,6 +22,7 @@ namespace PartiDeGauche\ElectionDomain\Entity\Election;
 use PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 use PartiDeGauche\ElectionDomain\VO\Score;
+use PartiDeGauche\ElectionDomain\VO\VoteInfo;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 
 /**
@@ -63,6 +64,21 @@ interface ElectionRepositoryInterface
         Echeance $echeance,
         $territoire,
         $candidat
+    );
+
+    /**
+     * Récupérer les informartion sur une élection pour un ou des territoires  à une
+     * échéance donnée. Si n'est pas disponible, doit être calculé à partir
+     * d'échelons plus petit. Seuls le sommage des communes pour obtenir le
+     * score des départements et des départements pour obtenir les chiffres des
+     * régions est disponible, ou les régions pour les circo européennes.
+     * @param  Echeance $echeance   L'échéance.
+     * @param  mixed    $territoire Un AbstractTerritoire ou un tableau.
+     * @return VoteInfo L'information sur le vote.
+     */
+    public function getVoteInfo(
+        Echeance $echeance,
+        $territoire
     );
 
     /**
