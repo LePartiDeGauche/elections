@@ -43,10 +43,10 @@ interface TerritoireRepositoryInterface
 
     /**
      * Récupérer une circonscription européenne.
-     * @param  string                   $nom Le nom de la circonscription.
+     * @param  string                   $critere Le nom ou le code de la circonscription.
      * @return CirconscriptionEuropenne La circonscription.
      */
-    public function getCirconscriptionEuropeenne($nom);
+    public function getCirconscriptionEuropeenne($critere);
 
     /**
      * Récupérer une circonscription législative.

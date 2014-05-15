@@ -51,15 +51,26 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
             ));
     }
 
-    public function getCirconscriptionEuropeenne($nom)
+    public function getCirconscriptionEuropeenne($critere)
     {
-        return $this
+        $result = $this
             ->em
             ->getRepository(
                 '\PartiDeGauche\TerritoireDomain\Entity' .
                 '\Territoire\CirconscriptionEuropeenne'
             )
-            ->findOneByNom($nom);
+            ->findOneByNom($critere)
+        ;
+
+        return $result ? $result :
+            $this
+            ->em
+            ->getRepository(
+                '\PartiDeGauche\TerritoireDomain\Entity' .
+                '\Territoire\CirconscriptionEuropeenne'
+            )
+            ->findOneByCode($critere)
+        ;
     }
 
     public function getCirconscriptionLegislative($codeDepartement, $code)

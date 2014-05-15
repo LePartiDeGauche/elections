@@ -29,6 +29,7 @@ use PartiDeGauche\ElectionDomain\Entity\Election\UniqueConstraintViolationExcept
 use PartiDeGauche\ElectionDomain\VO\Score;
 use PartiDeGauche\ElectionDomain\VO\VoteInfo;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
@@ -97,6 +98,13 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
             if ($territoire instanceof Departement) {
                 $score = $this->doScoreDepartementQuery($echeance, $territoire, $candidat);
             }
+            if ($territoire instanceof CirconscriptionEuropeenne) {
+                $score = $this->getScore(
+                    $echeance,
+                    $territoire->getRegions(),
+                    $candidat
+                );
+            }
         }
 
         return $score ?
@@ -149,6 +157,11 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
             if ($territoire instanceof Departement) {
                 $voteInfo = $this->doVoteInfoDepartementQuery($echeance, $territoire);
             }
+            if ($territoire instanceof CirconscriptionEuropeenne) {
+                $voteInfo = $this->getVoteInfo(
+                    $echeance,
+                    $territoire->getRegions()
+                );
             }
         }
 

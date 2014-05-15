@@ -43,6 +43,25 @@ class ResultatController extends Controller
 
     /**
      * @Route(
+     *     "/circo-europeenne/{code}/{nom}",
+     *     name="resultat_circo_europeenne"
+     * )
+     * @Template("PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig")
+     */
+    public function circoEuropeenneAction($code)
+    {
+        $region = $this
+            ->get('repository.territoire')
+            ->getCirconscriptionEuropeenne($code)
+        ;
+
+        $results = $this->getResults($region);
+
+        return array('resultats' => $results);
+    }
+
+    /**
+     * @Route(
      *     "/commune/{departement}/{code}/{nom}",
      *     name="resultat_commune"
      * )

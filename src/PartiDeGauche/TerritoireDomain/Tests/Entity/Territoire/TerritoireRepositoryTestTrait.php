@@ -87,6 +87,12 @@ trait TerritoireRepositoryTestTrait
             )->getNom()
         );
         $this->assertEquals(
+            $circonscriptionEur->getNom(),
+            $this->repository->getCirconscriptionEuropeenne(
+                1
+            )->getNom()
+        );
+        $this->assertEquals(
             'France',
             $this->repository->getPays()->getNom()
         );

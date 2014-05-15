@@ -27,6 +27,7 @@ use PartiDeGauche\ElectionDomain\Entity\Election\ElectionRepositoryInterface;
 use PartiDeGauche\ElectionDomain\Entity\Election\ElectionUninominale;
 use PartiDeGauche\ElectionDomain\VO\Score;
 use PartiDeGauche\ElectionDomain\VO\VoteInfo;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
@@ -194,12 +195,15 @@ trait ElectionRepositoryTestTrait
         $date = new \DateTime();
         $echeance = new Echeance($date, Echeance::CANTONALES);
         $region = new Region(11, 'Île-de-France');
+        $circoEuro = new CirconscriptionEuropeenne(1, 'Test');
+        $circoEuro->addRegion($region);
         $departement = new Departement($region, 93, 'Seine-Saint-Denis');
         $departement2 = new Departement($region, 92, 'Hauts-de-Seine');
         $commune2 = new Commune($departement2, 20, 'Jesaispas');
         $this->territoireRepository->add($departement);
         $this->territoireRepository->add($commune2);
         $this->territoireRepository->add($region);
+        $this->territoireRepository->add($circoEuro);
         $election = new ElectionUninominale($echeance, $departement);
         $election2 = new ElectionUninominale($echeance, $commune2);
 
@@ -228,6 +232,14 @@ trait ElectionRepositoryTestTrait
             array($candidat, $candidat2, $candidat3)
         );
 
+        $scoreEuro = $this->electionRepository->getScore(
+            $echeance,
+            $circoEuro,
+            array($candidat, $candidat2, $candidat3)
+        );
+
+        $this->assertEquals($score, $scoreEuro);
+
         $this->assertEquals(460, $score->toVoix());
         $this->assertTrue(abs(52.27 - $score->toPourcentage()) < 0.01);
 
@@ -239,6 +251,17 @@ trait ElectionRepositoryTestTrait
                 'PG',
             ))
         );
+
+        $scoreEuro = $this->electionRepository->getScore(
+            $echeance,
+            $circoEuro,
+            new CandidatNuanceSpecification(array(
+                'FG',
+                'PG',
+            ))
+        );
+
+        $this->assertEquals($score, $scoreEuro);
 
         $this->assertEquals(460, $score->toVoix());
         $this->assertTrue(abs(52.27 - $score->toPourcentage()) < 0.01);
