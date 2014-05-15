@@ -30,7 +30,6 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
     public function __construct($doctrine)
     {
         $this->em = $doctrine->getManager();
-        $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
     }
 
     public function add(AbstractTerritoire $element)

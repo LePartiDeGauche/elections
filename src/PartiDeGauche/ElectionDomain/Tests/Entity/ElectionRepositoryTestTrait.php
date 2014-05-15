@@ -276,6 +276,21 @@ trait ElectionRepositoryTestTrait
         );
 
         $this->assertEquals(450, $score->toVoix());
+
+        // prendre directement les résultats du département s'ils sont dispo
+        // et ne pas tenir compte de ceux de la commune
+        $voteInfo3 = new VoteInfo(110, 100, 90);
+        $election->setVoteInfo($voteInfo3, $departement2);
+        $election->setVoixCandidat(60, $candidat, $departement2);
+        $this->electionRepository->save();
+
+        $score = $this->electionRepository->getScore(
+            $echeance,
+            $region,
+            $candidat
+        );
+
+        $this->assertEquals(460, $score->toVoix());
     }
 
     // Il ne peut y avoir qu'une élection par échéance et par circonscription.
