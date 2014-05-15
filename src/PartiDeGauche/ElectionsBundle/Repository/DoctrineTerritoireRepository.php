@@ -199,6 +199,9 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
         $entities = $this->em->getUnitOfWork()->getScheduledEntityInsertions();
 
         foreach ($entities as $entity) {
+            if (!$entity instanceof AbstractTerritoire) {
+                continue;
+            }
             $repo = $this->em->getRepository(get_class($entity));
             switch (get_class($entity)) {
                 case 'PartiDeGauche\TerritoireDomain\Entity' .

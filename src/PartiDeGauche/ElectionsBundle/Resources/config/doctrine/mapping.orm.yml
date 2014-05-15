@@ -173,6 +173,18 @@ PartiDeGauche\ElectionDomain\VO\VoteInfo:
         votants:
             type: integer
 
+PartiDeGauche\ElectionsBundle\Repository\CacheInfo\TerritoireTimestamp:
+    type: entity
+    id:
+        territoire:
+            associationKey: true
+    fields:
+        timestamp:
+            type: date
+    oneToOne:
+        territoire:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire
+
 PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire:
     type: entity
     inheritanceType: SINGLE_TABLE

@@ -17,12 +17,15 @@
 services:
     repository.election.doctrine:
         class:        "PartiDeGauche\ElectionsBundle\Repository\DoctrineElectionRepository"
-        arguments:    ["@doctrine"]
+        arguments:    ["@doctrine", "@repository.cache_info.doctrine"]
     repository.echeance.doctrine:
         class:        "PartiDeGauche\ElectionsBundle\Repository\DoctrineEcheanceRepository"
         arguments:    ["@doctrine"]
     repository.territoire.doctrine:
         class:        "PartiDeGauche\ElectionsBundle\Repository\DoctrineTerritoireRepository"
+        arguments:    ["@doctrine"]
+    repository.cache_info.doctrine:
+        class:        "PartiDeGauche\ElectionsBundle\Repository\CacheInfo\DoctrineCacheInfoRepository"
         arguments:    ["@doctrine"]
     repository.election:
         alias: repository.election.doctrine
@@ -30,3 +33,5 @@ services:
         alias: repository.echeance.doctrine
     repository.territoire:
         alias: repository.territoire.doctrine
+    repository.cache_info:
+        alias: repository.cache_info.doctrine
