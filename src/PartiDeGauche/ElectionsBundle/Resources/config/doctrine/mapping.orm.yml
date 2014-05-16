@@ -252,6 +252,7 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays
             joinColumn:
                 name: territoire_id
+            inversedBy: circonscriptionsEuropeennes
             cascade: [ "persist" ]
     oneToMany:
         regions:
@@ -315,6 +316,15 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays:
         nom:
             type: string
             length: 255
+    oneToMany:
+        regions:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
+            mappedBy: pays
+            cascade: [ "remove" ]
+        circonscriptionsEuropeennes:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne
+            mappedBy: pays
+            cascade: [ "remove" ]
 
 PartiDeGauche\TerritoireDomain\Entity\Territoire\Region:
     type: entity
@@ -333,11 +343,10 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\Region:
                 name: territoire_id
         pays:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays
+            inversedBy: regions
             joinColumn:
-                name: territoire_id
+                name: territoire2_id
             cascade: [ "persist" ]
-            joinColumn:
-                name: territoire_id
     oneToMany:
         departements:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement

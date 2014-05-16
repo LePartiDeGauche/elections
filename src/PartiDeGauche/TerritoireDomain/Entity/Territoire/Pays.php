@@ -24,11 +24,41 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Pays extends AbstractTerritoire
 {
     /**
+     * Les regions du Pays.
+     * @var ArrayCollection
+     */
+    private $regions;
+
+    /**
+     * Les circonscriptions européeennes du pays.
+     * @var ArrayCollection
+     */
+    private $circonscriptionsEuropeennes;
+
+    /**
      * Créer un nouvel objet Pays.
      * @param string $nom Le nom du Pays.
      */
     public function __construct($nom = 'France')
     {
         $this->nom = $nom;
+    }
+
+    /**
+     * Récupérer les régions du pays.
+     * @return ArrayCollection Les régions de France.
+     */
+    public function getRegions()
+    {
+        return $this->regions;
+    }
+
+    /**
+     * Récupérer les circos européennes du pays.
+     * @return ArrayCollection Les circos de France.
+     */
+    public function getCirconscriptionsEuropeennes()
+    {
+        return $this->circonscriptionsEuropeennes;
     }
 }
