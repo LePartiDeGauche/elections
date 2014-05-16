@@ -20,6 +20,9 @@
 namespace PartiDeGauche\ElectionsBundle\Repository\CacheInfo;
 
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
 class DoctrineCacheInfoRepository
 {
@@ -62,6 +65,27 @@ class DoctrineCacheInfoRepository
 
         if ($timestamp) {
             $timestamp->setNow();
+        }
+
+        if ($territoire instanceof Commune) {
+            $this->invalidate($territoire->getDepartement());
+
+            return;
+        }
+
+        if ($territoire instanceof Departement) {
+            $this->invalidate($territoire->getRegion());
+
+            return;
+        }
+
+        if (
+            $territoire instanceof Region
+            && $territoire->getCirconscriptionEuropeenne()
+        ) {
+            $this->invalidate($territoire->getCirconscriptionEuropeenne());
+
+            return;
         }
     }
 }
