@@ -59,6 +59,12 @@ abstract class Election
     private $scores;
 
     /**
+     * Le nombre de sièges de l'élection
+     * @var integer
+     */
+    private $sieges;
+
+    /**
      * Les éventuelles informations sur le vote.
      * @var ArrayCollection
      */
@@ -137,6 +143,51 @@ abstract class Election
     }
 
     /**
+     * Récupérer le nombre de sièges d'un candidat à l'élection. Retourne
+     * null si le calcul est impossible ou le nombre total de sièges est
+     * inconnu.
+     * @param  CandidatInterface $candidat Le candidat.
+     * @return integer           Le nombre de sièges.
+     */
+    public function getSiegesCandidat(CandidatInterface $candidat)
+    {
+        if (!$this->sieges) {
+            return;
+        }
+
+        if (
+            Echeance::EUROPEENNES === $this->echeance->getType()
+        ) {
+            $scores = array();
+            $candidats = array();
+            foreach ($this->getCandidats() as $c) {
+                $score = $this->getScoreCandidat($c);
+                for ($i = 1; $i <= $this->sieges; $i++) {
+                    if (
+                        null == $score->toPourcentage()
+                        || 5 < $score->toPourcentage()
+                    ) {
+                        $scores[] = $score->toVoix()/$i;
+                        $candidats[] = $c;
+                    }
+                }
+            }
+            arsort($scores);
+            $listeSieges = array_slice($scores, 0, $this->sieges, true);
+            $sieges = 0;
+            foreach ($listeSieges as $key => $score) {
+                if (
+                    $candidats[$key] === $candidat
+                ) {
+                    $sieges++;
+                }
+            }
+
+            return $sieges;
+        }
+    }
+
+    /**
      * Récupérer les informations sur le vote.
      * @return VoteInfo Les informations sur le vote.
      */
@@ -196,6 +247,15 @@ abstract class Election
         $scoreAssignment->setScoreVO($score);
 
         return;
+    }
+
+    /**
+     * Mettre à jour le nombre de sièges à gagner dans cette élection.
+     * @param integer $sieges Le nombre de sieges.
+     */
+    public function setSieges($sieges)
+    {
+        $this->sieges = $sieges;
     }
 
     /**

@@ -19,10 +19,11 @@
 
 namespace PartiDeGauche\ElectionDomain\Tests\Entity\Election;
 
+use PartiDeGauche\ElectionDomain\Entity\Candidat\ListeCandidate;
 use PartiDeGauche\ElectionDomain\Entity\Candidat\PersonneCandidate;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
-use PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire\TerritoireMock;
 use PartiDeGauche\ElectionDomain\VO\VoteInfo;
+use PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire\TerritoireMock;
 
 class ElectionTest extends \PHPUnit_Framework_TestCase
 {
@@ -76,6 +77,48 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
         $scoreTerritoire = $election->getScoreCandidat($candidat, $territoire);
         $this->assertEquals(66.66, $scoreTerritoire->toPourcentage());
         $this->assertNull($scoreTerritoire->toVoix());
+    }
+
+    public function testSiegesEuropeennes()
+    {
+        $echeance = new Echeance(new \DateTime, Echeance::EUROPEENNES);
+        $circonscription = new TerritoireMock();
+        $territoire = new TerritoireMock();
+        $election = new ElectionMock($echeance, $circonscription);
+        $candidat1 = new ListeCandidate($election, 'FG', 'L\'humain d\'abord');
+        $candidat2 = new ListeCandidate($election, 'PS', 'Solfériniens');
+        $candidat3 = new ListeCandidate($election, 'UMP', 'Droite');
+        $candidat4 = new ListeCandidate($election, 'ECO', 'Les amis');
+
+        $election->addCandidat($candidat1);
+        $election->addCandidat($candidat2);
+        $election->addCandidat($candidat3);
+        $election->addCandidat($candidat4);
+
+        $election->setVoteInfo(new VoteInfo(12000, 11000, 10000));
+        $election->setVoixCandidat(5000, $candidat1);
+        $election->setVoixCandidat(1600, $candidat2);
+        $election->setVoixCandidat(400, $candidat3);
+        $election->setVoixCandidat(3000, $candidat4);
+
+        $election->setSieges(30);
+
+        $this->assertEquals(
+            16,
+            $election->getSiegesCandidat($candidat1)
+        );
+        $this->assertEquals(
+            5,
+            $election->getSiegesCandidat($candidat2)
+        );
+        $this->assertEquals(
+            0,
+            $election->getSiegesCandidat($candidat3)
+        );
+        $this->assertEquals(
+            9,
+            $election->getSiegesCandidat($candidat4)
+        );
     }
 
     public function testVoixByCandidatAndTerritoire()

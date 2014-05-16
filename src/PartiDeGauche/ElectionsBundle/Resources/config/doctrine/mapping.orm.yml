@@ -56,6 +56,10 @@ PartiDeGauche\ElectionDomain\Entity\Election\Election:
     uniqueConstraints:
         echeance_circonscription:
             columns: [ "echeance_id", "circonscription_id" ]
+    fields:
+        sieges:
+            type: smallint
+            nullable: true
     manyToOne:
         echeance:
             targetEntity: PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance
