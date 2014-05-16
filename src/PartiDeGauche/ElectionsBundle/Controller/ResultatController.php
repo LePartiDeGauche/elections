@@ -70,7 +70,7 @@ class ResultatController extends Controller
 
         return $this->render(
             'PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig',
-            array('resultats' => $results),
+            array('resultats' => $results, 'territoire' => $circo->getNom()),
             $response
         );
     }
@@ -102,7 +102,7 @@ class ResultatController extends Controller
 
         return $this->render(
             'PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig',
-            array('resultats' => $results),
+            array('resultats' => $results, 'territoire' => $commune->getNom()),
             $response
         );
     }
@@ -135,7 +135,10 @@ class ResultatController extends Controller
 
         return $this->render(
             'PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig',
-            array('resultats' => $results),
+            array(
+                'resultats' => $results,
+                'territoire' => $departement->getNom()
+            ),
             $response
         );
     }
@@ -168,7 +171,7 @@ class ResultatController extends Controller
 
         return $this->render(
             'PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig',
-            array('resultats' => $results),
+            array('resultats' => $results, 'territoire' => $region->getNom()),
             $response
         );
     }
