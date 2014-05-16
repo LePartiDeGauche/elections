@@ -17,7 +17,7 @@
 services:
     repository.election.doctrine:
         class:        "PartiDeGauche\ElectionsBundle\Repository\DoctrineElectionRepository"
-        arguments:    ["@doctrine", "@repository.cache_info.doctrine"]
+        arguments:    ["@doctrine"]
     repository.echeance.doctrine:
         class:        "PartiDeGauche\ElectionsBundle\Repository\DoctrineEcheanceRepository"
         arguments:    ["@doctrine"]
@@ -27,6 +27,12 @@ services:
     repository.cache_info.doctrine:
         class:        "PartiDeGauche\ElectionsBundle\Repository\CacheInfo\DoctrineCacheInfoRepository"
         arguments:    ["@doctrine"]
+    listener.cache_info.doctrine:
+        class:        "PartiDeGauche\ElectionsBundle\Repository\CacheInfo\DoctrineCacheInfoListener"
+        arguments:    ["@service_container"]
+        tags:
+            - { name: doctrine.event_listener, event: onFlush }
+            - { name: doctrine.event_listener, event: postFlush }
     repository.election:
         alias: repository.election.doctrine
     repository.echeance:

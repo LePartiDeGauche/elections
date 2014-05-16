@@ -26,9 +26,19 @@ use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
 class DoctrineCacheInfoRepository
 {
+    /**
+     * On garde les timestamp à persister pour éviter
+     * les erreurs sur la contrainte d'unicité si invalidate()
+     * est appelée plusieurs fois pour le même territoire entre
+     * deux flush.
+     * @var \SplObjectStorage
+     */
+    private $toPersist;
+
     public function __construct($doctrine)
     {
         $this->em = $doctrine->getManager();
+        $this->toPersist = new \SplObjectStorage();
     }
 
     public function getLastModified(AbstractTerritoire $territoire)
@@ -58,13 +68,18 @@ class DoctrineCacheInfoRepository
             ->findOneByTerritoire($territoire)
         ;
 
-        if (!$timestamp) {
-            $timestamp = new TerritoireTimestamp($territoire);
-            $this->em->persist($timestamp);
+        if (!$timestamp && $this->toPersist->offsetExists($territoire)) {
+            $timestamp = $this->toPersist[$territoire];
         }
 
         if ($timestamp) {
             $timestamp->setNow();
+        }
+
+        if (!$timestamp) {
+            $timestamp = new TerritoireTimestamp($territoire);
+            $this->em->persist($timestamp);
+            $this->toPersist[$territoire] = $timestamp;
         }
 
         if ($territoire instanceof Commune) {

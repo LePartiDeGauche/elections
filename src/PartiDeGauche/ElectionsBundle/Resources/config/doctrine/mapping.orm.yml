@@ -184,7 +184,7 @@ PartiDeGauche\ElectionsBundle\Repository\CacheInfo\TerritoireTimestamp:
             associationKey: true
     fields:
         timestamp:
-            type: date
+            type: datetime
     oneToOne:
         territoire:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire

@@ -37,11 +37,10 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
 {
     private $cache = array();
 
-    public function __construct($doctrine, $cacheInfoRepo)
+    public function __construct($doctrine)
     {
         $this->em = $doctrine->getManager();
         $this->cache['getVoteInfo'] = new \SplObjectStorage();
-        $this->cacheInfoRepo = $cacheInfoRepo;
     }
 
     public function add(Election $element)
