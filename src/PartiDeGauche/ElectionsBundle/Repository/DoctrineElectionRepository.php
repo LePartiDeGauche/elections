@@ -30,6 +30,7 @@ use PartiDeGauche\ElectionDomain\VO\Score;
 use PartiDeGauche\ElectionDomain\VO\VoteInfo;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
@@ -54,7 +55,7 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
         Echeance $echeance,
         AbstractTerritoire $circonscription
     ) {
-        return $election = $this
+        $election = $this
             ->em
             ->getRepository(
                 'PartiDeGauche\ElectionDomain\Entity\Election\Election'
@@ -64,6 +65,33 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
                 'circonscription' => $circonscription
             ))
         ;
+
+        if ($election) {
+            return $election;
+        }
+
+        if ($circonscription instanceof Commune) {
+            return $this->get($echeance, $circonscription->getDepartement());
+        }
+
+        if ($circonscription instanceof Departement) {
+            return $this->get($echeance, $circonscription->getRegion());
+        }
+
+        if ($circonscription instanceof Region) {
+            $circo = $circonscription->getCirconscriptionEuropeenne() ?
+            $circonscription->getCirconscriptionEuropeenne()
+            : $circonscription->getPays();
+
+            return $this->get($echeance, $circo);
+        }
+
+        if ($circonscription instanceof CirconscriptionEuropeenne) {
+            return $this->get(
+                $echeance,
+                $circonscription->getPays()
+            );
+        }
     }
 
     public function getScore(

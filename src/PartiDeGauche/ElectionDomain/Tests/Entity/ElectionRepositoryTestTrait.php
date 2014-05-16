@@ -102,6 +102,30 @@ trait ElectionRepositoryTestTrait
         );
     }
 
+    public function testAddAndGetHigher()
+    {
+        $date = new \DateTime();
+        $echeance = new Echeance($date, Echeance::CANTONALES);
+        $pays = $this->territoireRepository->getPays();
+        $region = new Region($pays, 11, 'Île-de-France');
+        $circoEuro = new CirconscriptionEuropeenne($pays, 1, 'Île-de-France');
+        $circoEuro->addRegion($region);
+        $departement = new Departement($region, 92, 'Hauts-de-Seine');
+        $commune = new Commune($departement, 250, 'Bourg-la-Reine');
+
+        $election = new ElectionUninominale($echeance, $pays);
+
+        $this->territoireRepository->add($commune);
+        $this->territoireRepository->save();
+        $this->electionRepository->add($election);
+        $this->electionRepository->save();
+
+        $this->assertEquals(
+            $election,
+            $this->electionRepository->get($echeance, $commune)
+        );
+    }
+
     public function testRemove()
     {
         $date = new \DateTime();
