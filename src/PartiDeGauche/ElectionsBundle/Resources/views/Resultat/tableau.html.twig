@@ -41,7 +41,7 @@
             <th>Inscrits</th>
             {% for echeance in resultats %}
               <td>
-                {{ echeance.inscrits }}
+                {{ echeance.inscrits|default('NA') }}
               </td>
             {% endfor %}
           </tr>
@@ -49,7 +49,7 @@
             <th>Votants</th>
             {% for echeance in resultats %}
               <td>
-                {{ echeance.votants }}
+                {{ echeance.votants|default('NA') }}
               </td>
             {% endfor %}
           </tr>
@@ -65,7 +65,7 @@
             <th>Exprimés</th>
             {% for echeance in resultats %}
               <td>
-                {{ echeance.exprimes }}
+                {{ echeance.exprimes|default('NA') }}
               </td>
             {% endfor %}
           </tr>
