@@ -23,6 +23,8 @@ use PartiDeGauche\ElectionDomain\Entity\Candidat\Specification\CandidatNuanceSpe
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ResultatController extends Controller
 {
@@ -46,18 +48,31 @@ class ResultatController extends Controller
      *     "/circo-europeenne/{code}/{nom}",
      *     name="resultat_circo_europeenne"
      * )
-     * @Template("PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig")
      */
-    public function circoEuropeenneAction($code)
+    public function circoEuropeenneAction(Request $request, $code)
     {
-        $region = $this
+        $circo = $this
             ->get('repository.territoire')
             ->getCirconscriptionEuropeenne($code)
         ;
 
-        $results = $this->getResults($region);
+        $response = new Response();
+        $response->setLastModified(
+            $this->get('repository.cache_info')->getLastModified($circo)
+        );
+        $response->setPublic();
 
-        return array('resultats' => $results);
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
+        $results = $this->getResults($circo);
+
+        return $this->render(
+            'PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig',
+            array('resultats' => $results),
+            $response
+        );
     }
 
     /**
@@ -65,18 +80,31 @@ class ResultatController extends Controller
      *     "/commune/{departement}/{code}/{nom}",
      *     name="resultat_commune"
      * )
-     * @Template("PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig")
      */
-    public function communeAction($departement, $code)
+    public function communeAction(Request $request, $departement, $code)
     {
         $commune = $this
             ->get('repository.territoire')
             ->getCommune($departement, $code)
         ;
 
+        $response = new Response();
+        $response->setLastModified(
+            $this->get('repository.cache_info')->getLastModified($commune)
+        );
+        $response->setPublic();
+
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
         $results = $this->getResults($commune);
 
-        return array('resultats' => $results);
+        return $this->render(
+            'PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig',
+            array('resultats' => $results),
+            $response
+        );
     }
 
     /**
@@ -86,16 +114,30 @@ class ResultatController extends Controller
      * )
      * @Template("PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig")
      */
-    public function departementAction($code)
+    public function departementAction(Request $request, $code)
     {
         $departement = $this
             ->get('repository.territoire')
             ->getDepartement($code)
         ;
 
+        $response = new Response();
+        $response->setLastModified(
+            $this->get('repository.cache_info')->getLastModified($departement)
+        );
+        $response->setPublic();
+
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
         $results = $this->getResults($departement);
 
-        return array('resultats' => $results);
+        return $this->render(
+            'PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig',
+            array('resultats' => $results),
+            $response
+        );
     }
 
     /**
@@ -105,16 +147,30 @@ class ResultatController extends Controller
      * )
      * @Template("PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig")
      */
-    public function regionAction($code)
+    public function regionAction(Request $request, $code)
     {
         $region = $this
             ->get('repository.territoire')
             ->getRegion($code)
         ;
 
+        $response = new Response();
+        $response->setLastModified(
+            $this->get('repository.cache_info')->getLastModified($region)
+        );
+        $response->setPublic();
+
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
         $results = $this->getResults($region);
 
-        return array('resultats' => $results);
+        return $this->render(
+            'PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig',
+            array('resultats' => $results),
+            $response
+        );
     }
 
     private function getResults($territoire)
