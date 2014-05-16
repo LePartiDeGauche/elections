@@ -364,7 +364,7 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
                 'SELECT
                     SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
                     SUM(voteInfo.voteInfoVO.votants) AS votants,
-                    SUM(voteInfo.voteInfVO.inscrits) AS inscrits
+                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits
                 FROM
                     PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune
                     territoire,
@@ -373,8 +373,6 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
                 JOIN voteInfo.election election
                 WHERE territoire.departement  = :territoire
                     AND voteInfo.territoire = territoire
-                    AND voteInfo.candidat
-                        IN (' . $this->getCandidatSubquery($candidat) . ')
                     AND election.echeance = :echeance'
             )
             ->setParameters(array(
