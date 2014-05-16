@@ -20,6 +20,7 @@
 namespace PartiDeGauche\ElectionsBundle\Tests\Repository\CacheInfo;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
 class DoctrineCacheInfoRepositoryTest extends WebTestCase
@@ -50,7 +51,8 @@ class DoctrineCacheInfoRepositoryTest extends WebTestCase
 
     public function testgetLastModifiedAndInvalidate()
     {
-        $region = new Region(11, 'Île-de-France');
+        $pays = new Pays('France');
+        $region = new Region($pays, 11, 'Île-de-France');
         $this->territoireRepository->add($region);
         $this->territoireRepository->save();
 

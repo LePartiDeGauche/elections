@@ -63,7 +63,8 @@ trait ElectionRepositoryTestTrait
     {
         $date = new \DateTime();
         $echeance = new Echeance($date, Echeance::CANTONALES);
-        $circonscription = new Region(11, 'Île-de-France');
+        $pays = $this->territoireRepository->getPays();
+        $circonscription = new Region($pays, 11, 'Île-de-France');
         $election = new ElectionUninominale($echeance, $circonscription);
 
         $this->electionRepository->add($election);
@@ -105,8 +106,9 @@ trait ElectionRepositoryTestTrait
     {
         $date = new \DateTime();
         $echeance = new Echeance($date, Echeance::CANTONALES);
-        $circonscription = new Region(11, 'Île-de-France');
-        $circonscription2 = new Region(38, 'Jesaisplus');
+        $pays = $this->territoireRepository->getPays();
+        $circonscription = new Region($pays, 11, 'Île-de-France');
+        $circonscription2 = new Region($pays, 38, 'Jesaisplus');
         $election = new ElectionUninominale($echeance, $circonscription);
         $election2 = new ElectionUninominale($echeance, $circonscription2);
         $election3 = new ElectionUninominale($echeance, $circonscription);
@@ -137,7 +139,8 @@ trait ElectionRepositoryTestTrait
     {
         $date = new \DateTime();
         $echeance = new Echeance($date, Echeance::CANTONALES);
-        $circonscription = new Region(11, 'Île-de-France');
+        $pays = $this->territoireRepository->getPays();
+        $circonscription = new Region($pays, 11, 'Île-de-France');
         $election = new ElectionUninominale($echeance, $circonscription);
 
         $candidat = new PersonneCandidate($election, 'FG', 'Naël', 'Ferret');
@@ -164,7 +167,8 @@ trait ElectionRepositoryTestTrait
     {
         $date = new \DateTime();
         $echeance = new Echeance($date, Echeance::CANTONALES);
-        $circonscription = new Region(11, 'Île-de-France');
+        $pays = $this->territoireRepository->getPays();
+        $circonscription = new Region($pays, 11, 'Île-de-France');
         $election = new ElectionUninominale($echeance, $circonscription);
 
         $candidat = new PersonneCandidate($election, 'FG', 'Naël', 'Ferret');
@@ -177,7 +181,7 @@ trait ElectionRepositoryTestTrait
         $this->electionRepository->add($election);
         $this->electionRepository->save();
 
-        $region = new Region(38, 'Jesaisplus');
+        $region = new Region($pays, 38, 'Jesaisplus');
         $this->territoireRepository->add($region);
         $this->territoireRepository->save();
         $score = $this->electionRepository->getScore(
@@ -194,8 +198,9 @@ trait ElectionRepositoryTestTrait
     {
         $date = new \DateTime();
         $echeance = new Echeance($date, Echeance::CANTONALES);
-        $region = new Region(11, 'Île-de-France');
-        $circoEuro = new CirconscriptionEuropeenne(1, 'Test');
+        $pays = $this->territoireRepository->getPays();
+        $region = new Region($pays, 11, 'Île-de-France');
+        $circoEuro = new CirconscriptionEuropeenne($pays, 1, 'Test');
         $circoEuro->addRegion($region);
         $departement = new Departement($region, 93, 'Seine-Saint-Denis');
         $departement2 = new Departement($region, 92, 'Hauts-de-Seine');
@@ -271,7 +276,8 @@ trait ElectionRepositoryTestTrait
     {
         $date = new \DateTime();
         $echeance = new Echeance($date, Echeance::CANTONALES);
-        $region = new Region(11, 'Île-de-France');
+        $pays = $this->territoireRepository->getPays();
+        $region = new Region($pays, 11, 'Île-de-France');
         $departement = new Departement($region, 93, 'Seine-Saint-Denis');
         $departement2 = new Departement($region, 92, 'Hauts-de-Seine');
         $commune2 = new Commune($departement2, 20, 'Jesaispas');
@@ -328,7 +334,8 @@ trait ElectionRepositoryTestTrait
         $date = new \DateTime();
         $echeance = new Echeance($date, Echeance::CANTONALES);
         $echeance2 = new Echeance($date, Echeance::CANTONALES);
-        $circonscription = new Region(11, 'Île-de-France');
+        $pays = $this->territoireRepository->getPays();
+        $circonscription = new Region($pays, 11, 'Île-de-France');
         $election = new ElectionUninominale($echeance, $circonscription);
         $election2 = new ElectionUninominale($echeance, $circonscription);
 

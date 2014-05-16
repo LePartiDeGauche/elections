@@ -43,11 +43,17 @@ class Region extends AbstractTerritoire
     private $departements;
 
     /**
+     * La France, le pays de la région.
+     * @var Region
+     */
+    private $pays;
+
+    /**
      * Constructeur d'objet département.
      * @param string $code Le code de la région.
      * @param string $nom  Le nom de la région.
      */
-    public function __construct($code, $nom)
+    public function __construct(Pays $pays, $code, $nom)
     {
         \Assert\that((string) $code)
             ->string()
@@ -65,6 +71,7 @@ class Region extends AbstractTerritoire
             )
         ;
 
+        $this->pays = $pays;
         $this->code = (string) $code;
         $this->nom = $nom;
         $this->departements = new ArrayCollection();
@@ -107,6 +114,15 @@ class Region extends AbstractTerritoire
     public function getDepartements()
     {
         return $this->departements;
+    }
+
+    /**
+     * Récupérer la France, le pays de la région.
+     * @return Pays La France.
+     */
+    public function getPays()
+    {
+        return $this->pays;
     }
 
     /**

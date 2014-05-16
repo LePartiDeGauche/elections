@@ -22,20 +22,23 @@ namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
 class CommuneTest extends \PHPUnit_Framework_TestCase
 {
     public function testCodeIsNumeric()
     {
-        $region = new Region(82, 'Rhône-Alpes');
+        $pays = new Pays('France');
+        $region = new Region($pays, 82, 'Rhône-Alpes');
         $departement = new Departement($region, 38, 'Isère');
         $commune = new Commune($departement, 'ZE', 'Grenoble');
     }
 
     public function testHasDepartementAndCodeAndNom()
     {
-        $region = new Region(82, 'Rhône-Alpes');
+        $pays = new Pays('France');
+        $region = new Region($pays, 82, 'Rhône-Alpes');
         $departement = new Departement($region, 38, 'Isère');
         $commune = new Commune($departement, 185, 'Grenoble');
 
@@ -50,7 +53,8 @@ class CommuneTest extends \PHPUnit_Framework_TestCase
 
     public function testIsTerritoire()
     {
-        $region = new Region(82, 'Rhône-Alpes');
+        $pays = new Pays('France');
+        $region = new Region($pays, 82, 'Rhône-Alpes');
         $departement = new Departement($region, 38, 'Isère');
         $commune = new Commune($departement, 185, 'Grenoble');
 
@@ -61,7 +65,8 @@ class CommuneTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $region = new Region(82, 'Rhône-Alpes');
+        $pays = new Pays('France');
+        $region = new Region($pays, 82, 'Rhône-Alpes');
         $departement = new Departement($region, 38, 'Isère');
         $commune = new Commune(
             $departement,

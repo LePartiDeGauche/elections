@@ -41,7 +41,8 @@ trait TerritoireRepositoryTestTrait
 
     public function testAddGetRemove()
     {
-        $region = new Region(82, 'Rhône-Alpes');
+        $pays = $this->repository->getPays();
+        $region = new Region($pays, 82, 'Rhône-Alpes');
         $departement = new Departement($region, 38, 'Isère');
         $commune = new Commune($departement, 'ZE', 'Grenoble');
         $arrondissementCommunal = new ArrondissementCommunal(
@@ -50,7 +51,11 @@ trait TerritoireRepositoryTestTrait
             'Test'
         );
         $circonscriptionLeg = new CirconscriptionLegislative($departement, 2);
-        $circonscriptionEur = new CirconscriptionEuropeenne(1, 'Sud-Ouest');
+        $circonscriptionEur = new CirconscriptionEuropeenne(
+            $pays,
+            1,
+            'Sud-Ouest'
+        );
 
         $this->repository->add($arrondissementCommunal);
         $this->repository->add($circonscriptionLeg);
@@ -119,7 +124,8 @@ trait TerritoireRepositoryTestTrait
 
     public function testDoNotViolateUniqueConstraintIfTypeDifferent()
     {
-        $region = new Region(38, 'Nimportequoi');
+        $pays = $this->repository->getPays();
+        $region = new Region($pays, 38, 'Nimportequoi');
         $departement = new Departement($region, 38, 'Isère');
         $commune = new Commune($departement, 'ZE', 'Grenoble');
         $arrondissementCommunal = new ArrondissementCommunal(
@@ -153,7 +159,8 @@ trait TerritoireRepositoryTestTrait
     // uniques.
     public function testViolateUniqueCondition()
     {
-        $region = new Region(82, 'Rhône-Alpes');
+        $pays = $this->repository->getPays();
+        $region = new Region($pays, 82, 'Rhône-Alpes');
         $departement = new Departement($region, 38, 'Isère');
         $commune = new Commune($departement, 'ZE', 'Grenoble');
         $arrondissementCommunal = new ArrondissementCommunal(
@@ -167,7 +174,7 @@ trait TerritoireRepositoryTestTrait
         $this->repository->save();
 
         // On test les contraintes d'unicité une à une.
-        $this->repository->add(new Region(82, 'Rhône-Alpes'));
+        $this->repository->add(new Region($pays, 82, 'Rhône-Alpes'));
         $this->setExpectedException(
             'PartiDeGauche\TerritoireDomain\Entity\Territoire'
             . '\UniqueConstraintViolationException'

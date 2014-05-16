@@ -21,13 +21,15 @@ namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionLegislative;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
 class CirconscriptionLegislativeTest extends \PHPUnit_Framework_TestCase
 {
     public function testHasDepartementAndCode()
     {
-        $region = new Region(82, 'Rhône-Alpes');
+        $pays = new Pays('France');
+        $region = new Region($pays, 82, 'Rhône-Alpes');
         $departement = new Departement($region, 38, 'Isère');
         $circo = new CirconscriptionLegislative($departement, 12);
 

@@ -21,14 +21,16 @@ namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
 class RegionTest extends \PHPUnit_Framework_TestCase
 {
     public function testCirconscriptionEuropeenne()
     {
-        $region = new Region(11, 'Île-de-France');
-        $circo = new CirconscriptionEuropeenne(1, 'Île-de-France');
+        $pays = new Pays('France');
+        $region = new Region($pays, 11, 'Île-de-France');
+        $circo = new CirconscriptionEuropeenne($pays, 1, 'Île-de-France');
 
         $region->setCirconscriptionEuropeenne($circo);
 
@@ -40,20 +42,24 @@ class RegionTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $region = new Region('ZEEEE', 'Île-de-France');
+        $pays = new Pays('France');
+        $region = new Region($pays, 'ZEEEE', 'Île-de-France');
     }
 
-    public function testHasCodeAndNom()
+    public function testHasCodeAndNomAndPays()
     {
-        $region = new Region(11, 'Île-de-France');
+        $pays = new Pays('France');
+        $region = new Region($pays, 11, 'Île-de-France');
 
         $this->assertEquals(11, $region->getCode());
         $this->assertEquals('Île-de-France', $region->getNom());
+        $this->assertEquals($pays, $region->getPays());
     }
 
     public function testIsTerritoire()
     {
-        $region = new Region(11, 'Île-de-France');
+        $pays = new Pays('France');
+        $region = new Region($pays, 11, 'Île-de-France');
 
         $this->assertTrue($region instanceof AbstractTerritoire);
     }
@@ -61,8 +67,9 @@ class RegionTest extends \PHPUnit_Framework_TestCase
     public function testNomIsStringMax255()
     {
         $this->setExpectedException('\InvalidArgumentException');
-
+        $pays = new Pays('France');
         $region = new Region(
+            $pays,
             'ZEEE',
             'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
             . 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'

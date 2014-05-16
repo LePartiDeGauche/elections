@@ -21,6 +21,7 @@ namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
 class DepartementTest extends \PHPUnit_Framework_TestCase
@@ -29,7 +30,8 @@ class DepartementTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $region = new Region(11, 'Île-de-France');
+        $pays = new Pays('France');
+        $region = new Region($pays, 11, 'Île-de-France');
         $departement = new Departement(
             $region,
             'ZEEEE',
@@ -39,7 +41,8 @@ class DepartementTest extends \PHPUnit_Framework_TestCase
 
     public function testHasRegionAndCodeAndNom()
     {
-        $region = new Region(11, 'Île-de-France');
+        $pays = new Pays('France');
+        $region = new Region($pays, 11, 'Île-de-France');
         $departement = new Departement(
             $region,
             92,
@@ -54,7 +57,8 @@ class DepartementTest extends \PHPUnit_Framework_TestCase
 
     public function testIsTerritoire()
     {
-        $region = new Region(11, 'Île-de-France');
+        $pays = new Pays('France');
+        $region = new Region($pays, 11, 'Île-de-France');
         $departement = new Departement(
             $region,
             92,
@@ -68,7 +72,8 @@ class DepartementTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $region = new Region(11, 'Île-de-France');
+        $pays = new Pays('France');
+        $region = new Region($pays, 11, 'Île-de-France');
         $departement = new Departement(
             $region,
             'ZEEE',

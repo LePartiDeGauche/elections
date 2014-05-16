@@ -30,15 +30,22 @@ class CirconscriptionEuropeenne extends AbstractTerritoire
     protected $code;
 
     /**
+     * La France, le pays où sont les circonscription.
+     * @var Pays
+     */
+    protected $pays;
+
+    /**
      * Les régions composant la circonscription.
      * @var ArrayCollection
      */
     protected $regions;
 
-    public function __construct($code, $nom)
+    public function __construct(Pays $pays, $code, $nom)
     {
         $this->nom = $nom;
         $this->code = $code;
+        $this->pays = $pays;
 
         $this->regions = new ArrayCollection();
     }
@@ -61,6 +68,15 @@ class CirconscriptionEuropeenne extends AbstractTerritoire
     public function getCode()
     {
         return $this->code;
+    }
+
+    /**
+     * Récupérer la France, le pays où sont les circos
+     * @return Pays La France.
+     */
+    public function getPays()
+    {
+        return $this->pays;
     }
 
     /**

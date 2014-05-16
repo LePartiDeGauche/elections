@@ -20,14 +20,17 @@
 namespace PartiDeGauche\TerritoireDomain\Tests\Entity\Territoire;
 
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays;
 
 class CirconscriptionEuropeenneTest extends \PHPUnit_Framework_TestCase
 {
     public function testHasNom()
     {
-        $circo = new CirconscriptionEuropeenne(1, 'Nom');
+        $pays = new Pays('France');
+        $circo = new CirconscriptionEuropeenne($pays, 1, 'Nom');
 
         $this->assertEquals('Nom', $circo->getNom());
         $this->assertEquals(1, $circo->getCode());
+        $this->assertEquals($pays, $circo->getPays());
     }
 }
