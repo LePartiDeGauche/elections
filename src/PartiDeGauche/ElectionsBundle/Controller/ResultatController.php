@@ -190,16 +190,33 @@ class ResultatController extends Controller
             $result[$echeance->getNom()]['exprimes'] = $voteInfo->getExprimes();
 
             foreach ($this->nuancess as $nuances) {
-                $score =
-                    $this
-                        ->get('repository.election')
-                        ->getScore(
-                            $echeance,
-                            $territoire,
-                            new CandidatNuanceSpecification($nuances)
-                        )
-                    ;
-                $result[$echeance->getNom()][$nuances[0]] = $score;
+                $spec = new CandidatNuanceSpecification($nuances);
+                $score =$this
+                    ->get('repository.election')
+                    ->getScore(
+                        $echeance,
+                        $territoire,
+                        $spec
+                    )
+                ;
+
+                $election = $this
+                    ->get('repository.election')
+                    ->get($echeance, $territoire)
+                ;
+
+                $candidats = array();
+                if ($election) {
+                    $candidats = array_filter(
+                        $election->getCandidats(),
+                        array($spec, 'isSatisfiedBy')
+                    );
+                }
+
+                $result[$echeance->getNom()][$nuances[0]] = array();
+                $result[$echeance->getNom()][$nuances[0]]['score'] = $score;
+                $result[$echeance->getNom()][$nuances[0]]['candidats'] =
+                    $candidats;
             }
         }
 
