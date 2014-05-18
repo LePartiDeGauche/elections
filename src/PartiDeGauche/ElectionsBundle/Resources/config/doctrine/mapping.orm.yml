@@ -341,6 +341,7 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\Region:
             inversedBy: regions
             joinColumn:
                 name: territoire_id
+            cascade: [ "persist" ]
         pays:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays
             inversedBy: regions

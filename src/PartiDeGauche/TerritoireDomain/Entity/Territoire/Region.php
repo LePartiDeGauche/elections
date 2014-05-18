@@ -72,6 +72,7 @@ class Region extends AbstractTerritoire
         ;
 
         $this->pays = $pays;
+        $pays->addRegion($this);
         $this->code = (string) $code;
         $this->nom = $nom;
         $this->departements = new ArrayCollection();

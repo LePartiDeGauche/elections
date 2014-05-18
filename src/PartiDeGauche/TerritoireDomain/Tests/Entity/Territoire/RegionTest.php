@@ -38,6 +38,15 @@ class RegionTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($region, $circo->getRegions());
     }
 
+    public function testPays()
+    {
+        $pays = new Pays('France');
+        $region = new Region($pays, 11, 'Île-de-France');
+
+        $this->assertEquals($pays, $region->getPays());
+        $this->assertContains($region, $pays->getRegions());
+    }
+
     public function testCodeIsStringMax4()
     {
         $this->setExpectedException('\InvalidArgumentException');

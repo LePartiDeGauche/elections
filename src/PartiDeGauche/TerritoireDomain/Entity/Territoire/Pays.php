@@ -42,6 +42,33 @@ class Pays extends AbstractTerritoire
     public function __construct($nom = 'France')
     {
         $this->nom = $nom;
+        $this->regions = new ArrayCollection();
+        $this->circonscriptionsEuropeennes = new ArrayCollection();
+    }
+
+    /**
+     * @internal
+     * Pour mettre à jour les relations entre les entités.
+     * @param Region $region La région à ajouter.
+     */
+    public function addRegion(Region $region)
+    {
+        if (!$this->regions->contains($region)) {
+            $this->regions[] = $region;
+        }
+    }
+
+    /**
+     * @internal
+     * Pour mettre à jour les relations entre les entités.
+     * @param Departement $departement Le département à ajouter
+     */
+    public function addCirconscriptionEuropeenne(
+        CirconscriptionEuropeenne $circo
+    ) {
+        if (!$this->circonscriptionsEuropeennes->contains($circo)) {
+            $this->circonscriptionsEuropeennes[] = $circo;
+        }
     }
 
     /**

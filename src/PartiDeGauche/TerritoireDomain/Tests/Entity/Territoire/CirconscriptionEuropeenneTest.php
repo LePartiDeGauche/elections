@@ -24,6 +24,16 @@ use PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays;
 
 class CirconscriptionEuropeenneTest extends \PHPUnit_Framework_TestCase
 {
+
+    public function testPays()
+    {
+        $pays = new Pays('France');
+        $circo = new CirconscriptionEuropeenne($pays, 1, 'Nom');
+
+        $this->assertEquals($pays, $circo->getPays());
+        $this->assertContains($circo, $pays->getCirconscriptionsEuropeennes());
+    }
+
     public function testHasNom()
     {
         $pays = new Pays('France');

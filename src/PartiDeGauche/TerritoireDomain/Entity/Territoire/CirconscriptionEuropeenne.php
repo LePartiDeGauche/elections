@@ -46,6 +46,7 @@ class CirconscriptionEuropeenne extends AbstractTerritoire
         $this->nom = $nom;
         $this->code = $code;
         $this->pays = $pays;
+        $pays->addCirconscriptionEuropeenne($this);
 
         $this->regions = new ArrayCollection();
     }
