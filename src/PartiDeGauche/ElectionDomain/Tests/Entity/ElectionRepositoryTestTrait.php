@@ -29,8 +29,9 @@ use PartiDeGauche\ElectionDomain\VO\Score;
 use PartiDeGauche\ElectionDomain\VO\VoteInfo;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune;
-use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
 
 /**
  * Le repository doit être vidé au moyen d'une fonction setUp avant chaque
@@ -110,6 +111,7 @@ trait ElectionRepositoryTestTrait
         $region = new Region($pays, 11, 'Île-de-France');
         $circoEuro = new CirconscriptionEuropeenne($pays, 1, 'Île-de-France');
         $circoEuro->addRegion($region);
+        $region->setCirconscriptionEuropeenne($circoEuro);
         $departement = new Departement($region, 92, 'Hauts-de-Seine');
         $commune = new Commune($departement, 250, 'Bourg-la-Reine');
 
@@ -222,7 +224,7 @@ trait ElectionRepositoryTestTrait
     {
         $date = new \DateTime();
         $echeance = new Echeance($date, Echeance::CANTONALES);
-        $pays = $this->territoireRepository->getPays();
+        $pays = new Pays();
         $region = new Region($pays, 11, 'Île-de-France');
         $circoEuro = new CirconscriptionEuropeenne($pays, 1, 'Test');
         $circoEuro->addRegion($region);
@@ -290,7 +292,18 @@ trait ElectionRepositoryTestTrait
             ))
         );
 
+        $pays = $this->territoireRepository->getPays();
+        $scorePays = $this->electionRepository->getScore(
+            $echeance,
+            $pays,
+            new CandidatNuanceSpecification(array(
+                'FG',
+                'PG',
+            ))
+        );
+
         $this->assertEquals($score, $scoreEuro);
+        $this->assertEquals($score, $scorePays);
 
         $this->assertEquals(460, $score->toVoix());
         $this->assertTrue(abs(52.27 - $score->toPourcentage()) < 0.01);
@@ -300,7 +313,7 @@ trait ElectionRepositoryTestTrait
     {
         $date = new \DateTime();
         $echeance = new Echeance($date, Echeance::CANTONALES);
-        $pays = $this->territoireRepository->getPays();
+        $pays = new Pays();
         $region = new Region($pays, 11, 'Île-de-France');
         $departement = new Departement($region, 93, 'Seine-Saint-Denis');
         $departement2 = new Departement($region, 92, 'Hauts-de-Seine');

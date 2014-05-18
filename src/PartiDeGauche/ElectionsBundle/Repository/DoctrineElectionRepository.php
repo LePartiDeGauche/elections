@@ -33,6 +33,7 @@ use PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays;
 
 class DoctrineElectionRepository implements ElectionRepositoryInterface
 {
@@ -133,6 +134,13 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
                     $candidat
                 );
             }
+            if ($territoire instanceof Pays) {
+                $score = $this->getScore(
+                    $echeance,
+                    $territoire->getCirconscriptionsEuropeennes(),
+                    $candidat
+                );
+            }
         }
 
         return $score ?
@@ -189,6 +197,12 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
                 $voteInfo = $this->getVoteInfo(
                     $echeance,
                     $territoire->getRegions()
+                );
+            }
+            if ($territoire instanceof Pays) {
+                $voteInfo = $this->getVoteInfo(
+                    $echeance,
+                    $territoire->getCirconscriptionsEuropeennes()
                 );
             }
         }
