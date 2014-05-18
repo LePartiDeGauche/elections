@@ -18,16 +18,62 @@
 
 {% extends 'PartiDeGaucheElectionsBundle::layout.html.twig' %}
 
-{% macro pourcentage(valeur, total) %}
+{% macro pourcentage(valeur, total) %}{% spaceless %}
   {{ valeur and total ? ((valeur/total) * 100)|number_format(2) ~ '%' : 'NA' }}
-{% endmacro %}
+{% endspaceless %}{% endmacro %}
 
-{% macro candidat(candidats) %}
+{% macro candidat(candidats) %}{% spaceless %}
   {% for candidat in candidats %}
     {{ candidat.nom }}
     {% if not loop.last %}<br/>{% endif %}
   {% endfor %}
-{% endmacro %}
+{% endspaceless %}{% endmacro %}
+
+{% macro diffVoix(resultats, index, nuance) %}{% spaceless %}
+  {% import _self as format %}
+  {% set currentResultat = 0 %}
+  {% set prevResultat = 0 %}
+  {% for echeance in resultats|slice(index-2, 2) %}
+    {% if loop.first %}
+      {% set prevResultat = echeance[nuance].score.toVoix %}
+    {% elseif loop.last %}
+      {% set currentResultat = echeance[nuance].score.toVoix %}
+    {% endif %}
+  {% endfor %}
+
+  {% if prevResultat and currentResultat %}
+    {% set diff = currentResultat - prevResultat %}
+    {% set class = (diff >= 0 ? 'success' : 'danger') %}
+    /
+    <span class="text-{{class}}">
+      {{ (diff >= 0 ? '+': '') }}{{ diff|number_format(0, ',', ' ')}}
+      ({{ (diff >= 0 ? '+': '') ~ format.pourcentage(diff, prevResultat) }})
+    </span>
+  {% endif %}
+{% endspaceless %}{% endmacro %}
+
+{% macro diffPourcentage(resultats, index, nuance) %}{% spaceless %}
+  {% import _self as format %}
+  {% set currentResultat = 0 %}
+  {% set prevResultat = 0 %}
+  {% for echeance in resultats|slice(index-2, 2) %}
+    {% if loop.first %}
+      {% set prevResultat = (echeance[nuance].score.toVoix/echeance.exprimes) * 100 %}
+    {% elseif loop.last %}
+      {% set currentResultat = (echeance[nuance].score.toVoix/echeance.exprimes) * 100 %}
+    {% endif %}
+  {% endfor %}
+
+  {% if prevResultat and currentResultat %}
+    {% set diff = currentResultat - prevResultat %}
+    {% set class = (diff >= 0 ? 'success' : 'danger') %}
+    /
+    <span class="text-{{class}}">
+      {{ (diff >= 0 ? '+': '') }}
+      {{ diff|number_format(2, ',', ' ')}} %
+    </span>
+  {% endif %}
+{% endspaceless %}{% endmacro %}
 
 {% import _self as format %}
 
@@ -53,7 +99,7 @@
             <th>Inscrits</th>
             {% for echeance in resultats %}
               <td>
-                {{ echeance.inscrits|default('NA') }}
+                {{ echeance.inscrits|number_format(0, ',', ' ')|default('NA') }}
               </td>
             {% endfor %}
           </tr>
@@ -61,7 +107,7 @@
             <th>Votants</th>
             {% for echeance in resultats %}
               <td>
-                {{ echeance.votants|default('NA') }}
+                {{ echeance.votants|number_format(0, ',', ' ')|default('NA') }}
               </td>
             {% endfor %}
           </tr>
@@ -77,7 +123,7 @@
             <th>Exprimés</th>
             {% for echeance in resultats %}
               <td>
-                {{ echeance.exprimes|default('NA') }}
+                {{ echeance.exprimes|number_format(0, ',', ' ')|default('NA') }}
               </td>
             {% endfor %}
           </tr>
@@ -92,8 +138,14 @@
                 {% else %}
                   <td>
                 {% endif %}
-                  {{ echeance[nuance].score.toVoix|default('NA') }}<br/>
+                  {{ echeance[nuance].score.toVoix|number_format(0, ',', ' ')|default('NA') }}
+                  {% if loop.index > 1 %}
+                    {{ format.diffVoix(resultats, loop.index, nuance) }}
+                  {% endif %}<br/>
                   {{ format.pourcentage(echeance[nuance].score.toVoix, echeance.exprimes) }}
+                  {% if loop.index > 1 %}
+                    {{ format.diffPourcentage(resultats, loop.index, nuance) }}
+                  {% endif %}<br/>
                 </td>
               {% endfor %}
             <tr>
