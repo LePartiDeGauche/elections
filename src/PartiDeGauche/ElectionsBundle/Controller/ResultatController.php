@@ -21,7 +21,6 @@ namespace PartiDeGauche\ElectionsBundle\Controller;
 
 use PartiDeGauche\ElectionDomain\Entity\Candidat\Specification\CandidatNuanceSpecification;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -112,7 +111,6 @@ class ResultatController extends Controller
      *     "/departement/{code}/{nom}",
      *     name="resultat_departement"
      * )
-     * @Template("PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig")
      */
     public function departementAction(Request $request, $code)
     {
@@ -145,10 +143,41 @@ class ResultatController extends Controller
 
     /**
      * @Route(
+     *     "/france",
+     *     name="resultat_france"
+     * )
+     */
+    public function paysAction(Request $request)
+    {
+        $pays = $this
+            ->get('repository.territoire')
+            ->getPays()
+        ;
+
+        $response = new Response();
+        $response->setLastModified(
+            $this->get('repository.cache_info')->getLastModified($pays)
+        );
+        $response->setPublic();
+
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
+        $results = $this->getResults($pays);
+
+        return $this->render(
+            'PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig',
+            array('resultats' => $results, 'territoire' => $pays->getNom()),
+            $response
+        );
+    }
+
+    /**
+     * @Route(
      *     "/region/{code}/{nom}",
      *     name="resultat_region"
      * )
-     * @Template("PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig")
      */
     public function regionAction(Request $request, $code)
     {
