@@ -209,6 +209,15 @@ abstract class Election
     }
 
     /**
+     * Récupérer le nombre de sièges disponibles à cette élection.
+     * @return integer Le nombre de sièges.
+     */
+    public function getSieges()
+    {
+        return $this->sieges;
+    }
+
+    /**
      * Mettre à jour le pourcentage de voix d'un candidat par rapport au nombre
      * de suffrages exprimés sur un territoire donné, ou par défaut sur la
      * circonscription de l'élection. Si le nombre de suffrages exprimés est

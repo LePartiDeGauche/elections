@@ -21,15 +21,36 @@ namespace PartiDeGauche\ElectionsAdminBundle\Admin\Election;
 
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Form\FormMapper;
 
 class ElectionDeListeAdmin extends Admin
 {
     protected $baseRouteName = 'election_de_liste';
     protected $baseRoutePattern = 'election_de_liste';
 
+    protected function configureDatagridFilters(DatagridMapper $filter)
+    {
+        $filter
+            ->add('echeance')
+        ;
+    }
+
+    protected function configureFormFields(FormMapper $formMapper)
+    {
+        $formMapper
+            ->add('sieges')
+        ;
+    }
+
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
+            ->add('_action', 'actions', array(
+                'actions' => array(
+                    'edit' => array(),
+                )
+            ))
             ->addIdentifier('echeance')
             ->add('circonscription')
             ->add('candidats', 'array')
