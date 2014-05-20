@@ -213,6 +213,11 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire:
             type: integer
             generator:
                 strategy: AUTO
+    fields:
+        nom:
+            type: string
+            length: 255
+            nullable: true
 
 PartiDeGauche\TerritoireDomain\Entity\Territoire\ArrondissementCommunal:
     type: entity
@@ -223,9 +228,6 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\ArrondissementCommunal:
         code:
             type: string
             length: 10
-        nom:
-            type: string
-            length: 255
     manyToOne:
         commune:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune
@@ -260,9 +262,6 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne:
         code:
             type: string
             length: 10
-        nom:
-            type: string
-            length: 255
     manyToOne:
         pays:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays
@@ -284,9 +283,6 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune:
         code:
             type: string
             length: 10
-        nom:
-            type: string
-            length: 255
     manyToOne:
         departement:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
@@ -306,9 +302,6 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement:
         code:
             type: string
             length: 10
-        nom:
-            type: string
-            length: 255
     manyToOne:
         region:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
@@ -328,10 +321,6 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement:
 
 PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays:
     type: entity
-    fields:
-        nom:
-            type: string
-            length: 255
     oneToMany:
         regions:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
@@ -348,9 +337,6 @@ PartiDeGauche\TerritoireDomain\Entity\Territoire\Region:
         code:
             type: string
             length: 10
-        nom:
-            type: string
-            length: 255
     manyToOne:
         circonscriptionEuropeenne:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne

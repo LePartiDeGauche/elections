@@ -21,6 +21,8 @@ namespace PartiDeGauche\ElectionsBundle\Repository;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException as DoctrineException;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Pays;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\TerritoireRepositoryInterface;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\UniqueConstraintViolationException;
@@ -35,6 +37,35 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
     public function add(AbstractTerritoire $element)
     {
         $this->em->persist($element);
+    }
+
+    public function findLike($string, $limit = 10)
+    {
+        $queryResult = $this
+            ->em
+            ->createQuery(
+                'SELECT territoires
+                FROM
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire
+                    territoires
+                WHERE
+                    territoires.nom LIKE :string'
+            )
+            ->setParameter('string', '%' . $string . '%')
+            ->setMaxResults($limit)
+            ->getResult();
+
+        $result = $queryResult;
+        foreach ($queryResult as $key => $value) {
+            if ($value instanceof Commune) {
+                $result = array_merge($result, $value->getArrondissements()->toArray());
+            }
+            if ($value instanceof Departement) {
+                $result = array_merge($result, $value->getCirconscriptionsLegislatives()->toArray());
+            }
+        }
+
+        return array_slice($result, 0, $limit);
     }
 
     public function getArrondissementCommunal($commune, $codeArrondissement)

@@ -122,6 +122,70 @@ trait TerritoireRepositoryTestTrait
         );
     }
 
+    public function testAddFinLike()
+    {
+        $pays = $this->repository->getPays();
+        $region = new Region($pays, 82, 'Rhône-Alpes');
+        $departement = new Departement($region, 38, 'Isère');
+        $commune = new Commune($departement, 'ZE', 'Grenoble');
+        $arrondissementCommunal = new ArrondissementCommunal(
+            $commune,
+            'ZE',
+            'Test'
+        );
+        $circonscriptionLeg = new CirconscriptionLegislative($departement, 2);
+        $circonscriptionEur = new CirconscriptionEuropeenne(
+            $pays,
+            1,
+            'Sud-Ouest'
+        );
+
+        $this->repository->add($arrondissementCommunal);
+        $this->repository->add($circonscriptionLeg);
+        $this->repository->add($circonscriptionEur);
+        $this->repository->save();
+
+        $this->assertTrue(in_array(
+            $region,
+            $this->repository->findLike('Rhône-Al')
+        ));
+        $this->assertEquals(1, count($this->repository->findLike('Rhône-Al')));
+
+        $this->assertTrue(in_array(
+            $departement,
+            $this->repository->findLike('Isèr')
+        ));
+        $this->assertTrue(in_array(
+            $circonscriptionLeg,
+            $this->repository->findLike('Isèr')
+        ));
+        $this->assertEquals(2, count($this->repository->findLike('Isèr')));
+
+        $this->assertTrue(in_array(
+            $commune,
+            $this->repository->findLike('Gre')
+        ));
+        $this->assertTrue(in_array(
+            $arrondissementCommunal,
+            $this->repository->findLike('Gre')
+        ));
+        $this->assertEquals(2, count($this->repository->findLike('Gre')));
+
+        $this->assertTrue(in_array(
+            $circonscriptionEur,
+            $this->repository->findLike('Sud-Oue')
+        ));
+        $this->assertEquals(1, count($this->repository->findLike('Sud-Oue')));
+
+        $this->assertTrue(in_array(
+            $pays,
+            $this->repository->findLike('Fran')
+        ));
+        $this->assertEquals(1, count($this->repository->findLike('Fran')));
+
+        $this->assertEquals(6, count($this->repository->findLike('r')));
+    }
+
     public function testDoNotViolateUniqueConstraintIfTypeDifferent()
     {
         $pays = $this->repository->getPays();

@@ -33,6 +33,14 @@ interface TerritoireRepositoryInterface
     public function add(AbstractTerritoire $territoire);
 
     /**
+     * Rechercher des territoires par leur nom.
+     * @param  string  $string La chaîne à rechercher dans les noms des territoires.
+     * @param  integer $limit  Le nombre de résultats à retourner.
+     * @return array   Les territoires.
+     */
+    public function findLike($string, $limit = 10);
+
+    /**
      * Récupérer un arrondissement communal en fonction de sa commune et de son
      * code.
      * @param  Commune                $commune            La commune de l'arrondissement.
