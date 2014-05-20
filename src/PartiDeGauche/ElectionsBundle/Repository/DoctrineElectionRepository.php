@@ -58,42 +58,53 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
         Echeance $echeance,
         AbstractTerritoire $circonscription
     ) {
-        $election = $this
-            ->em
-            ->getRepository(
-                'PartiDeGauche\ElectionDomain\Entity\Election\Election'
-            )
-            ->findOneBy(array(
-                'echeance' => $echeance,
-                'circonscription' => $circonscription
-            ))
-        ;
+        $circonscriptions = array();
 
-        if ($election) {
-            return $election;
+        $circonscriptions[] = $circonscription;
+
+        if (end($circonscriptions) instanceof Commune) {
+            $circonscriptions[] = end($circonscriptions)->getDepartement();
         }
 
-        if ($circonscription instanceof Commune) {
-            return $this->get($echeance, $circonscription->getDepartement());
+        if (end($circonscriptions) instanceof Departement) {
+            $circonscriptions[] = end($circonscriptions)
+                ->getRegion()
+            ;
         }
 
-        if ($circonscription instanceof Departement) {
-            return $this->get($echeance, $circonscription->getRegion());
+        if (end($circonscriptions) instanceof Region) {
+            if (end($circonscriptions)->getCirconscriptionEuropeenne()) {
+                $circonscriptions[] =
+                    end($circonscriptions)->getCirconscriptionEuropeenne();
+            }
+
+            $circonscriptions[] = end($circonscriptions)->getPays();
         }
 
-        if ($circonscription instanceof Region) {
-            $circo = $circonscription->getCirconscriptionEuropeenne() ?
-            $circonscription->getCirconscriptionEuropeenne()
-            : $circonscription->getPays();
-
-            return $this->get($echeance, $circo);
+        if (end($circonscriptions) instanceof CirconscriptionEuropeenne) {
+            $circonscriptions[] = end($circonscriptions)->getPays();
         }
 
-        if ($circonscription instanceof CirconscriptionEuropeenne) {
-            return $this->get(
-                $echeance,
-                $circonscription->getPays()
-            );
+        try {
+            return $this
+                ->em
+                ->createQuery(
+                    'SELECT election
+                    FROM PartiDeGauche\ElectionDomain\Entity\Election\Election
+                        election
+                    WHERE
+                        election.echeance = :echeance
+                        AND election.circonscription IN (:circonscriptions)'
+                )
+                ->setMaxResults(1)
+                ->setParameters(array(
+                    'echeance' => $echeance,
+                    'circonscriptions' => $circonscriptions
+                ))
+                ->getOneOrNullResult()
+            ;
+        } catch (\Doctrine\ORM\ORMInvalidArgumentException $exception) {
+            return null;
         }
     }
 
