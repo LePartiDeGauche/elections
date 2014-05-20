@@ -251,9 +251,9 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
                 );
             }
             if ($territoire instanceof CirconscriptionEuropeenne) {
-                $voteInfo = $this->getVoteInfo(
+                $voteInfo = $this->doVoteInfoCircoEuroQuery(
                     $echeance,
-                    $territoire->getRegions()
+                    $territoire
                 );
             }
             if ($territoire instanceof Pays) {
@@ -456,6 +456,141 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
         $result = $query->getSingleScalarResult();
 
         return $result ? Score::fromVoix($result) : null;
+    }
+
+    private function doVoteInfoCircoEuroQuery(
+        Echeance $echeance,
+        CirconscriptionEuropeenne $territoire
+    ) {
+        $query = $this
+            ->em
+            ->createQuery(
+                'SELECT
+                    SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
+                    SUM(voteInfo.voteInfoVO.votants) AS votants,
+                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits,
+                    territoire.id
+                FROM
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
+                    region,
+                    PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
+                    voteInfo
+                JOIN voteInfo.election election
+                JOIN voteInfo.territoire territoire
+                WHERE region.circonscriptionEuropeenne  = :territoire
+                AND voteInfo.territoire = region
+                AND election.echeance = :echeance'
+            )
+            ->setParameters(array(
+                'echeance' => $echeance,
+                'territoire' => $territoire,
+            ))
+        ;
+
+        $regionsAcResultats = $query->getResult();
+
+        $result0 = $regionsAcResultats[0];
+
+        $regionsAcResultats = array_map(function ($line) {
+            return $line['id'];
+        }, $regionsAcResultats);
+        $regionsAcResultats = array_filter($regionsAcResultats, function ($element) {
+            return ($element);
+        });
+
+        $query = $this
+            ->em
+            ->createQuery(
+                'SELECT
+                    SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
+                    SUM(voteInfo.voteInfoVO.votants) AS votants,
+                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits,
+                    territoire.id
+                FROM
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
+                    region,
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
+                    departement,
+                    PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
+                    voteInfo
+                JOIN voteInfo.election election
+                JOIN voteInfo.territoire territoire
+                WHERE region.circonscriptionEuropeenne = :territoire
+                ' . (
+                        empty($regionsAcResultats) ? ''
+                        : 'AND region NOT IN (:regionsAcResultats)'
+                    ) . '
+                AND departement.region  = region
+                AND voteInfo.territoire = departement
+                AND election.echeance = :echeance'
+            )
+                        ->setParameters(array(
+                'echeance' => $echeance,
+                'territoire' => $territoire,
+            ))
+        ;
+
+        $departementsAcResultats = $query->getResult();
+
+        $result1 = $departementsAcResultats[0];
+
+        $departementsAcResultats = array_map(function ($line) {
+            return $line['id'];
+        }, $departementsAcResultats);
+        $departementsAcResultats = array_filter($departementsAcResultats, function ($element) {
+            return ($element);
+        });
+
+        $query = $this
+            ->em
+            ->createQuery(
+                'SELECT
+                    SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
+                    SUM(voteInfo.voteInfoVO.votants) AS votants,
+                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits
+                FROM
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
+                    region,
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
+                    departement,
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune
+                    commune,
+                    PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
+                    voteInfo
+                JOIN voteInfo.election election
+                JOIN voteInfo.territoire territoire
+                WHERE region.circonscriptionEuropeenne= :territoire
+                    ' . (
+                        empty($regionsAcResultats) ? ''
+                        : 'AND region NOT IN (:regionsAcResultats)'
+                    ) . '
+                    AND departement.region  = region
+                    ' . (
+                        empty($departementsAcResultats) ? ''
+                        : 'AND departement NOT IN (:departementsAcResultats)'
+                    ) . '
+                    AND (
+                        commune.departement = departement
+                        AND voteInfo.territoire = commune
+                    )
+                    AND election.echeance = :echeance'
+            )
+            ->setParameters(array(
+                'echeance' => $echeance,
+                'territoire' => $territoire
+            ))
+        ;
+        if (!empty($departementsAcResultats)) {
+            $query->setParameter('departementsAcResultats', $departementsAcResultats);
+        }
+
+        $result2 = $query->getSingleResult();
+
+        return !empty($result) || !empty($result2) ? new VoteInfo(
+            $result0['inscrits'] + $result1['inscrits'] + $result2['inscrits'],
+            $result0['votants'] + $result1['votants'] + $result2['votants'],
+            $result0['exprimes'] + $result1['exprimes'] + $result2['exprimes']
+        ) : new VoteInfo(null, null, null);
     }
 
     private function doVoteInfoDepartementQuery(
