@@ -358,6 +358,16 @@ abstract class Election
             $this->scores->setDirty(true);
         }
 
+        foreach ($collection as $score) {
+            if ($score->getTerritoire() === $territoire) {
+                $c = $score->getCandidat();
+                if (!isset($this->cache['score'][spl_object_hash($c)])) {
+                    $this->cache['score'][spl_object_hash($c)] = array();
+                }
+                $this->cache['score'][spl_object_hash($c)][spl_object_hash($territoire)] = $score;
+            }
+        }
+
         // filter by candidat
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('candidat', $candidat))
