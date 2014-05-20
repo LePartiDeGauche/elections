@@ -42,6 +42,8 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
     public function __construct($doctrine)
     {
         $this->em = $doctrine->getManager();
+        $this->nuanceOptimizer = new DoctrineElectionRepositoryScoreByNuanceOptimizer($doctrine);
+        $this->sameElectionOptimizer = new DoctrineElectionRepositoryScoreSameElectionOptimizer($doctrine);
         $this->cache['getVoteInfo'] = new \SplObjectStorage();
     }
 
@@ -116,16 +118,54 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
             $score = Score::fromVoix($score);
         }
 
+        if ($candidat instanceof CandidatNuanceSpecification) {
+            $score = $this->nuanceOptimizer->getScore(
+                $echeance,
+                $territoire,
+                $candidat
+            );
+
+            return $score ?
+                Score::fromVoixAndExprimes(
+                    $score->toVoix(),
+                    $this->getVoteInfo($echeance, $territoire)->getExprimes()
+                )
+                : new Score();
+        }
+
+        if ($candidat instanceof Candidat && $this->get($echeance, $territoire)) {
+            $score = $this->sameElectionOptimizer->getScore(
+                $echeance,
+                $territoire,
+                $candidat
+            );
+
+            return $score ?
+                Score::fromVoixAndExprimes(
+                    $score->toVoix(),
+                    $this->getVoteInfo($echeance, $territoire)->getExprimes()
+                )
+                : new Score();
+        }
+
         if (!isset($score) || !$score) {
             $score = $this->doScoreQuery($echeance, $territoire, $candidat);
         }
 
         if (!$score) {
             if ($territoire instanceof Region) {
-                $score = $this->doScoreRegionQuery($echeance, $territoire, $candidat);
+                $score = $this->doScoreRegionQuery(
+                    $echeance,
+                    $territoire,
+                    $candidat
+                );
             }
             if ($territoire instanceof Departement) {
-                $score = $this->doScoreDepartementQuery($echeance, $territoire, $candidat);
+                $score = $this->doScoreDepartementQuery(
+                    $echeance,
+                    $territoire,
+                    $candidat
+                );
             }
             if ($territoire instanceof CirconscriptionEuropeenne) {
                 $score = $this->getScore(
@@ -188,10 +228,16 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
 
         if (!$voteInfo || !$voteInfo->getExprimes()) {
             if ($territoire instanceof Region) {
-                $voteInfo =  $this->doVoteInfoRegionQuery($echeance, $territoire);
+                $voteInfo =  $this->doVoteInfoRegionQuery(
+                    $echeance,
+                    $territoire
+                );
             }
             if ($territoire instanceof Departement) {
-                $voteInfo = $this->doVoteInfoDepartementQuery($echeance, $territoire);
+                $voteInfo = $this->doVoteInfoDepartementQuery(
+                    $echeance,
+                    $territoire
+                );
             }
             if ($territoire instanceof CirconscriptionEuropeenne) {
                 $voteInfo = $this->getVoteInfo(
@@ -235,6 +281,8 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
         }
 
         $this->cache['getVoteInfo'] = new \SplObjectStorage;
+        $this->nuanceOptimizer->reset();
+        $this->sameElectionOptimizer->reset();
     }
 
     private function doScoreDepartementQuery(
@@ -313,9 +361,12 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
         $departementsAcResultats = array_map(function ($line) {
             return $line['id'];
         }, $departementsAcResultats);
-        $departementsAcResultats = array_filter($departementsAcResultats, function ($element) {
-            return ($element);
-        });
+        $departementsAcResultats = array_filter(
+            $departementsAcResultats,
+            function ($element) {
+                return ($element);
+            }
+        );
 
         $query = $this
             ->em

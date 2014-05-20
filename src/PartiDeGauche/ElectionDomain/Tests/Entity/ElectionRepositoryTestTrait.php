@@ -239,13 +239,14 @@ trait ElectionRepositoryTestTrait
         $this->assertTrue(null === $score->toPourcentage());
     }
 
-    public function testSetSurCircoAndGetHigher()
+    public function testSetSurCircoAndGetHigherScore()
     {
         $date = new \DateTime();
         $echeance = new Echeance($date, Echeance::CANTONALES);
         $pays = new Pays();
         $region = new Region($pays, 11, 'Île-de-France');
         $circoEuro = new CirconscriptionEuropeenne($pays, 1, 'Test');
+        $region->setCirconscriptionEuropeenne($circoEuro);
         $circoEuro->addRegion($region);
         $departement = new Departement($region, 93, 'Seine-Saint-Denis');
         $departement2 = new Departement($region, 92, 'Hauts-de-Seine');
@@ -255,6 +256,96 @@ trait ElectionRepositoryTestTrait
         $this->territoireRepository->add($region);
         $this->territoireRepository->add($circoEuro);
         $election = new ElectionUninominale($echeance, $departement);
+        $election2 = new ElectionUninominale($echeance, $commune2);
+
+        $candidat = new PersonneCandidate($election, 'FG', 'Naël', 'Ferret');
+        $election->addCandidat($candidat);
+        $candidat2 = new PersonneCandidate($election2, 'PG', 'Lea', 'Ferret');
+        $election2->addCandidat($candidat2);
+        $candidat3 = new PersonneCandidate($election2, 'FG', 'Leo', 'Ferret');
+        $election2->addCandidat($candidat3);
+
+        $voteInfo1 = new VoteInfo(1000, 900, 800);
+        $election->setVoteInfo($voteInfo1);
+        $voteInfo2 = new VoteInfo(100, 90, 80);
+        $election2->setVoteInfo($voteInfo2);
+        $election->setVoixCandidat(400, $candidat);
+        $election2->setVoixCandidat(50, $candidat2);
+        $election2->setVoixCandidat(10, $candidat3);
+
+        $this->electionRepository->add($election);
+        $this->electionRepository->add($election2);
+        $this->electionRepository->save();
+
+        $score = $this->electionRepository->getScore(
+            $echeance,
+            $region,
+            array($candidat, $candidat2, $candidat3)
+        );
+
+        $scoreEuro = $this->electionRepository->getScore(
+            $echeance,
+            $circoEuro,
+            array($candidat, $candidat2, $candidat3)
+        );
+
+        $this->assertEquals($score, $scoreEuro);
+
+        $this->assertEquals(460, $score->toVoix());
+        $this->assertTrue(abs(52.27 - $score->toPourcentage()) < 0.01);
+
+        $score = $this->electionRepository->getScore(
+            $echeance,
+            $region,
+            new CandidatNuanceSpecification(array(
+                'FG',
+                'PG',
+            ))
+        );
+
+        $scoreEuro = $this->electionRepository->getScore(
+            $echeance,
+            $circoEuro,
+            new CandidatNuanceSpecification(array(
+                'FG',
+                'PG',
+            ))
+        );
+
+        $pays = $this->territoireRepository->getPays();
+        $scorePays = $this->electionRepository->getScore(
+            $echeance,
+            $pays,
+            new CandidatNuanceSpecification(array(
+                'FG',
+                'PG',
+            ))
+        );
+
+        $this->assertEquals($score, $scoreEuro);
+        $this->assertEquals($score, $scorePays);
+
+        $this->assertEquals(460, $score->toVoix());
+        $this->assertTrue(abs(52.27 - $score->toPourcentage()) < 0.01);
+    }
+
+    public function testSetSurCommuneAndGetRegion()
+    {
+        $date = new \DateTime();
+        $echeance = new Echeance($date, Echeance::CANTONALES);
+        $pays = new Pays();
+        $region = new Region($pays, 11, 'Île-de-France');
+        $circoEuro = new CirconscriptionEuropeenne($pays, 1, 'Test');
+        $circoEuro->addRegion($region);
+        $region->setCirconscriptionEuropeenne($circoEuro);
+        $departement = new Departement($region, 93, 'Seine-Saint-Denis');
+        $commune = new Commune($departement, 12, 'Peu importe');
+        $departement2 = new Departement($region, 92, 'Hauts-de-Seine');
+        $commune2 = new Commune($departement2, 20, 'Jesaispas');
+        $this->territoireRepository->add($commune);
+        $this->territoireRepository->add($commune2);
+        $this->territoireRepository->add($circoEuro);
+        $election = new ElectionUninominale($echeance, $commune);
         $election2 = new ElectionUninominale($echeance, $commune2);
 
         $candidat = new PersonneCandidate($election, 'FG', 'Naël', 'Ferret');
@@ -366,6 +457,15 @@ trait ElectionRepositoryTestTrait
 
         $this->assertEquals(450, $score->toVoix());
         $this->assertTrue(abs(51.13 - $score->toPourcentage()) < 0.01);
+
+        $score = $this->electionRepository->getScore(
+            $echeance,
+            $departement2,
+            $candidat
+        );
+
+        $this->assertEquals(50, $score->toVoix());
+        $this->assertTrue(abs(62.5 - $score->toPourcentage()) < 0.01);
 
         // prendre directement les résultats du département s'ils sont dispo
         // et ne pas tenir compte de ceux de la commune
