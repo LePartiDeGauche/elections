@@ -134,24 +134,20 @@ class DoctrineElectionRepositoryScoreSameElectionOptimizer
                 return null;
         }
 
-        $total = 0;
         $results = $cache[$echeance][$territoire];
 
-        if (!is_array($results)) {
-            return $results;
-        }
-
         if (0 === count($results)) {
-            return -1;
+            return false;
         }
 
+        $total = 0;
         foreach ($results as $result) {
             if ($result['candidat'] === $candidat) {
                 $total += $result['voix'];
             }
         }
 
-        return $total ? $total : null;
+        return $total;
     }
 
     private function doScoreCircoEuroQuery(
@@ -165,11 +161,11 @@ class DoctrineElectionRepositoryScoreSameElectionOptimizer
             $nuance,
             'doScoreCircoEuroQuery'
         );
-        if ($result > 0) {
+        if (is_integer($result)) {
             return Score::fromVoix($result);
         }
 
-        if (-1 === $result) {
+        if (false === $result) {
             return null;
         }
 
@@ -354,7 +350,7 @@ class DoctrineElectionRepositoryScoreSameElectionOptimizer
             'doScoreCircoEuroQuery'
         );
 
-        return $result > 0 ? Score::fromVoix($result) : null;
+        return is_integer($result )? Score::fromVoix($result) : null;
     }
 
     private function doScoreDepartementQuery(
@@ -368,11 +364,11 @@ class DoctrineElectionRepositoryScoreSameElectionOptimizer
             $candidat,
             'doScoreDepartementQuery'
         );
-        if ($result > 0) {
+        if (is_integer($result)) {
             return Score::fromVoix($result);
         }
 
-        if (-1 === $result) {
+        if (false === $result) {
             return null;
         }
 
@@ -415,7 +411,7 @@ class DoctrineElectionRepositoryScoreSameElectionOptimizer
             'doScoreDepartementQuery'
         );
 
-        return $result > 0 ? Score::fromVoix($result) : null;
+        return is_integer($result )? Score::fromVoix($result) : null;
     }
 
     private function doScoreRegionQuery(
@@ -429,11 +425,11 @@ class DoctrineElectionRepositoryScoreSameElectionOptimizer
             $candidat,
             'doScoreRegionQuery'
         );
-        if ($result > 0) {
+        if (is_integer($result)) {
             return Score::fromVoix($result);
         }
 
-        if (-1 === $result) {
+        if (false === $result) {
             return null;
         }
 
@@ -543,7 +539,7 @@ class DoctrineElectionRepositoryScoreSameElectionOptimizer
             'doScoreRegionQuery'
         );
 
-        return $result > 0 ? Score::fromVoix($result) : null;
+        return is_integer($result )? Score::fromVoix($result) : null;
     }
 
     private function doScoreQuery(
@@ -557,11 +553,11 @@ class DoctrineElectionRepositoryScoreSameElectionOptimizer
             $candidat,
             'doScoreQuery'
         );
-        if ($result > 0) {
+        if (is_integer($result)) {
             return Score::fromVoix($result);
         }
 
-        if (-1 === $result) {
+        if (false === $result) {
             return null;
         }
 
@@ -601,6 +597,6 @@ class DoctrineElectionRepositoryScoreSameElectionOptimizer
             'doScoreQuery'
         );
 
-        return $result > 0 ? Score::fromVoix($result) : null;
+        return is_integer($result )? Score::fromVoix($result) : null;
     }
 }
