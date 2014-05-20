@@ -20,6 +20,8 @@
 namespace PartiDeGauche\ElectionsBundle\Controller;
 
 use PartiDeGauche\ElectionDomain\Entity\Candidat\Specification\CandidatNuanceSpecification;
+use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
+use PartiDeGauche\ElectionDomain\VO\VoteInfo;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -210,6 +212,20 @@ class ResultatController extends Controller
         $result = array();
         foreach ($this->get('repository.echeance')->getAll() as $echeance) {
             $result[$echeance->getNom()] = array();
+
+            $election = $this
+                ->get('repository.election')
+                ->get($echeance, $territoire)
+            ;
+
+            if (
+                $election
+                && $echeance->getType() === Echeance::EUROPEENNES
+                && $election->getCirconscription() === $territoire
+            ) {
+                $this->fakeCompletedResult($echeance, $territoire, $election);
+            }
+
             $voteInfo = $this
                 ->get('repository.election')
                 ->getVoteInfo($echeance, $territoire)
@@ -229,26 +245,47 @@ class ResultatController extends Controller
                     )
                 ;
 
-                $election = $this
-                    ->get('repository.election')
-                    ->get($echeance, $territoire)
-                ;
-
                 $candidats = array();
+                $sieges = 0;
                 if ($election) {
                     $candidats = array_filter(
                         $election->getCandidats(),
                         array($spec, 'isSatisfiedBy')
                     );
+
+                    if ($election->getCirconscription() == $territoire) {
+                        foreach ($candidats as $candidat) {
+                            $sieges += $election->getSiegesCandidat($candidat);
+                        }
+                    }
                 }
 
                 $result[$echeance->getNom()][$nuances[0]] = array();
                 $result[$echeance->getNom()][$nuances[0]]['score'] = $score;
+                $result[$echeance->getNom()][$nuances[0]]['sieges'] = $sieges;
                 $result[$echeance->getNom()][$nuances[0]]['candidats'] =
                     $candidats;
             }
         }
 
         return $result;
+    }
+
+    private function fakeCompletedResult($echeance, $territoire, $election)
+    {
+        foreach ($election->getCandidats() as $candidat) {
+            $voix = $this
+                ->get('repository.election')
+                ->getScore(
+                    $echeance,
+                    $territoire,
+                    $candidat
+                )->toVoix()
+            ;
+            $election->setVoixCandidat(
+                $voix,
+                $candidat
+            );
+        }
     }
 }

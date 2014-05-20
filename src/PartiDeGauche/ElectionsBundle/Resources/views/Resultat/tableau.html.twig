@@ -146,6 +146,9 @@
                   {% if loop.index > 1 %}
                     {{ format.diffPourcentage(resultats, loop.index, nuance) }}
                   {% endif %}<br/>
+                  {% if echeance[nuance].sieges %}
+                    {{ echeance[nuance].sieges }} sièges
+                  {% endif %}
                 </td>
               {% endfor %}
             <tr>
