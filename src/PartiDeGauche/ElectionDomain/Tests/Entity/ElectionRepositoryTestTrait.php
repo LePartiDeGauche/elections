@@ -187,6 +187,25 @@ trait ElectionRepositoryTestTrait
 
         $this->assertEquals(400, $score->toVoix());
         $this->assertTrue(abs(50 - $score->toPourcentage()) < 0.001);
+
+        $voteInfo = new VoteInfo(1000, 900, 400);
+        $election->setVoteInfo($voteInfo);
+        $election->setVoixCandidat(100, $candidat);
+
+        $voteInfo = $election->getVoteInfo();
+        $this->assertEquals(400, $voteInfo->getExprimes());
+
+        $score = $election->getScoreCandidat($candidat);
+
+        $this->assertEquals(100, $score->toVoix());
+        $this->assertTrue(abs(25 - $score->toPourcentage()) < 0.001);
+
+        $this->electionRepository->save();
+
+        $score = $election->getScoreCandidat($candidat);
+
+        $this->assertEquals(100, $score->toVoix());
+        $this->assertTrue(abs(25 - $score->toPourcentage()) < 0.001);
     }
 
     public function testSetSurCircoAndGetOtherScore()

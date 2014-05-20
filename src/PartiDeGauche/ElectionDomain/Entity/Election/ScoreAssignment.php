@@ -29,6 +29,7 @@ class ScoreAssignment
     private $election;
     private $candidat;
     private $territoire;
+    private $territoire_id;
     private $scoreVO;
 
     public function getCandidat()
@@ -56,6 +57,11 @@ class ScoreAssignment
     public function getTerritoire()
     {
         return $this->territoire;
+    }
+
+    public function getTerritoire_id()
+    {
+        return $this->territoire_id;
     }
 
     public function getScoreVO()

@@ -27,6 +27,7 @@ class VoteInfoAssignment
     private $id;
     private $election;
     private $territoire;
+    private $territoire_id;
     private $voteInfoVO;
 
     public function __construct(
@@ -47,6 +48,11 @@ class VoteInfoAssignment
     public function getTerritoire()
     {
         return $this->territoire;
+    }
+
+    public function getTerritoire_id()
+    {
+        return $this->territoire_id;
     }
 
     public function getVoteInfoVO()

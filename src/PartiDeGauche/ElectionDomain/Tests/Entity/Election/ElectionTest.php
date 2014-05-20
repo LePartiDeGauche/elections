@@ -166,6 +166,10 @@ class ElectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($voteInfo1, $election->getVoteInfo($territoire1));
         $this->assertEquals($voteInfo2, $election->getVoteInfo($territoire2));
+
+        $election->setVoteInfo($voteInfo1, $territoire2);
+
+        $this->assertEquals($voteInfo1, $election->getVoteInfo($territoire2));
     }
 
     public function testVoteInfoDefault()

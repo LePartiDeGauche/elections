@@ -30,6 +30,11 @@ abstract class AbstractTerritoire
         $this->nom = $nom;
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
     /**
      * Récupérer le nom du territoire.
      * @return string Le nom du territoire.

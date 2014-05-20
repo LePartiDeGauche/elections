@@ -21,6 +21,7 @@ namespace PartiDeGauche\ElectionDomain\Entity\Election;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\PersistentCollection;
 use PartiDeGauche\ElectionDomain\CandidatInterface;
 use PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance;
 use PartiDeGauche\ElectionDomain\VO\Score;
@@ -84,6 +85,10 @@ abstract class Election
         $this->circonscription = $circonscription;
         $this->voteInfos = new ArrayCollection();
         $this->scores = new ArrayCollection();
+        $this->cache = array(
+            'score' => array(),
+            'voteInfo' => array()
+        );
     }
 
     /**
@@ -164,8 +169,11 @@ abstract class Election
                 $score = $this->getScoreCandidat($c);
                 for ($i = 1; $i <= $this->sieges; $i++) {
                     if (
-                        null == $score->toPourcentage()
-                        || 5 < $score->toPourcentage()
+                        $score instanceof Score &&
+                        (
+                            null == $score->toPourcentage()
+                            || 5 < $score->toPourcentage()
+                        )
                     ) {
                         $scores[] = $score->toVoix()/$i;
                         $candidats[] = $c;
@@ -245,8 +253,6 @@ abstract class Election
             $territoire
         );
         $scoreAssignment->setScoreVO($score);
-
-        return;
     }
 
     /**
@@ -323,34 +329,88 @@ abstract class Election
         CandidatInterface $candidat,
         AbstractTerritoire $territoire
     ) {
+        // try to fetch from cache
+        if (isset(
+            $this->cache['score'][spl_object_hash($candidat)],
+            $this->cache['score'][spl_object_hash($candidat)][spl_object_hash($territoire)]
+        )) {
+            return $this->cache['score'][spl_object_hash($candidat)][spl_object_hash($territoire)];
+        }
+
+        // if it is not in cache, it has not been changed so we can fetch from database
+        if ($this->scores instanceof PersistentCollection) {
+            $this->scores->setDirty(false);
+        }
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('territoire_id', $territoire->getId()))
+        ;
+        $collection = $this->scores->matching($criteria);
+        if ($this->scores instanceof PersistentCollection) {
+            $this->scores->setDirty(true);
+        }
+
+        // filter by candidat
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('candidat', $candidat))
             ->andWhere(Criteria::expr()->eq('territoire', $territoire))
         ;
-        $array = array_values($this->scores->matching($criteria)->toArray());
+        $array = array_values($collection->matching($criteria)->toArray());
         if (array_key_exists(0, $array)) {
-            return $array[0];
+            $scoreAssignment = $array[0];
         }
 
-        $scoreAssignment =
-            new ScoreAssignment($this, $candidat, $territoire);
-        $this->scores[] = $scoreAssignment;
+        // new one if no was found
+        if (!isset($scoreAssignment)) {
+            $scoreAssignment =
+                new ScoreAssignment($this, $candidat, $territoire);
+            $this->scores[] = $scoreAssignment;
+        }
+
+        // put to cache
+        if (!isset($this->cache['score'][spl_object_hash($candidat)])) {
+            $this->cache['score'][spl_object_hash($candidat)] = array();
+        }
+        $this->cache['score'][spl_object_hash($candidat)][spl_object_hash($territoire)] = $scoreAssignment;
 
         return $scoreAssignment;
     }
 
     private function getVoteInfoAssignment(AbstractTerritoire $territoire)
     {
+        // try to fetch from cache
+        if (isset($this->cache['voteInfo'][spl_object_hash($territoire)])) {
+            return $this->cache['voteInfo'][spl_object_hash($territoire)];
+        }
+
+        // if not in cache, not changed, so we dont mind fetching from db
+        if ($this->voteInfos instanceof PersistentCollection) {
+            $this->voteInfos->setDirty(false);
+        }
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('territoire_id', $territoire->getId()))
+        ;
+        $collection = $this->voteInfos->matching($criteria);
+        if ($this->voteInfos instanceof PersistentCollection) {
+            $this->voteInfos->setDirty(true);
+        }
+
+        // filter again if territoire_id were not initialized
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('territoire', $territoire))
         ;
-        $array = array_values($this->voteInfos->matching($criteria)->toArray());
+        $array = array_values($collection->matching($criteria)->toArray());
         if (array_key_exists(0, $array)) {
-            return $array[0];
+            $voteInfoAssignment = $array[0];
         }
 
-        $voteInfoAssignment = new VoteInfoAssignment($this, $territoire);
-        $this->voteInfos[] = $voteInfoAssignment;
+        // new one if not found
+        if (!isset($voteInfoAssignment)) {
+            $voteInfoAssignment = new VoteInfoAssignment($this, $territoire);
+            $this->voteInfos[] = $voteInfoAssignment;
+        }
+
+        // put to cache
+        $this->cache['voteInfo'][spl_object_hash($territoire)] = $voteInfoAssignment;
 
         return $voteInfoAssignment;
     }

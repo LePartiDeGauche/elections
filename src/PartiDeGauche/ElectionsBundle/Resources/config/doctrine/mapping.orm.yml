@@ -138,8 +138,14 @@ PartiDeGauche\ElectionDomain\Entity\Election\ScoreAssignment:
         candidat:
             targetEntity: PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat
             cascade: ["persist"]
+            joinColumn: candidat_id
         territoire:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire
+            joinColumn: territoire_id
+    fields:
+        territoire_id:
+            type: integer
+            nullable: true
 
 PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment:
     type: entity
@@ -157,25 +163,35 @@ PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment:
             inversedBy: voteInfos
         territoire:
             targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire
+            joinColumn: territoire_id
+    fields:
+        territoire_id:
+            type: integer
+            nullable: true
 
 PartiDeGauche\ElectionDomain\VO\Score:
     type: embeddable
     fields:
         voix:
             type: integer
+            nullable: true
         pourcentage:
             type: float
             precision: 0.01
+            nullable: true
 
 PartiDeGauche\ElectionDomain\VO\VoteInfo:
     type: embeddable
     fields:
         exprimes:
             type: integer
+            nullable: true
         inscrits:
             type: integer
+            nullable: true
         votants:
             type: integer
+            nullable: true
 
 PartiDeGauche\ElectionsBundle\Repository\CacheInfo\TerritoireTimestamp:
     type: entity
