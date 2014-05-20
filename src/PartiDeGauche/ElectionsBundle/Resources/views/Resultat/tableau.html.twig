@@ -58,9 +58,9 @@
   {% set prevResultat = 0 %}
   {% for echeance in resultats|slice(index-2, 2) %}
     {% if loop.first %}
-      {% set prevResultat = (echeance[nuance].score.toVoix/echeance.exprimes) * 100 %}
+      {% set prevResultat = echeance.exprimes ? (echeance[nuance].score.toVoix/echeance.exprimes) * 100 : false %}
     {% elseif loop.last %}
-      {% set currentResultat = (echeance[nuance].score.toVoix/echeance.exprimes) * 100 %}
+      {% set prevResultat = echeance.exprimes ? (echeance[nuance].score.toVoix/echeance.exprimes) * 100 : false %}
     {% endif %}
   {% endfor %}
 
