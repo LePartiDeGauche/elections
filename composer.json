@@ -1,6 +1,6 @@
 {
     "name": "partidegauche/elections",
-    "license": "AGPL",
+    "license": "AGPL-3.0",
     "type": "project",
     "description": "OpenData sur les élections française par le Parti de Gauche",
     "autoload": {
