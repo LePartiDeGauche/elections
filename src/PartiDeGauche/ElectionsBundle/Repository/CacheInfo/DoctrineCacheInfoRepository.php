@@ -102,5 +102,12 @@ class DoctrineCacheInfoRepository
 
             return;
         }
+
+        if (
+            $territoire instanceof Region
+            || $territoire instanceof CirconscriptionEuropeenne
+        ) {
+            $this->invalidate($territoire->getPays());
+        }
     }
 }
