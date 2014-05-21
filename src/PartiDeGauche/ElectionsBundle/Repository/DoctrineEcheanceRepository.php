@@ -52,10 +52,13 @@ class DoctrineEcheanceRepository implements EcheanceRepositoryInterface
     {
         return $this
             ->em
-            ->getRepository(
-                '\PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance'
+            ->createQuery(
+                'SELECT echeance
+                FROM \PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance
+                    echeance
+                ORDER BY echeance.date ASC'
             )
-            ->findAll()
+            ->getResult()
         ;
     }
 
