@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "7d75fdf1683835d69eae2021d23e678a",
+    "hash": "a9a56a7cbf6a0588ba7241485a6f6a7e",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -53,6 +53,61 @@
                 "validation"
             ],
             "time": "2014-01-26 15:26:52"
+        },
+        {
+            "name": "cocur/slugify",
+            "version": "v0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cocur/slugify.git",
+                "reference": "2b6df626d1958200b8ee059aea01d52c3b658024"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cocur/slugify/zipball/2b6df626d1958200b8ee059aea01d52c3b658024",
+                "reference": "2b6df626d1958200b8ee059aea01d52c3b658024",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "phpunit/phpunit": "~3.7",
+                "satooshi/php-coveralls": "dev-master",
+                "silex/silex": "~1.2",
+                "symfony/dependency-injection": "~2.4",
+                "symfony/http-kernel": "~2.4",
+                "twig/twig": "~1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Cocur\\Slugify\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ivo Bathke",
+                    "email": "ivo.bathke@gmail.com"
+                },
+                {
+                    "name": "Florian Eckerstorfer",
+                    "email": "florian@eckerstorfer.co",
+                    "homepage": "http://florian.ec",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Converts a string into a slug.",
+            "keywords": [
+                "slug",
+                "slugify"
+            ],
+            "time": "2014-04-18 11:01:23"
         },
         {
             "name": "doctrine/annotations",

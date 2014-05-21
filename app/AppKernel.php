@@ -22,6 +22,8 @@ class AppKernel extends Kernel
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
             new Sonata\AdminBundle\SonataAdminBundle(),
+            // Slugify
+            new Cocur\Slugify\Bridge\Symfony\CocurSlugifyBundle(),
             // Nos bundle PG
             new PartiDeGauche\ElectionsBundle\PartiDeGaucheElectionsBundle(),
             new PartiDeGauche\ElectionsAdminBundle\PartiDeGaucheElectionsAdminBundle(),
