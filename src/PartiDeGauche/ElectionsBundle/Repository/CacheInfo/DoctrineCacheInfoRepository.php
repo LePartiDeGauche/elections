@@ -20,6 +20,7 @@
 namespace PartiDeGauche\ElectionsBundle\Repository\CacheInfo;
 
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire;
+use PartiDeGauche\TerritoireDomain\Entity\Territoire\CirconscriptionEuropeenne;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement;
 use PartiDeGauche\TerritoireDomain\Entity\Territoire\Region;
@@ -99,8 +100,6 @@ class DoctrineCacheInfoRepository
             && $territoire->getCirconscriptionEuropeenne()
         ) {
             $this->invalidate($territoire->getCirconscriptionEuropeenne());
-
-            return;
         }
 
         if (
