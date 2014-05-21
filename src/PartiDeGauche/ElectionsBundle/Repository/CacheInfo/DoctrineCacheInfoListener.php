@@ -31,10 +31,22 @@ class DoctrineCacheInfoListener
 
     private $recursionMutex;
 
+    private $switchedOff = false;
+
     public function __construct($container)
     {
         $this->container = $container;
     }
+
+    /**
+     * Switch off le listener.
+     * @param boolean $bool True pour switch off le listener
+     */
+    public function switchOff($bool)
+    {
+        $this->switchedOff = $bool;
+    }
+
     /**
      * Gets all the entities to flush
      *
@@ -42,7 +54,7 @@ class DoctrineCacheInfoListener
      */
     public function onFlush(Event\OnFlushEventArgs $eventArgs)
     {
-        if ($this->recursionMutex) {
+        if ($this->recursionMutex || $this->switchedOff) {
             return;
         }
 
@@ -67,7 +79,7 @@ class DoctrineCacheInfoListener
 
     public function postFlush(Event\PostFlushEventArgs $eventArgs)
     {
-        if ($this->recursionMutex) {
+        if ($this->recursionMutex || $this->switchedOff) {
             return;
         }
 
@@ -81,6 +93,7 @@ class DoctrineCacheInfoListener
         $this->recursionMutex = true;
         $eventArgs->getEntityManager()->flush();
         $this->recursionMutex = false;
+        $this->toInvalidate = array();
     }
 
     private function invalidate($entity)
