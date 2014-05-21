@@ -41,3 +41,8 @@ services:
         alias: repository.territoire.doctrine
     repository.cache_info:
         alias: repository.cache_info.doctrine
+    territoire.twig_extension:
+        class:         "PartiDeGauche\ElectionsBundle\Twig\TerritoireExtension"
+        arguments:     ["@router", "@cocur_slugify"]
+        tags:
+            - { name: twig.extension }
