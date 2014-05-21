@@ -57,6 +57,9 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
 
         $result = $queryResult;
         foreach ($queryResult as $key => $value) {
+            if (count($result) >= $limit) {
+                break;
+            }
             if ($value instanceof Commune) {
                 $result = array_merge($result, $value->getArrondissements()->toArray());
             }
