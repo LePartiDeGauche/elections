@@ -1,0 +1,62 @@
+{#
+ # This file is part of the Parti de Gauche elections data project.
+ #
+ # The Parti de Gauche elections data project is free software: you can
+ # redistribute it and/or modify it under the terms of the GNU Affero General
+ # Public License as published by the Free Software Foundation, either
+ # version 3 of the License, or (at your option) any later version.
+ #
+ # The Parti de Gauche elections data project is distributed in the hope
+ # that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ # See the GNU Affero General Public License for more details.
+ #
+ # You should have received a copy of the GNU Affero General Public License
+ # along with the Parti de Gauche elections data project.
+ # If not, see <http://www.gnu.org/licenses/>.
+ #}
+
+{% extends 'PartiDeGaucheElectionsBundle::layout.html.twig' %}
+
+{% form_theme form 'PartiDeGaucheElectionsBundle:Form:fields.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 text-center">
+            {{ form(form) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                {% if territoires|length < 90 %}
+                    La recherche a retourné {{ territoires|length }} résultat(s).
+                {% elseif territoires|length == 90 %}
+                    La recherche a retourné plus de 90 résultats. Il est conseillé
+                    d'affiner la recherche.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <table class="table">
+                {% for territoire in territoires %}
+                    <tr>
+                        <td>
+                            {% if territoire|resultatsLink != '' %}
+                                <a href="{{ territoire|resultatsLink }}">{{ territoire|display }}</a>
+                            {% else %}
+                                {{ territoire|display }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% if (loop.index % 30) == 0 %}
+                        </table></div>
+                        <div class="col-md-4"><table class="table">
+                    {% endif %}
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
