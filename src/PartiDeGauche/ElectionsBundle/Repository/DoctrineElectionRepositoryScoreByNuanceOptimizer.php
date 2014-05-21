@@ -565,7 +565,7 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
         $query = $this
             ->em
             ->createQuery(
-                'SELECT candidat_.nuance AS nuance, score.scoreVO.voix AS voix
+                'SELECT candidat_.nuance AS nuance, SUM(score.scoreVO.voix) AS voix
                 FROM
                     PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat
                     candidat_,
