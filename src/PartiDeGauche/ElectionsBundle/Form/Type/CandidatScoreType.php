@@ -48,7 +48,7 @@ class CandidatScoreType extends AbstractType
                 'expanded' => false,
                 'multiple' => false
             ))
-            ->add('voix', 'integer')
+            ->add('voix', 'integer', array('required' => false))
         ;
     }
 

@@ -21,25 +21,36 @@
 {% form_theme form 'PartiDeGaucheElectionsBundle:Form:fields.html.twig' %}
 
 {% block content %}
-    {{ form_start(form) }}
-        <div class="col-md-3">
-            <h4>Election</h4>
-            {{ form_row(form.inscrits) }}
-            {{ form_row(form.votants) }}
-            {{ form_row(form.exprimes) }}
+  <div class="row">
+    <div class="col-md-12">
+      {{ form_start(form) }}
+        <div class="row">
+          <div class="col-md-3">
+              <h4>Election</h4>
+              {{ form_row(form.inscrits) }}
+              {{ form_row(form.votants) }}
+              {{ form_row(form.exprimes) }}
+          </div>
+          <div class="col-md-9">
+              <h4>Candidats</h4>
+              <div class="row">
+                  {% for candidatForm in form.candidats %}
+                      <div class="col-md-4 candidat">
+                          {{ form_row(candidatForm, {'label': false}) }}
+                      </div>
+                  {% endfor %}
+              </div>
+          </div>
         </div>
-        <div class="col-md-9">
-            <h4>Candidats</h4>
-            <div class="row">
-                {% for candidatForm in form.candidats %}
-                    <div class="col-md-4 candidat">
-                        {{ form_row(candidatForm, {'label': false}) }}
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-4">
+            {{ form_widget(form.effacer, {'attr': {'class': 'form-control btn-danger'} }) }}
+          </div>
+          <div class="col-md-8">
             {{ form_row(form.enregistrer, {'attr': {'class': 'form-control'} }) }}
+          </div>
         </div>
-    {{ form_end(form) }}
+      {{ form_end(form) }}
+    </div>
+  </div>
 {% endblock %}

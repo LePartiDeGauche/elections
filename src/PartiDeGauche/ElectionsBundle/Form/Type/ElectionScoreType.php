@@ -36,6 +36,7 @@ class ElectionScoreType extends AbstractType
                 'label' => false,
             ))
             ->add('enregistrer', 'submit')
+            ->add('effacer', 'submit')
         ;
     }
 

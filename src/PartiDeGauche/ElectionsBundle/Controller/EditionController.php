@@ -259,11 +259,13 @@ class EditionController extends Controller
         if ($form->isValid()) {
             $data = $form->getData();
 
+            $effacer = $form->get('effacer')->isClicked();
+
             $election->setVoteInfo(
                 new VoteInfo(
-                    $data['inscrits'],
-                    $data['votants'],
-                    $data['exprimes']
+                    $effacer ? 0 : $data['inscrits'],
+                    $effacer ? 0 : $data['votants'],
+                    $effacer ? 0 : $data['exprimes']
                 ),
                 $territoire
             );
@@ -271,7 +273,7 @@ class EditionController extends Controller
             $candidats = $election->getCandidats();
             foreach ($data['candidats'] as $key => $candidat) {
                 $election->setVoixCandidat(
-                    $candidat['voix'],
+                    $effacer ? null : $candidat['voix'],
                     $candidats[$key],
                     $territoire
                 );

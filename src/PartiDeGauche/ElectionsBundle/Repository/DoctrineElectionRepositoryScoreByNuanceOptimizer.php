@@ -182,6 +182,7 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
                 JOIN score.election election
                 JOIN score.territoire territoire
                 WHERE region_.circonscriptionEuropeenne = :circo
+                    AND score.scoreVO.voix IS NOT NULL
                     AND score.territoire = region_
                     AND election.echeance = :echeance'
             )
@@ -212,6 +213,7 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
                 JOIN score.election election
                 JOIN score.territoire territoire
                 WHERE departement_.region = :circo
+                    AND score.scoreVO.voix IS NOT NULL
                     AND score.territoire = departement_
                     AND election.echeance = :echeance'
             )
@@ -243,6 +245,7 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
                     score
                 JOIN score.election election
                 WHERE region.circonscriptionEuropeenne  = :circo
+                    AND score.scoreVO.voix IS NOT NULL
                     AND score.territoire = region
                     AND score.candidat = candidat_
                     AND election.echeance = :echeance
@@ -272,6 +275,7 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
                 WHERE region.circonscriptionEuropeenne = :circo
                     '. $regCondition . '
                     AND departement.region  = region
+                    AND score.scoreVO.voix IS NOT NULL
                     AND score.territoire = departement
                     AND score.candidat = candidat_
                     AND election.echeance = :echeance
@@ -311,6 +315,7 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
                     AND departement.region  = region
                     '. $depCondition . '
                     AND commune.departement = departement
+                    AND score.scoreVO.voix IS NOT NULL
                     AND score.territoire = commune
                     AND score.candidat = candidat_
                     AND election.echeance = :echeance
@@ -386,6 +391,7 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
                     score
                 JOIN score.election election
                 WHERE commune.departement  = :departement
+                    AND score.scoreVO.voix IS NOT NULL
                     AND score.territoire = commune
                     AND score.candidat = candidat_
                     AND election.echeance = :echeance
@@ -446,6 +452,7 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
                 JOIN score.election election
                 JOIN score.territoire territoire
                 WHERE departement_.region = :region
+                    AND score.scoreVO.voix IS NOT NULL
                     AND score.territoire = departement_
                     AND election.echeance = :echeance'
             )
@@ -477,6 +484,7 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
                     score
                 JOIN score.election election
                 WHERE departement.region  = :region
+                    AND score.scoreVO.voix IS NOT NULL
                     AND score.territoire = departement
                     AND score.candidat = candidat_
                     AND election.echeance = :echeance
@@ -506,6 +514,7 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
                 WHERE departement.region  = :region
                     '. $depCondition . '
                     AND commune.departement = departement
+                    AND score.scoreVO.voix IS NOT NULL
                     AND score.territoire = commune
                     AND score.candidat = candidat_
                     AND election.echeance = :echeance
@@ -573,6 +582,7 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
                     score
                 JOIN score.election election
                 WHERE score.territoire  = :territoire
+                    AND score.scoreVO.voix IS NOT NULL
                     AND score.candidat = candidat_
                     AND election.echeance = :echeance
                 GROUP BY candidat_.nuance'
