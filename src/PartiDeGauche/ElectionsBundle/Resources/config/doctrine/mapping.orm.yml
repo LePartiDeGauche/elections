@@ -193,6 +193,22 @@ PartiDeGauche\ElectionDomain\VO\VoteInfo:
             type: integer
             nullable: true
 
+PartiDeGauche\ElectionsBundle\Repository\ModificationSignature\TerritoireModificationSignature:
+    type: entity
+    id:
+        territoire:
+            associationKey: true
+        echeance:
+            associationKey: true
+    fields:
+        signature:
+            type: string
+    oneToOne:
+        territoire:
+            targetEntity: PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire
+        echeance:
+            targetEntity: PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance
+
 PartiDeGauche\ElectionsBundle\Repository\CacheInfo\TerritoireTimestamp:
     type: entity
     id:

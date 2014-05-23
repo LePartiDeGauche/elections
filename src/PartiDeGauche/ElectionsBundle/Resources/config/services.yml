@@ -33,6 +33,9 @@ services:
         tags:
             - { name: doctrine.event_listener, event: onFlush }
             - { name: doctrine.event_listener, event: postFlush }
+    repository.modification_signature.doctrine:
+        class:        "PartiDeGauche\ElectionsBundle\Repository\ModificationSignature\DoctrineModificationSignatureRepository"
+        arguments:    ["@doctrine"]
     repository.election:
         alias: repository.election.doctrine
     repository.echeance:
@@ -41,6 +44,8 @@ services:
         alias: repository.territoire.doctrine
     repository.cache_info:
         alias: repository.cache_info.doctrine
+    repository.modification_signature:
+        alias: repository.modification_signature.doctrine
     territoire.twig_extension:
         class:         "PartiDeGauche\ElectionsBundle\Twig\TerritoireExtension"
         arguments:     ["@router", "@cocur_slugify"]

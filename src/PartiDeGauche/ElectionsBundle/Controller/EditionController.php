@@ -279,6 +279,12 @@ class EditionController extends Controller
                 );
             }
 
+            $this->get('repository.modification_signature')->sign(
+                $territoire,
+                $election->getEcheance(),
+                'user'
+            );
+
             $this->get('repository.election')->save();
 
             return false;
