@@ -76,11 +76,20 @@ class ResultatController extends Controller
             return $response;
         }
 
-        $results = $this->getResults($circo);
+        $form = $this->createEcheanceChoiceForm();
+        $echeances = $this->getEcheances($form, $request);
+        $reference = $echeances['reference'];
+        $echeances = $echeances['echeances'];
+        $results = $this->getResults($circo, $echeances);
 
         return $this->render(
             'PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig',
-            array('resultats' => $results, 'territoire' => $circo->getNom()),
+            array(
+                'resultats' => $results,
+                'territoire' => $circo->getNom(),
+                'form' => $form->createView(),
+                'reference' => $reference
+            ),
             $response
         );
     }
@@ -117,11 +126,20 @@ class ResultatController extends Controller
             return $response;
         }
 
-        $results = $this->getResults($commune);
+        $form = $this->createEcheanceChoiceForm();
+        $echeances = $this->getEcheances($form, $request);
+        $reference = $echeances['reference'];
+        $echeances = $echeances['echeances'];
+        $results = $this->getResults($commune, $echeances);
 
         return $this->render(
             'PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig',
-            array('resultats' => $results, 'territoire' => $commune->getNom()),
+            array(
+                'resultats' => $results,
+                'territoire' => $commune->getNom(),
+                'form' => $form->createView(),
+                'reference' => $reference
+            ),
             $response
         );
     }
@@ -158,13 +176,19 @@ class ResultatController extends Controller
             return $response;
         }
 
-        $results = $this->getResults($departement);
+        $form = $this->createEcheanceChoiceForm();
+        $echeances = $this->getEcheances($form, $request);
+        $reference = $echeances['reference'];
+        $echeances = $echeances['echeances'];
+        $results = $this->getResults($departement, $echeances);
 
         return $this->render(
             'PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig',
             array(
                 'resultats' => $results,
-                'territoire' => $departement->getNom()
+                'territoire' => $departement->getNom(),
+                'form' => $form->createView(),
+                'reference' => $reference
             ),
             $response
         );
@@ -195,11 +219,20 @@ class ResultatController extends Controller
             return $response;
         }
 
-        $results = $this->getResults($pays);
+        $form = $this->createEcheanceChoiceForm();
+        $echeances = $this->getEcheances($form, $request);
+        $reference = $echeances['reference'];
+        $echeances = $echeances['echeances'];
+        $results = $this->getResults($pays, $echeances);
 
         return $this->render(
             'PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig',
-            array('resultats' => $results, 'territoire' => $pays->getNom()),
+            array(
+                'resultats' => $results,
+                'territoire' => $pays->getNom(),
+                'form' => $form->createView(),
+                'reference' => $reference
+            ),
             $response
         );
     }
@@ -236,19 +269,88 @@ class ResultatController extends Controller
             return $response;
         }
 
-        $results = $this->getResults($region);
+        $form = $this->createEcheanceChoiceForm();
+        $echeances = $this->getEcheances($form, $request);
+        $reference = $echeances['reference'];
+        $echeances = $echeances['echeances'];
+        $results = $this->getResults($region, $echeances);
 
         return $this->render(
             'PartiDeGaucheElectionsBundle:Resultat:tableau.html.twig',
-            array('resultats' => $results, 'territoire' => $region->getNom()),
+            array(
+                'resultats' => $results,
+                'territoire' => $region->getNom(),
+                'form' => $form->createView(),
+                'reference' => $reference
+            ),
             $response
         );
     }
 
-    private function getResults($territoire)
+    private function createEcheanceChoiceForm()
+    {
+        $echeances = $this
+            ->get('repository.echeance')
+            ->getAll()
+        ;
+
+        $form = $this->createFormBuilder()
+            ->setMethod('GET')
+            ->add('echeances', 'entity', array(
+                'class' => 'PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance',
+                'choices' => $echeances,
+                'expanded' => true,
+                'multiple' => true,
+                'label' => 'Elections'
+            ))
+            ->add('comparaison', 'entity', array(
+                'class' => 'PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance',
+                'choices' => $echeances,
+                'expanded' => false,
+                'multiple' => false,
+                'required' => false,
+                'empty_value' => 'Comparer par rapport à la précédente.'
+            ))
+            ->add('voir', 'submit', array('label' => 'Voir la sélection'))
+            ->getForm()
+        ;
+
+        return $form;
+    }
+
+    private function getEcheances($form, Request $request)
+    {
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+
+            $reference = $data['comparaison'] ?
+                $data['comparaison']->getNom() : null
+            ;
+
+            if (!in_array($data['comparaison'], $data['echeances']->toArray())) {
+                $reference = null;
+            }
+
+            return array(
+                'echeances' => $data['echeances'],
+                'reference' => $reference
+            );
+        }
+
+        return array('echeances' => array(), 'reference' => null);
+    }
+
+    private function getResults($territoire, $echeances = array())
     {
         $result = array();
-        foreach ($this->get('repository.echeance')->getAll() as $echeance) {
+
+        if (empty($echeances)) {
+            $echeances = $this->get('repository.echeance')->getAll();
+        }
+
+        foreach ($echeances as $echeance) {
             $result[$echeance->getNom()] = array();
 
             $election = $this
