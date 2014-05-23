@@ -33,15 +33,15 @@ class ResultatController extends Controller
     private $nuancess = array(
         array('EXG', 'LEXG'),
         array('FG', 'LCOP', 'LCOM' ,'LPG', 'LFG'),
-        array('SOC', 'LSOC', 'LUG'),
         array('VEC', 'LVEC'),
-        array('AUT', 'LAUT'),
-        array('CEN', 'LCMD', 'LCM', 'LMDM', 'LUC', 'LUDI', 'NCE'),
-        array('UMP', 'LMAJ', 'LUD'),
-        array('DVD', 'LDVD'),
+        array('SOC', 'LSOC', 'LUG'),
         array('DVG', 'LDVG'),
+        array('CEN', 'LCMD', 'LCM', 'LMDM', 'LUC', 'LUDI', 'NCE'),
+        array('UMP', 'LMAJ', 'LUD', 'LUMP'),
+        array('DVD', 'LDVD'),
         array('FN', 'LFN'),
         array('EXD', 'LEXD'),
+        array('AUT', 'LAUT', 'LDIV'),
     );
 
     /**
