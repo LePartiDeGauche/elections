@@ -47,6 +47,12 @@
             {% block navLinks %}
               <li><a href="{{ path('accueil') }}">Accueil</a></li>
               <li><a href="{{ path('rechercher') }}">Rechercher</a></li>
+              {% if not is_granted('ROLE_ADMIN') %}
+                <li><a href="{{ path('login') }}">Connexion</a></li>
+              {% else %}
+                <li><a href="{{ path('sonata_admin_dashboard') }}">Administration</a></li>
+                <li><a href="{{ path('logout') }}">Déconnexion</a></li>
+              {% endif %}
             {% endblock %}
           </ul>
           {% endblock %}
