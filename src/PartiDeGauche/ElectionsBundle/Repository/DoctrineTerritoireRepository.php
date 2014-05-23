@@ -49,14 +49,56 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
                     PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire
                     territoires
                 WHERE
-                    territoires.nom LIKE :string'
+                    territoires.nom = :exactString'
             )
+            ->setParameter('exactString', $string)
+            ->setMaxResults($limit)
+            ->getResult()
+        ;
+        $result = $queryResult;
+
+        $queryResult = $this
+            ->em
+            ->createQuery(
+                'SELECT territoires
+                FROM
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire
+                    territoires
+                WHERE
+                    territoires.nom LIKE :stringAtStart
+                    AND territoires.nom NOT LIKE :exactString
+                ORDER BY territoires.nom'
+            )
+            ->setParameter('exactString', $string)
+            ->setParameter('stringAtStart', $string . '%')
+            ->setMaxResults($limit)
+            ->getResult()
+        ;
+
+        $result = array_merge($result, $queryResult);
+
+        $queryResult = $this
+            ->em
+            ->createQuery(
+                'SELECT territoires
+                FROM
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\AbstractTerritoire
+                    territoires
+                WHERE
+                    territoires.nom LIKE :string
+                    AND territoires.nom NOT LIKE :stringAtStart
+                    AND territoires.nom NOT LIKE :exactString'
+            )
+            ->setParameter('exactString', $string)
+            ->setParameter('stringAtStart', $string . '%')
             ->setParameter('string', '%' . $string . '%')
             ->setMaxResults($limit)
-            ->getResult();
+            ->getResult()
+        ;
 
-        $result = $queryResult;
-        foreach ($queryResult as $key => $value) {
+        $result = array_merge($result, $queryResult);
+        $queriesResult = $result;
+        foreach ($queriesResult as $key => $value) {
             if (count($result) >= $limit) {
                 break;
             }
