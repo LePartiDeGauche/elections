@@ -119,7 +119,10 @@ class Echeance
                 $echeance = 'Européennes';
         }
 
-        return $echeance . ' ' .$this->date->format('Y');
+        return $echeance
+            . ' ' . $this->date->format('Y')
+            . ' ' . ($this->secondTour ? '(second tour)' : '')
+        ;
     }
 
     /**

@@ -30,11 +30,11 @@ class EcheanceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($date, $echeance->getDate());
         $this->assertEquals(
-            'Cantonales ' . $date->format('Y'),
+            'Cantonales ' . $date->format('Y') . ' (second tour)',
             $echeance->getNom()
         );
         $this->assertEquals(
-            'Cantonales ' . $date->format('Y'),
+            'Cantonales ' . $date->format('Y') . ' (second tour)',
             $echeance->__toString()
         );
         $this->assertTrue($echeance->isSecondTour());
