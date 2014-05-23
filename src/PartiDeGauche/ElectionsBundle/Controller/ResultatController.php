@@ -50,12 +50,16 @@ class ResultatController extends Controller
      *     name="resultat_circo_europeenne"
      * )
      */
-    public function circoEuropeenneAction(Request $request, $code)
+    public function circoEuropeenneAction(Request $request, $code, $nom)
     {
         $circo = $this
             ->get('repository.territoire')
             ->getCirconscriptionEuropeenne($code)
         ;
+
+        if ($this->get('cocur_slugify')->slugify($circo->getNom()) !== $nom) {
+            throw $this->createNotFoundException('Circonscription inconnue.');
+        }
 
         $response = new Response();
         $response->setLastModified(
@@ -82,12 +86,16 @@ class ResultatController extends Controller
      *     name="resultat_commune"
      * )
      */
-    public function communeAction(Request $request, $departement, $code)
+    public function communeAction(Request $request, $departement, $code, $nom)
     {
         $commune = $this
             ->get('repository.territoire')
             ->getCommune($departement, $code)
         ;
+
+        if ($this->get('cocur_slugify')->slugify($commune->getNom()) !== $nom) {
+            throw $this->createNotFoundException('Commune inconnue.');
+        }
 
         $response = new Response();
         $response->setLastModified(
@@ -114,12 +122,17 @@ class ResultatController extends Controller
      *     name="resultat_departement"
      * )
      */
-    public function departementAction(Request $request, $code)
+    public function departementAction(Request $request, $code, $nom)
     {
         $departement = $this
             ->get('repository.territoire')
             ->getDepartement($code)
         ;
+
+        $dNom = $this->get('cocur_slugify')->slugify($departement->getNom());
+        if ($dNom !== $nom) {
+            throw $this->createNotFoundException('Département inconnu.');
+        }
 
         $response = new Response();
         $response->setLastModified(
@@ -181,12 +194,16 @@ class ResultatController extends Controller
      *     name="resultat_region"
      * )
      */
-    public function regionAction(Request $request, $code)
+    public function regionAction(Request $request, $code, $nom)
     {
         $region = $this
             ->get('repository.territoire')
             ->getRegion($code)
         ;
+
+        if ($this->get('cocur_slugify')->slugify($region->getNom()) !== $nom) {
+            throw $this->createNotFoundException('Région inconnue.');
+        }
 
         $response = new Response();
         $response->setLastModified(
