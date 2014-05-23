@@ -57,7 +57,10 @@ class ResultatController extends Controller
             ->getCirconscriptionEuropeenne($code)
         ;
 
-        if ($this->get('cocur_slugify')->slugify($circo->getNom()) !== $nom) {
+        if (
+            !$circo
+            || $this->get('cocur_slugify')->slugify($circo->getNom()) !== $nom
+        ) {
             throw $this->createNotFoundException('Circonscription inconnue.');
         }
 
@@ -93,7 +96,10 @@ class ResultatController extends Controller
             ->getCommune($departement, $code)
         ;
 
-        if ($this->get('cocur_slugify')->slugify($commune->getNom()) !== $nom) {
+        if (
+            !$commune
+            || $this->get('cocur_slugify')->slugify($commune->getNom()) !== $nom
+        ) {
             throw $this->createNotFoundException('Commune inconnue.');
         }
 
@@ -129,8 +135,10 @@ class ResultatController extends Controller
             ->getDepartement($code)
         ;
 
-        $dNom = $this->get('cocur_slugify')->slugify($departement->getNom());
-        if ($dNom !== $nom) {
+        if (
+            !$departement
+            || $this->get('cocur_slugify')->slugify($departement->getNom()) !== $nom
+        ) {
             throw $this->createNotFoundException('Département inconnu.');
         }
 
@@ -201,7 +209,10 @@ class ResultatController extends Controller
             ->getRegion($code)
         ;
 
-        if ($this->get('cocur_slugify')->slugify($region->getNom()) !== $nom) {
+        if (
+            !$region
+            || $this->get('cocur_slugify')->slugify($region->getNom()) !== $nom
+        ) {
             throw $this->createNotFoundException('Région inconnue.');
         }
 
