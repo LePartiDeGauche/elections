@@ -92,6 +92,13 @@
             {% for echeance, resultat in resultats %}
               <th>
                 {{ echeance }}
+                {% if is_granted('ROLE_ADMIN') and resultat.election is not null %}
+                  <br/>
+                  {% set editpath = app.request.uri ~ '/edit/' ~ echeance|slugify %}
+                  <a class="btn btn-xs btn-default" href="{{ editpath }}">
+                    Éditer
+                  </a>
+                {% endif %}
               </th>
             {% endfor %}
           </tr>
@@ -127,7 +134,7 @@
               </td>
             {% endfor %}
           </tr>
-          {% for nuance, score in (resultats|first)|slice(3) %}
+          {% for nuance, score in (resultats|first)|slice(4) %}
             <tr>
               <th>
                 {{ nuance }}

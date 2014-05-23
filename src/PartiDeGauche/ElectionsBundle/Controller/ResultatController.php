@@ -271,6 +271,7 @@ class ResultatController extends Controller
             $result[$echeance->getNom()]['inscrits'] = $voteInfo->getInscrits();
             $result[$echeance->getNom()]['votants'] = $voteInfo->getVotants();
             $result[$echeance->getNom()]['exprimes'] = $voteInfo->getExprimes();
+            $result[$echeance->getNom()]['election'] = $election;
 
             foreach ($this->nuancess as $nuances) {
                 $spec = new CandidatNuanceSpecification($nuances);
