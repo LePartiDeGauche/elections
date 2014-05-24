@@ -56,7 +56,7 @@ class DoctrineCacheInfoRepository
             return $timestamp->getTimestamp();
         }
 
-        return new \DateTime('04/24/2014');
+        return new \DateTime('04/23/2014');
     }
 
     public function invalidate(AbstractTerritoire $territoire)
