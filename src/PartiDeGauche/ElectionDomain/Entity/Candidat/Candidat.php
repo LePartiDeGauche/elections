@@ -50,4 +50,13 @@ abstract class Candidat implements CandidatInterface
     {
         return $this->nuance;
     }
+
+    /**
+     * Changer la nuance du candidat.
+     * @param string $nuance La nuance du candidiat.
+     */
+    public function setNuance($nuance)
+    {
+        $this->nuance = $nuance;
+    }
 }
