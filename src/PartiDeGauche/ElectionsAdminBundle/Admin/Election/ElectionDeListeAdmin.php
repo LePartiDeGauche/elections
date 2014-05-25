@@ -54,6 +54,7 @@ class ElectionDeListeAdmin extends Admin
             ->addIdentifier('echeance')
             ->add('circonscription')
             ->add('candidats', 'array')
+            ->add('sieges')
         ;
     }
 }
