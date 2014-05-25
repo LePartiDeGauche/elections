@@ -16,7 +16,9 @@
     <!-- Bootstrap core CSS -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <!-- Notre css -->
-    {% stylesheets '@PartiDeGaucheElectionsBundle/Resources/public/css/*.css' %}
+    {% stylesheets '@PartiDeGaucheElectionsBundle/Resources/public/css/baseLayout.css'
+      '@PartiDeGaucheElectionsBundle/Resources/public/css/selectize.css'
+      '@PartiDeGaucheElectionsBundle/Resources/public/css/selectize.bootstrap3.css' %}
       <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
     {% endstylesheets %}
     {% block stylesheets %}
