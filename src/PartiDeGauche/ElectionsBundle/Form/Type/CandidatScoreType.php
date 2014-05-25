@@ -21,32 +21,39 @@ namespace PartiDeGauche\ElectionsBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Choice;
 
 class CandidatScoreType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $nuances = array(
+            'EXG',
+            'FG',
+            'VEC',
+            'SOC',
+            'DVG',
+            'CEN',
+            'UMP',
+            'DVD',
+            'FN',
+            'EXD',
+            'AUT'
+        );
+
         $builder
             ->add('nom', 'text', array(
                 'disabled' => true,
                 'read_only' => true
             ))
-            ->add('nuance', 'choice', array(
-                'choices' => array(
-                    'EXG',
-                    'FG',
-                    'VEC',
-                    'SOC',
-                    'DVG',
-                    'CEN',
-                    'UMP',
-                    'DVD',
-                    'FN',
-                    'EXD',
-                    'AUT'
-                ),
-                'expanded' => false,
-                'multiple' => false
+            ->add('nuance', 'text', array(
+                'constraints' => array(
+                    new Choice(array(
+                        'choices' => $nuances,
+                        'message' => 'La nuance doit faire partie '
+                        . 'de la liste suivante : ' . join($nuances, ', ') . '.'
+                    ))
+                )
             ))
             ->add('voix', 'integer', array('required' => false))
         ;

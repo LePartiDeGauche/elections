@@ -239,7 +239,7 @@ class EditionController extends Controller
 
             $candidats[$key] = array(
                 'nom' => $candidat->getNom(),
-                'nuance' => $candidat->getNuance(),
+                'nuance' => $this->convertNuance($candidat->getNuance()),
                 'voix' => $voix
             );
         }
@@ -277,6 +277,7 @@ class EditionController extends Controller
                     $candidats[$key],
                     $territoire
                 );
+                $candidats[$key]->setNuance($candidat['nuance']);
             }
 
             $this->get('repository.modification_signature')->sign(
@@ -309,6 +310,33 @@ class EditionController extends Controller
             if ($slug === $echeanceSlug) {
                 return $echeance;
             }
+        }
+    }
+
+    private function convertNuance($nuance)
+    {
+        if (in_array($nuance, array('EXG', 'LEXG'))) {
+            return 'EXG';
+        } elseif (in_array($nuance, array('FG', 'LCOP', 'LCOM' ,'LPG', 'LFG'))) {
+            return 'FG';
+        } elseif (in_array($nuance, array('VEC', 'LVEC'))) {
+            return 'VEC';
+        } elseif (in_array($nuance, array('SOC', 'LSOC', 'LUG'))) {
+            return 'SOC';
+        } elseif (in_array($nuance, array('DVG', 'LDVG'))) {
+            return 'DVG';
+        } elseif (in_array($nuance, array('CEN', 'LCMD', 'LCM', 'LMDM', 'LUC', 'LUDI', 'NCE'))) {
+            return 'CEN';
+        } elseif (in_array($nuance, array('UMP', 'LMAJ', 'LUD', 'LUMP'))) {
+            return 'UMP';
+        } elseif (in_array($nuance, array('DVD', 'LDVD'))) {
+            return 'DVD';
+        } elseif (in_array($nuance, array('FN', 'LFN'))) {
+            return 'FN';
+        } elseif (in_array($nuance, array('EXD', 'LEXD'))) {
+            return 'EXD';
+        } elseif (in_array($nuance, array('AUT', 'LAUT', 'LDIV'))) {
+            return 'AUT';
         }
     }
 }
