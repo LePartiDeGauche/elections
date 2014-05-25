@@ -56,7 +56,7 @@ class TerritoireExtension extends \Twig_Extension
             case 'PartiDeGauche\TerritoireDomain\Entity\Territoire\Region':
                 return $territoire->getNom() . ' (Region)';
             case 'PartiDeGauche\TerritoireDomain\Entity\Territoire\Commune':
-                return $territoire->getNom() . ' (Commune)';
+                return $territoire->getNom() . ' (' . $territoire->getDepartement() . ')';
         }
 
         return $territoire->getNom();
