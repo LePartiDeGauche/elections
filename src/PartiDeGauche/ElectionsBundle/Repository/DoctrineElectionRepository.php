@@ -524,11 +524,15 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
                 AND voteInfo.territoire = departement
                 AND election.echeance = :echeance'
             )
-                        ->setParameters(array(
+            ->setParameters(array(
                 'echeance' => $echeance,
                 'territoire' => $territoire,
             ))
         ;
+
+        if (!empty($regionsAcResultats)) {
+            $query->setParameter('regionsAcResultats', $regionsAcResultats);
+        }
 
         $departementsAcResultats = $query->getResult();
 
@@ -582,6 +586,10 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
         ;
         if (!empty($departementsAcResultats)) {
             $query->setParameter('departementsAcResultats', $departementsAcResultats);
+        }
+
+        if (!empty($regionsAcResultats)) {
+            $query->setParameter('regionsAcResultats', $regionsAcResultats);
         }
 
         $result2 = $query->getSingleResult();
