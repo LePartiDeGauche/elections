@@ -31,6 +31,12 @@ class DefaultController extends Controller
      */
     public function accueilAction()
     {
-        return array();
+        $form = $this->createFormBuilder(array())
+            ->setAction($this->generateUrl('rechercher_post'))
+            ->add('terme', 'text', array('label' => 'Nom du territoire : '))
+            ->add('Rechercher', 'submit')
+            ->getForm();
+
+        return array('form' => $form->createView());
     }
 }

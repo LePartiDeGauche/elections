@@ -1,0 +1,8 @@
+[{% for territoire in territoires %}
+{% spaceless %}
+    {
+        "nom": "{{ territoire|display }}",
+        "url": "{{ territoire|resultatsLink }}"
+    }{% if not loop.last%},{% endif %}
+{% endspaceless %}
+{% endfor %}]

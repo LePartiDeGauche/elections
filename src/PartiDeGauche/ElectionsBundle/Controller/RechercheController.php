@@ -54,6 +54,23 @@ class RechercheController extends Controller
     }
 
     /**
+     * @Route("/json/rechercher/{terme}", name="rechercher_json")
+     * @Method({"GET"})
+     * @Template("PartiDeGaucheElectionsBundle:Recherche:rechercher.json.twig")
+     */
+    public function rechercherJsonAction($terme = null)
+    {
+        $territoires = array();
+        if (!empty($terme)) {
+            $territoires = $this
+                ->get('repository.territoire')
+                ->findLike($terme, 20);
+        }
+
+        return array('territoires' => $territoires);
+    }
+
+    /**
      * @Route("/rechercher", name="rechercher_post")
      * @Method({"POST"})
      */

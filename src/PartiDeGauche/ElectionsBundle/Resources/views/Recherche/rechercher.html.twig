@@ -60,3 +60,50 @@
         </div>
     </div>
 {% endblock %}
+
+{% block javascript %}
+  <script>
+    var selectizeOptions = {
+      valueField: 'url',
+      searchField: 'nom',
+      labelField: 'nom',
+      create: function(input, callback) {
+        return {
+            nom: input,
+            url: '{{ path('rechercher') }}/' + input
+        };
+      },
+      load: function(query, callback) {
+          if (!query.length) return callback();
+          $.ajax({
+              url: '{{ path('rechercher_json') }}/' + query,
+              type: 'GET',
+              dataType: 'json',
+              error: function() {
+                  callback();
+              },
+              success: function(res) {
+                  callback(res);
+              }
+          });
+      },
+      render: {
+        option_create: function(item, escape) {
+          return '<div class="create">Rechercher "' + item.input + '"</div>';
+        }
+      },
+      maxItems: 1,
+      addPrecedence: true,
+      dropdownParent: 'body',
+      onChange: function(value) {
+        window.location.href = value;
+      }
+    };
+    $(function() {
+      var $select = $('#form_terme').selectize(selectizeOptions);
+      $select[0].selectize.clear();
+      $select[0].selectize.clearOptions();
+    });
+  </script>
+{% endblock %}
+
