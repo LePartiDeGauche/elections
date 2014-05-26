@@ -521,9 +521,11 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
             ))
         ;
 
-        $departementsAcResultats = $query->getResult();
+        if (!empty($regionsAcResultats)) {
+            $query->setParameter('regionsAcResultats', $regionsAcResultats);
+        }
 
-        $result1 = $departementsAcResultats[0];
+        $departementsAcResultats = $query->getResult();
 
         $query = $this
             ->em
