@@ -283,10 +283,13 @@
 
     new Chart(ctx).Line(data, options);
     window.onresize = function(event) {
-      var width = $('canvas').parent().width();
-      $('canvas').attr("width", width);
-      $('#chart').attr("height", width/3);
-      new Chart(ctx).Line(data, options);
+      var newWidth = $('canvas').parent().width();
+      if (width !== newWidth) {
+        $('canvas').attr("width", newWidth);
+        $('#chart').attr("height", width/3);
+        new Chart(ctx).Line(data, options);
+        width = newWidth;
+      }
     };
   </script>
 {% endblock %}
