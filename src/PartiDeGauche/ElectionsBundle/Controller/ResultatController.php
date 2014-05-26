@@ -299,7 +299,10 @@ class ResultatController extends Controller
             ->getAll()
         ;
 
-        $form = $this->createFormBuilder()
+        $form = $this
+            ->createFormBuilder(null, array(
+                'csrf_protection' => false
+            ))
             ->setMethod('GET')
             ->add('echeances', 'entity', array(
                 'class' => 'PartiDeGauche\ElectionDomain\Entity\Echeance\Echeance',
