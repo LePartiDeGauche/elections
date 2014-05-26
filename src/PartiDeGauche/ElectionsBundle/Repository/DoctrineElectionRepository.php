@@ -129,7 +129,10 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
             $score = Score::fromVoix($score);
         }
 
-        if ($candidat instanceof CandidatNuanceSpecification) {
+        if (
+            (!isset($score) || !$score)
+            && $candidat instanceof CandidatNuanceSpecification
+        ) {
             $score = $this->nuanceOptimizer->getScore(
                 $echeance,
                 $territoire,
