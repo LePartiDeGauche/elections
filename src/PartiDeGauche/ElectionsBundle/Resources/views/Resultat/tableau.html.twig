@@ -191,22 +191,103 @@
                   {% endif %}
                 </td>
               {% endfor %}
-            <tr>
+            </tr>
           {% endfor %}
         </table>
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-11">
+      <canvas id="chart"></canvas>
+    </div>
+    <div class="col-md-1" id="legend">
+    </div>
+  </div>
 {% endblock %}
 
 {% block javascript %}
+  {% javascripts '@PartiDeGaucheElectionsBundle/Resources/public/js/Chart.min.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+  {% endjavascripts %}
   <script>
+    // popover
     $('td').popover({
       container: 'body',
       placement: 'top',
       html: true,
       trigger: 'hover'
     });
+
+    // chart
+    var getNuanceColor = function(nuance) {
+      var map = {
+        EXG: "#750103",
+        FG: "#DD0005",
+        VEC: "#74B443",
+        SOC: "#FF00BB",
+        DVG: "#FF424B",
+        CEN: "#FFF300",
+        UMP: "#424BFF",
+        DVD: "#8B88FF",
+        FN: "#02005B",
+        EXD: "#000000",
+        AUT: "#717171"
+      };
+
+      return map[nuance];
+    };
+
+    {% for nuance, score in (resultats|first)|slice(4) %}
+      $('#legend').append(
+          '<span style="color: ' + getNuanceColor('{{ nuance }}') + ';">'
+          + '&#11035;'
+        + '</span> '
+        + '<strong>{{ nuance }}</strong><br/>'
+      );
+    {% endfor %}
+
+    var data = {
+      labels: [
+        {% for echeance, resultat in resultats %}
+          '{{ echeance }}'{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ],
+      datasets: [
+        {% for nuance, score in (resultats|first)|slice(4) %}
+          {
+            fillColor: "rgba(255,255,255,0)",
+            strokeColor : getNuanceColor('{{ nuance }}'),
+            pointColor : getNuanceColor('{{ nuance }}'),
+            pointStrokeColor : getNuanceColor('{{ nuance }}'),
+            data : [
+              {% for echeance in resultats %}
+                {{ echeance.exprimes ? (echeance[nuance].score.toVoix/echeance.exprimes) * 100 : 0 }}
+                {% if not loop.last %},{% endif %}
+              {% endfor %}
+            ]
+          }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    };
+    var options = {
+      datasetFill : false,
+      scaleStartValue: 0,
+        scaleLabel : "<%=value%> %"
+    }
+    var ctx = document.getElementById("chart").getContext("2d");
+
+    var width = $('#chart').parent().width();
+    $('#chart').attr("width",width);
+    $('#chart').attr("height", width/3);
+
+    new Chart(ctx).Line(data, options);
+    window.onresize = function(event) {
+      var width = $('canvas').parent().width();
+      $('canvas').attr("width", width);
+      $('#chart').attr("height", width/3);
+      new Chart(ctx).Line(data, options);
+    };
   </script>
 {% endblock %}
 
