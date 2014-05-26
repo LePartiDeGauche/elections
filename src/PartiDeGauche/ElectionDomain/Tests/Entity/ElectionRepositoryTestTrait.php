@@ -530,6 +530,9 @@ trait ElectionRepositoryTestTrait
         $echeance = new Echeance($date, Echeance::CANTONALES);
         $pays = new Pays();
         $region = new Region($pays, 11, 'Île-de-France');
+        $circoEuro = new CirconscriptionEuropeenne($pays, 1, 'Test');
+        $circoEuro->addRegion($region);
+        $region->setCirconscriptionEuropeenne($circoEuro);
         $departement = new Departement($region, 93, 'Seine-Saint-Denis');
         $departement2 = new Departement($region, 92, 'Hauts-de-Seine');
         $commune2 = new Commune($departement2, 20, 'Jesaispas');
@@ -585,6 +588,17 @@ trait ElectionRepositoryTestTrait
             $candidat
         );
 
+        $score2 = $this->electionRepository->getScore(
+            $echeance,
+            $circoEuro,
+            $candidat
+        );
+
+        $voteInfo = $this->electionRepository->getVoteInfo($echeance, $region);
+
+        $this->assertEquals(890, $voteInfo->getExprimes());
+
+        $this->assertEquals($score, $score2);
         $this->assertEquals(460, $score->toVoix());
         $this->assertTrue(abs(51.68 - $score->toPourcentage()) < 0.01);
     }

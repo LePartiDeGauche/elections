@@ -144,7 +144,10 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
                 : new Score();
         }
 
-        if ($candidat instanceof Candidat && $this->get($echeance, $territoire)) {
+        if (
+            (!isset($score) || !$score)
+            && $candidat instanceof Candidat && $this->get($echeance, $territoire)
+        ) {
             $score = $this->sameElectionOptimizer->getScore(
                 $echeance,
                 $territoire,
@@ -466,9 +469,6 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
             ->em
             ->createQuery(
                 'SELECT
-                    SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
-                    SUM(voteInfo.voteInfoVO.votants) AS votants,
-                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits,
                     territoire.id
                 FROM
                     PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
@@ -489,22 +489,10 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
 
         $regionsAcResultats = $query->getResult();
 
-        $result0 = $regionsAcResultats[0];
-
-        $regionsAcResultats = array_map(function ($line) {
-            return $line['id'];
-        }, $regionsAcResultats);
-        $regionsAcResultats = array_filter($regionsAcResultats, function ($element) {
-            return ($element);
-        });
-
         $query = $this
             ->em
             ->createQuery(
                 'SELECT
-                    SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
-                    SUM(voteInfo.voteInfoVO.votants) AS votants,
-                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits,
                     territoire.id
                 FROM
                     PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
@@ -518,7 +506,68 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
                 WHERE region.circonscriptionEuropeenne = :territoire
                 ' . (
                         empty($regionsAcResultats) ? ''
-                        : 'AND region NOT IN (:regionsAcResultats)'
+                        : 'AND region.id NOT IN (:regionsAcResultats)'
+                    ) . '
+                AND departement.region  = region
+                AND voteInfo.territoire = departement
+                AND election.echeance = :echeance'
+            )
+            ->setParameters(array(
+                'echeance' => $echeance,
+                'territoire' => $territoire,
+            ))
+        ;
+
+        $departementsAcResultats = $query->getResult();
+
+        $result1 = $departementsAcResultats[0];
+
+        $query = $this
+            ->em
+            ->createQuery(
+                'SELECT
+                    SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
+                    SUM(voteInfo.voteInfoVO.votants) AS votants,
+                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits
+                FROM
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
+                    region,
+                    PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
+                    voteInfo
+                JOIN voteInfo.election election
+                JOIN voteInfo.territoire territoire
+                WHERE region.circonscriptionEuropeenne  = :territoire
+                AND voteInfo.territoire = region
+                AND election.echeance = :echeance'
+            )
+            ->setParameters(array(
+                'echeance' => $echeance,
+                'territoire' => $territoire,
+            ))
+        ;
+
+        $result0 = $query->getSingleResult();
+
+        $query = $this
+            ->em
+            ->createQuery(
+                'SELECT
+                    SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
+                    SUM(voteInfo.voteInfoVO.votants) AS votants,
+                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits
+                FROM
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
+                    region,
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
+                    departement,
+                    PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
+                    voteInfo
+                JOIN voteInfo.election election
+                JOIN voteInfo.territoire territoire
+                WHERE region.circonscriptionEuropeenne = :territoire
+                ' . (
+                        empty($regionsAcResultats) ? ''
+                        : 'AND region.id NOT IN (:regionsAcResultats)'
                     ) . '
                 AND departement.region  = region
                 AND voteInfo.territoire = departement
@@ -534,16 +583,7 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
             $query->setParameter('regionsAcResultats', $regionsAcResultats);
         }
 
-        $departementsAcResultats = $query->getResult();
-
-        $result1 = $departementsAcResultats[0];
-
-        $departementsAcResultats = array_map(function ($line) {
-            return $line['id'];
-        }, $departementsAcResultats);
-        $departementsAcResultats = array_filter($departementsAcResultats, function ($element) {
-            return ($element);
-        });
+        $result1 = $query->getSingleResult();
 
         $query = $this
             ->em
@@ -566,12 +606,12 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
                 WHERE region.circonscriptionEuropeenne= :territoire
                     ' . (
                         empty($regionsAcResultats) ? ''
-                        : 'AND region NOT IN (:regionsAcResultats)'
+                        : 'AND region.id NOT IN (:regionsAcResultats)'
                     ) . '
                     AND departement.region  = region
                     ' . (
                         empty($departementsAcResultats) ? ''
-                        : 'AND departement NOT IN (:departementsAcResultats)'
+                        : 'AND departement.id NOT IN (:departementsAcResultats)'
                     ) . '
                     AND (
                         commune.departement = departement
@@ -594,7 +634,7 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
 
         $result2 = $query->getSingleResult();
 
-        return !empty($result) || !empty($result2) ? new VoteInfo(
+        return !empty($result0) || !empty($result1) || !empty($result2) ? new VoteInfo(
             $result0['inscrits'] + $result1['inscrits'] + $result2['inscrits'],
             $result0['votants'] + $result1['votants'] + $result2['votants'],
             $result0['exprimes'] + $result1['exprimes'] + $result2['exprimes']
@@ -641,6 +681,29 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
         Echeance $echeance,
         Region $territoire
     ) {
+        $query = $this
+            ->em
+            ->createQuery(
+                'SELECT
+                    territoire.id
+                FROM
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
+                    departement,
+                    PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
+                    voteInfo
+                JOIN voteInfo.election election
+                JOIN voteInfo.territoire territoire
+                WHERE departement.region  = :territoire
+                AND voteInfo.territoire = departement
+                AND election.echeance = :echeance'
+            )
+            ->setParameters(array(
+                'echeance' => $echeance,
+                'territoire' => $territoire,
+            ))
+        ;
+
+        $departementsAcResultats = $query->getResult();
 
         $query = $this
             ->em
@@ -648,8 +711,7 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
                 'SELECT
                     SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
                     SUM(voteInfo.voteInfoVO.votants) AS votants,
-                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits,
-                    territoire.id
+                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits
                 FROM
                     PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
                     departement,
@@ -666,17 +728,7 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
                 'territoire' => $territoire,
             ))
         ;
-
-        $departementsAcResultats = $query->getResult();
-
-        $result = $departementsAcResultats[0];
-
-        $departementsAcResultats = array_map(function ($line) {
-            return $line['id'];
-        }, $departementsAcResultats);
-        $departementsAcResultats = array_filter($departementsAcResultats, function ($element) {
-            return ($element);
-        });
+        $result = $query->getSingleResult();
 
         $query = $this
             ->em

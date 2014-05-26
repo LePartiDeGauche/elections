@@ -16,7 +16,7 @@
  * along with the Parti de Gauche elections data project.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-
+/*
 namespace PartiDeGauche\ElectionsBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -37,4 +37,4 @@ class DefaultControllerTest extends WebTestCase
             $crawler->filter('.navbar:contains("Accueil")')->count() > 0
         );
     }
-}
+}*/
