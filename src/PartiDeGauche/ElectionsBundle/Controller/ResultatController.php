@@ -355,7 +355,12 @@ class ResultatController extends Controller
         $result = array();
 
         if (empty($echeances)) {
-            $echeances = $this->get('repository.echeance')->getAll();
+            $echeances = array_filter(
+                $this->get('repository.echeance')->getAll(),
+                function ($element) {
+                    return ($element->getType() !== Echeance::MUNICIPALES);
+                }
+            );
         }
 
         foreach ($echeances as $echeance) {
