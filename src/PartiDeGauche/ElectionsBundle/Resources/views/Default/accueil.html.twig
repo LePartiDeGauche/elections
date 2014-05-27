@@ -23,10 +23,25 @@
 {% form_theme form 'PartiDeGaucheElectionsBundle:Form:fields.html.twig' %}
 
 {% block content %}
+    <div class="row pushBottom">
+      <div class="col-md-6 col-md-offset-3 text-center">
+          {{ form(form) }}
+      </div>
+    </div>
     <div class="row">
-        <div class="col-md-6 col-md-offset-3 text-center">
-            {{ form(form) }}
-        </div>
+      <div class="col-md-12 text-center">
+        <p>
+          Ce site a été réalisé par des militants bénévoles du
+          <a href="http://www.lepartidegauche.fr">Parti de Gauche</a>.<br/>
+          Il permet une visualisation des résultats des dernières échéances
+          électorales à différent échelons territoriaux.
+        </p>
+        <p>
+          <a href="https://github.com/LePartiDeGauche">Le code</a> du projet est
+          disponible librement en ligne sous licence
+          <a href="http://www.gnu.org/licenses/agpl-3.0.fr.html">AGPL 3.0</a>.
+        </p>
+      </div>
     </div>
 {% endblock %}
 
