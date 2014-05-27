@@ -36,12 +36,12 @@ class ResultatController extends Controller
         array('VEC', 'LVEC'),
         array('SOC', 'LSOC', 'LUG'),
         array('DVG', 'LDVG', 'RDG'),
+        array('AUT', 'LAUT', 'LDIV', 'REG', 'LREG', 'ECO'),
         array('CEN', 'LCMD', 'LCM', 'LMDM', 'LUC', 'LUDI', 'NCE', 'ALLI', 'PRV'),
         array('UMP', 'LMAJ', 'LUD', 'LUMP'),
         array('DVD', 'LDVD'),
         array('FN', 'LFN'),
         array('EXD', 'LEXD'),
-        array('AUT', 'LAUT', 'LDIV', 'REG', 'LREG', 'ECO'),
     );
 
     /**
