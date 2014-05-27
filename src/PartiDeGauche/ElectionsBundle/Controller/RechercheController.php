@@ -43,7 +43,14 @@ class RechercheController extends Controller
 
         $form = $this->createFormBuilder(array())
             ->setAction($this->generateUrl('rechercher_post'))
-            ->add('terme', 'text', array('label' => 'Nom du territoire : '))
+            ->add(
+                'terme',
+                'text',
+                array(
+                    'label' => 'Rechercher un territoire '
+                            . '(commune, département, région...) : '
+                )
+            )
             ->add('Rechercher', 'submit')
             ->getForm();
 
@@ -78,7 +85,14 @@ class RechercheController extends Controller
     {
         $form = $this->createFormBuilder(array())
             ->setAction($this->generateUrl('rechercher_post'))
-            ->add('terme', 'text', array('label' => 'Nom du territoire : '))
+            ->add(
+                'terme',
+                'text',
+                array(
+                    'label' => 'Rechercher un territoire '
+                            . '(commune, département, région...) : '
+                )
+            )
             ->add('Rechercher', 'submit')
             ->getForm();
 
