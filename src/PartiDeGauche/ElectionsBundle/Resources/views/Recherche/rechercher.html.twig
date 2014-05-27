@@ -103,6 +103,10 @@
       var $select = $('#form_terme').selectize(selectizeOptions);
       $select[0].selectize.clear();
       $select[0].selectize.clearOptions();
+
+      $('#form_Rechercher').click(function() {
+        return false;
+      });
     });
   </script>
 {% endblock %}
