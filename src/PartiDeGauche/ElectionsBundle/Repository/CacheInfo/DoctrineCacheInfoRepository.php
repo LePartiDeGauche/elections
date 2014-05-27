@@ -36,10 +36,14 @@ class DoctrineCacheInfoRepository
      */
     private $toPersist;
 
-    public function __construct($doctrine)
+    private $cacheInvalidateDate;
+
+    public function __construct($doctrine, $cacheInvalidateDate)
     {
         $this->em = $doctrine->getManager();
         $this->toPersist = new \SplObjectStorage();
+        $this->cacheInvalidateDate = (new \DateTime())
+            ->setTimestamp((int) $cacheInvalidateDate);
     }
 
     public function getLastModified(AbstractTerritoire $territoire)
@@ -52,11 +56,11 @@ class DoctrineCacheInfoRepository
             ->findOneByTerritoire($territoire)
         ;
 
-        if ($timestamp) {
+        if ($timestamp && $timestamp->getTimestamp() > $this->cacheInvalidateDate) {
             return $timestamp->getTimestamp();
         }
 
-        return new \DateTime('04/23/2014');
+        return $this->cacheInvalidateDate;
     }
 
     public function invalidate(AbstractTerritoire $territoire)

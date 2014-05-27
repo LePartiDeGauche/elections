@@ -11,3 +11,5 @@ parameters:
 
     admin_user:        admin
     admin_password:    password
+
+    cache_invalidate_date: 2014-05-28t00:46:27

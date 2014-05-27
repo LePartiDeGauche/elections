@@ -69,7 +69,7 @@ class ResultatController extends Controller
             $this->get('repository.cache_info')->getLastModified($circo)
         );
         $response->setPublic();
-        $response->setVary(array('Authorization', 'Cookie', 'X-User-Hash'));
+        $response->setVary(array('X-User-Hash'));
         $user = $this->getUser() ? $this->getUser()->getUsername() : 'Anonymous';
         $response->headers->set('X-User-Hash', md5($user));
 
@@ -120,7 +120,7 @@ class ResultatController extends Controller
             $this->get('repository.cache_info')->getLastModified($commune)
         );
         $response->setPublic();
-        $response->setVary(array('Authorization', 'Cookie', 'X-User-Hash'));
+        $response->setVary(array('X-User-Hash'));
         $user = $this->getUser() ? $this->getUser()->getUsername() : 'Anonymous';
         $response->headers->set('X-User-Hash', md5($user));
 
@@ -171,7 +171,7 @@ class ResultatController extends Controller
             $this->get('repository.cache_info')->getLastModified($departement)
         );
         $response->setPublic();
-        $response->setVary(array('Authorization', 'Cookie', 'X-User-Hash'));
+        $response->setVary(array('X-User-Hash'));
         $user = $this->getUser() ? $this->getUser()->getUsername() : 'Anonymous';
         $response->headers->set('X-User-Hash', md5($user));
 
@@ -215,7 +215,7 @@ class ResultatController extends Controller
             $this->get('repository.cache_info')->getLastModified($pays)
         );
         $response->setPublic();
-        $response->setVary(array('Authorization', 'Cookie', 'X-User-Hash'));
+        $response->setVary(array('X-User-Hash'));
         $user = $this->getUser() ? $this->getUser()->getUsername() : 'Anonymous';
         $response->headers->set('X-User-Hash', md5($user));
 
@@ -266,7 +266,7 @@ class ResultatController extends Controller
             $this->get('repository.cache_info')->getLastModified($region)
         );
         $response->setPublic();
-        $response->setVary(array('Authorization', 'Cookie', 'X-User-Hash'));
+        $response->setVary(array('X-User-Hash'));
         $user = $this->getUser() ? $this->getUser()->getUsername() : 'Anonymous';
         $response->headers->set('X-User-Hash', md5($user));
 
