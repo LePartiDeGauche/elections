@@ -85,6 +85,58 @@
 
 {% import _self as format %}
 
+{% block stylesheets %}
+  {% stylesheets '@PartiDeGaucheElectionsBundle/Resources/public/css/rickshaw.min.css' %}
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
+  {% endstylesheets %}
+  <style>
+    #rickshaw_stack_container {
+      overflow: hidden;
+    }
+    #rickshaw_stack_chart {
+      position: relative;
+      left: 40px;
+    }
+    #rickshaw_stack_y {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 40px;
+    }
+    #rickshaw_stack_x {
+      position: relative;
+      left: 40px;
+      height: 40px;
+    }
+    #rickshaw_stack_legend {
+      margin-right: 0px;
+      overflow: hidden;
+    }
+    #rickshaw_line_container {
+      overflow: hidden;
+    }
+    #rickshaw_line_chart {
+      position: relative;
+      left: 40px;
+    }
+    #rickshaw_line_y {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 40px;
+    }
+    #rickshaw_line_x {
+      position: relative;
+      left: 40px;
+      height: 40px;
+    }
+    #rickshaw_line_legend {
+      margin-right: 0px;
+      overflow: hidden;
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
   <div class="row">
     <div class="col-md-3">
@@ -198,16 +250,31 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-11">
-      <canvas id="chart"></canvas>
+    <div class="col-md-11" id="rickshaw_stack_container">
+      <div id="rickshaw_stack_y"></div>
+      <div id="rickshaw_stack_chart"></div>
+      <div id="rickshaw_stack_x"></div>
     </div>
-    <div class="col-md-1" id="legend">
+    <div class="col-md-1" id="rickshaw_stack_legend">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-11" id="rickshaw_line_container">
+      <div id="rickshaw_line_y"></div>
+      <div id="rickshaw_line_chart"></div>
+      <div id="rickshaw_line_x"></div>
+    </div>
+    <div class="col-md-1" id="rickshaw_line_legend">
     </div>
   </div>
 {% endblock %}
 
 {% block javascript %}
-  {% javascripts '@PartiDeGaucheElectionsBundle/Resources/public/js/Chart.min.js' %}
+  {% javascripts
+    '@PartiDeGaucheElectionsBundle/Resources/public/js/vendor/d3.min.js'
+    '@PartiDeGaucheElectionsBundle/Resources/public/js/vendor/d3.layout.min.js'
+    '@PartiDeGaucheElectionsBundle/Resources/public/js/rickshaw.min.js'
+  %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
   {% endjavascripts %}
   <script>
@@ -219,7 +286,7 @@
       trigger: 'hover'
     });
 
-    // chart
+    // charts
     var getNuanceColor = function(nuance) {
       var map = {
         EXG: "#750103",
@@ -238,59 +305,121 @@
       return map[nuance];
     };
 
-    {% for nuance, score in (resultats|first)|slice(4) %}
-      $('#legend').append(
-          '<span style="color: ' + getNuanceColor('{{ nuance }}') + ';">'
-          + '&#11035;'
-        + '</span> '
-        + '<strong>{{ nuance }}</strong><br/>'
-      );
-    {% endfor %}
+    var echeances = [
+      {% for nom, echeance in resultats %}
+        '{{ nom }}'
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
+    ];
 
-    var data = {
-      labels: [
-        {% for echeance, resultat in resultats %}
-          '{{ echeance }}'{% if not loop.last %},{% endif %}
-        {% endfor %}
-      ],
-      datasets: [
-        {% for nuance, score in (resultats|first)|slice(4) %}
+    // rickshaw stack
+    var graph = new Rickshaw.Graph({
+      element: document.getElementById('rickshaw_stack_chart'),
+      width: $('#rickshaw_stack_chart').parent().width() - 40,
+      height: $('#rickshaw_stack_chart').parent().width()/3,
+      series: [
+        {% for nuance, score in (resultats|first)|slice(4)|reverse %}
           {
-            fillColor: "rgba(255,255,255,0)",
-            strokeColor : getNuanceColor('{{ nuance }}'),
-            pointColor : getNuanceColor('{{ nuance }}'),
-            pointStrokeColor : getNuanceColor('{{ nuance }}'),
+            name: '{{ nuance }}',
+            color : getNuanceColor('{{ nuance }}'),
             data : [
-              {% for echeance in resultats %}
-                {{ echeance.exprimes ? (echeance[nuance].score.toVoix/echeance.exprimes) * 100 : 0 }}
+              {% for nom, echeance in resultats %}
+                {
+                  x: {{ loop.index0 }},
+                  y: {{ echeance.exprimes ? (echeance[nuance].score.toVoix/echeance.exprimes) * 100 : 0 }}
+                }
                 {% if not loop.last %},{% endif %}
               {% endfor %}
             ]
           }{% if not loop.last %},{% endif %}
         {% endfor %}
       ]
-    };
-    var options = {
-      datasetFill : false,
-      scaleStartValue: 0,
-        scaleLabel : "<%=value%> %"
-    }
-    var ctx = document.getElementById("chart").getContext("2d");
+    });
 
-    var width = $('#chart').parent().width();
-    $('#chart').attr("width",width);
-    $('#chart').attr("height", width/3);
+    var x_axis = new Rickshaw.Graph.Axis.X( {
+      graph: graph,
+      orientation: 'bottom',
+      element: document.getElementById('rickshaw_stack_x'),
+      tickFormat: function(n) {
+        var label = echeances[n];
+        if ('undefined' === typeof label) {
+          return '';
+        }
 
-    new Chart(ctx).Line(data, options);
-    window.onresize = function(event) {
-      var newWidth = $('canvas').parent().width();
-      if (width !== newWidth) {
-        $('canvas').attr("width", newWidth);
-        $('#chart').attr("height", width/3);
-        new Chart(ctx).Line(data, options);
-        width = newWidth;
+        return label;
       }
-    };
+    });
+
+    var y_axis = new Rickshaw.Graph.Axis.Y({
+      graph: graph,
+      orientation: 'left',
+      tickFormat: function(n) {
+        return n + ' %';
+      },
+      element: document.getElementById('rickshaw_stack_y')
+    });
+
+    var legend = new Rickshaw.Graph.Legend( {
+      element: document.getElementById('rickshaw_stack_legend'),
+      graph: graph
+    });
+
+    graph.render();
+
+    // rickshaw line
+    var graph = new Rickshaw.Graph({
+      element: document.getElementById('rickshaw_line_chart'),
+      width: $('#rickshaw_line_chart').parent().width() - 40,
+      height: $('#rickshaw_line_chart').parent().width()/3,
+      renderer: 'line',
+      series: [
+        {% for nuance, score in (resultats|first)|slice(4)|reverse %}
+          {
+            name: '{{ nuance }}',
+            color : getNuanceColor('{{ nuance }}'),
+            data : [
+              {% for nom, echeance in resultats %}
+                {
+                  x: {{ loop.index0 }},
+                  y: {{ echeance.exprimes ? (echeance[nuance].score.toVoix/echeance.exprimes) * 100 : 0 }}
+                }
+                {% if not loop.last %},{% endif %}
+              {% endfor %}
+            ]
+          }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    });
+
+    var x_axis = new Rickshaw.Graph.Axis.X( {
+      graph: graph,
+      orientation: 'bottom',
+      element: document.getElementById('rickshaw_line_x'),
+      tickFormat: function(n) {
+        var label = echeances[n];
+        if ('undefined' === typeof label) {
+          return '';
+        }
+
+        return label;
+      }
+    });
+
+    var y_axis = new Rickshaw.Graph.Axis.Y({
+      graph: graph,
+      orientation: 'left',
+      tickFormat: function(n) {
+        return n + ' %';
+      },
+      element: document.getElementById('rickshaw_line_y')
+    });
+
+    var legend = new Rickshaw.Graph.Legend( {
+      element: document.getElementById('rickshaw_line_legend'),
+      graph: graph
+    });
+
+    graph.render();
   </script>
 {% endblock %}
 
