@@ -90,47 +90,26 @@
     <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
   {% endstylesheets %}
   <style>
-    #rickshaw_stack_container {
+    .row.rickshaw_container {
       overflow: hidden;
     }
-    #rickshaw_stack_chart {
+    .rickshaw_chart {
       position: relative;
       left: 40px;
+      overflow: hidden;
     }
-    #rickshaw_stack_y {
+    .rickshaw_y {
       position: absolute;
       top: 0;
       bottom: 0;
       width: 40px;
     }
-    #rickshaw_stack_x {
+    .rickshaw_x {
       position: relative;
       left: 40px;
       height: 40px;
     }
-    #rickshaw_stack_legend {
-      margin-right: 0px;
-      overflow: hidden;
-    }
-    #rickshaw_line_container {
-      overflow: hidden;
-    }
-    #rickshaw_line_chart {
-      position: relative;
-      left: 40px;
-    }
-    #rickshaw_line_y {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 40px;
-    }
-    #rickshaw_line_x {
-      position: relative;
-      left: 40px;
-      height: 40px;
-    }
-    #rickshaw_line_legend {
+    .rickshaw_legend {
       margin-right: 0px;
       overflow: hidden;
     }
@@ -249,22 +228,40 @@
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-11" id="rickshaw_stack_container">
-      <div id="rickshaw_stack_y"></div>
-      <div id="rickshaw_stack_chart"></div>
-      <div id="rickshaw_stack_x"></div>
+  <div class="row rickshaw_container">
+    <div class="col-md-12">
+      <h3>% inscrits</h3>
     </div>
-    <div class="col-md-1" id="rickshaw_stack_legend">
+    <div class="col-md-11">
+      <div class="rickshaw_y" id="rickshaw_inscrits_y"></div>
+      <div class="rickshaw_chart" id="rickshaw_inscrits_chart"></div>
+      <div class="rickshaw_x" id="rickshaw_inscrits_x"></div>
+    </div>
+    <div class="col-md-1" class="rickshaw_legend" id="rickshaw_inscrits_legend">
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-11" id="rickshaw_line_container">
-      <div id="rickshaw_line_y"></div>
-      <div id="rickshaw_line_chart"></div>
-      <div id="rickshaw_line_x"></div>
+  <div class="row rickshaw_container">
+    <div class="col-md-12">
+      <h3>% suffrages exprimés</h3>
     </div>
-    <div class="col-md-1" id="rickshaw_line_legend">
+    <div class="col-md-11">
+      <div class="rickshaw_y" id="rickshaw_stack_y"></div>
+      <div class="rickshaw_chart" id="rickshaw_stack_chart"></div>
+      <div class="rickshaw_x" id="rickshaw_stack_x"></div>
+    </div>
+    <div class="col-md-1" class="rickshaw_legend" id="rickshaw_stack_legend">
+    </div>
+  </div>
+  <div class="row rickshaw_container">
+    <div class="col-md-12">
+      <h3>% suffrages exprimés</h3>
+    </div>
+    <div class="col-md-11">
+      <div class="rickshaw_y" id="rickshaw_line_y"></div>
+      <div class="rickshaw_chart" id="rickshaw_line_chart"></div>
+      <div class="rickshaw_x" id="rickshaw_line_x"></div>
+    </div>
+    <div class="col-md-1" class="rickshaw_legend" id="rickshaw_line_legend">
     </div>
   </div>
 {% endblock %}
@@ -311,6 +308,87 @@
         {% if not loop.last %},{% endif %}
       {% endfor %}
     ];
+
+    // rickshaw stack exprimes
+    var graph = new Rickshaw.Graph({
+      element: document.getElementById('rickshaw_inscrits_chart'),
+      width: $('#rickshaw_inscrits_chart').parent().width() - 40,
+      height: $('#rickshaw_inscrits_chart').parent().width()/3,
+      series: [
+        {% for nuance, score in (resultats|first)|slice(4)|reverse %}
+          {
+            name: '{{ nuance }}',
+            color : getNuanceColor('{{ nuance }}'),
+            data : [
+              {% for nom, echeance in resultats %}
+                {
+                  x: {{ loop.index0 }},
+                  y: {{ echeance.inscrits ? (echeance[nuance].score.toVoix/echeance.inscrits) * 100 : 0 }}
+                }
+                {% if not loop.last %},{% endif %}
+              {% endfor %}
+            ]
+          },
+        {% endfor %}
+        {
+          name: 'Blancs/Nuls',
+          color : '#CCC',
+          data : [
+            {% for nom, echeance in resultats %}
+              {
+                x: {{ loop.index0 }},
+                y: {{ echeance.inscrits ? ((echeance.votants - echeance.exprimes)/echeance.inscrits) * 100 : 0 }}
+              }
+              {% if not loop.last %},{% endif %}
+            {% endfor %}
+          ]
+        },
+        {
+          name: 'Abstention',
+          color : '#EEE',
+          data : [
+            {% for nom, echeance in resultats %}
+              {
+                x: {{ loop.index0 }},
+                y: {{ echeance.inscrits ? ((echeance.inscrits - echeance.votants)/echeance.inscrits) * 100 : 0 }}
+              }
+              {% if not loop.last %},{% endif %}
+            {% endfor %}
+          ]
+        }
+      ]
+    });
+
+    var x_axis = new Rickshaw.Graph.Axis.X( {
+      graph: graph,
+      orientation: 'bottom',
+      element: document.getElementById('rickshaw_inscrits_x'),
+      tickFormat: function(n) {
+        var label = echeances[n];
+        if ('undefined' === typeof label) {
+          return '';
+        }
+
+        return label;
+      }
+    });
+
+    var y_axis = new Rickshaw.Graph.Axis.Y({
+      graph: graph,
+      orientation: 'left',
+      tickFormat: function(n) {
+        return n + ' %';
+      },
+      pixelsPerTick: 20,
+      element: document.getElementById('rickshaw_inscrits_y')
+    });
+
+    var legend = new Rickshaw.Graph.Legend( {
+      element: document.getElementById('rickshaw_inscrits_legend'),
+      graph: graph
+    });
+
+    graph.render();
 
     // rickshaw stack
     var graph = new Rickshaw.Graph({
