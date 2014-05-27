@@ -323,9 +323,9 @@ class EditionController extends Controller
             return 'VEC';
         } elseif (in_array($nuance, array('SOC', 'LSOC', 'LUG'))) {
             return 'SOC';
-        } elseif (in_array($nuance, array('DVG', 'LDVG'))) {
+        } elseif (in_array($nuance, array('DVG', 'LDVG', 'RDG'))) {
             return 'DVG';
-        } elseif (in_array($nuance, array('CEN', 'LCMD', 'LCM', 'LMDM', 'LUC', 'LUDI', 'NCE'))) {
+        } elseif (in_array($nuance, array('CEN', 'LCMD', 'LCM', 'LMDM', 'LUC', 'LUDI', 'NCE', 'ALLI', 'PRV'))) {
             return 'CEN';
         } elseif (in_array($nuance, array('UMP', 'LMAJ', 'LUD', 'LUMP'))) {
             return 'UMP';
@@ -335,7 +335,7 @@ class EditionController extends Controller
             return 'FN';
         } elseif (in_array($nuance, array('EXD', 'LEXD'))) {
             return 'EXD';
-        } elseif (in_array($nuance, array('AUT', 'LAUT', 'LDIV'))) {
+        } elseif (in_array($nuance, array('AUT', 'LAUT', 'LDIV', 'REG', 'LREG', 'ECO'))) {
             return 'AUT';
         }
     }
