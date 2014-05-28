@@ -41,12 +41,13 @@ class DoctrineCacheInfoRepositoryTest extends WebTestCase
     public function __construct()
     {
         $client = static::createClient();
+
         $this->container = $client->getContainer();
 
         $this->territoireRepository =
-            $client->getContainer()->get('repository.territoire');
+            $this->container->get('repository.territoire');
         $this->cacheInfoRepository =
-            $client->getContainer()->get('repository.cache_info');
+            $this->container->get('repository.cache_info');
     }
 
     public function testgetLastModifiedAndInvalidate()
@@ -56,17 +57,25 @@ class DoctrineCacheInfoRepositoryTest extends WebTestCase
         $this->territoireRepository->add($region);
         $this->territoireRepository->save();
 
+        $configDate =
+            (new \DateTime())
+            ->setTimestamp(
+                (int) $this->container->getParameter('cache_invalidate_date')
+            )
+        ;
         $this->assertEquals(
-            new \DateTime('04/15/2014'),
+            $configDate,
             $this->cacheInfoRepository->getLastModified($region)
         );
 
         $date = new \DateTime();
+        $this->assertTrue($configDate < $date);
+
         $this->cacheInfoRepository->invalidate($region);
         $this->territoireRepository->save();
 
         $this->assertTrue(
-            $date <= $this->cacheInfoRepository->getLastModified($region)
+            $this->cacheInfoRepository->getLastModified($region) >= $date
         );
     }
 }

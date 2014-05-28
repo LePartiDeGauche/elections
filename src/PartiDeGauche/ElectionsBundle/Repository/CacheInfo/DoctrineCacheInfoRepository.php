@@ -42,8 +42,17 @@ class DoctrineCacheInfoRepository
     {
         $this->em = $doctrine->getManager();
         $this->toPersist = new \SplObjectStorage();
-        $this->cacheInvalidateDate = (new \DateTime())
+        $this->cacheInvalidateDate =
+            (new \DateTime())
             ->setTimestamp((int) $cacheInvalidateDate);
+
+        if ($this->cacheInvalidateDate > new \DateTime()) {
+            throw new \InvalidArgumentException(
+                'La date de dernière' .
+                'invalidation du cache ne peut être supérieure' .
+                'à la date actuelle.'
+            );
+        }
     }
 
     public function getLastModified(AbstractTerritoire $territoire)
