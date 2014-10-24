@@ -377,14 +377,6 @@ class ResultatController extends Controller
                 ->get($echeance, $territoire)
             ;
 
-            if (
-                $election
-                && $echeance->getType() === Echeance::EUROPEENNES
-                && $election->getCirconscription() === $territoire
-            ) {
-                $this->fakeCompletedResult($echeance, $territoire, $election);
-            }
-
             /**
              * Deuxième query sur VoteInfoAssignment.
              */
