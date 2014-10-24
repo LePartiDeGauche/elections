@@ -135,7 +135,7 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
                 '\PartiDeGauche\TerritoireDomain\Entity' .
                 '\Territoire\CirconscriptionEuropeenne'
             )
-            ->findOneByNom($critere)
+            ->findOneByCode($critere)
         ;
 
         return $result ? $result :
@@ -145,7 +145,7 @@ class DoctrineTerritoireRepository implements TerritoireRepositoryInterface
                 '\PartiDeGauche\TerritoireDomain\Entity' .
                 '\Territoire\CirconscriptionEuropeenne'
             )
-            ->findOneByCode($critere)
+            ->findOneByNom($critere)
         ;
     }
 
