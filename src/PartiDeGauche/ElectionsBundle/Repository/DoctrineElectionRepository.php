@@ -572,68 +572,76 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
 
         $departementsAcResultats = $query->getResult();
 
-        $query = $this
-            ->em
-            ->createQuery(
-                'SELECT
-                    SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
-                    SUM(voteInfo.voteInfoVO.votants) AS votants,
-                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits
-                FROM
-                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
-                    region,
-                    PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
-                    voteInfo
-                JOIN voteInfo.election election
-                JOIN voteInfo.territoire territoire
-                WHERE region.circonscriptionEuropeenne  = :territoire
-                AND voteInfo.territoire = region
-                AND election.echeance = :echeance'
-            )
-            ->setParameters(array(
-                'echeance' => $echeance,
-                'territoire' => $territoire,
-            ))
-        ;
+        if(!empty($regionsAcResultats)) {
+            $query = $this
+                ->em
+                ->createQuery(
+                    'SELECT
+                        SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
+                        SUM(voteInfo.voteInfoVO.votants) AS votants,
+                        SUM(voteInfo.voteInfoVO.inscrits) AS inscrits
+                    FROM
+                        PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
+                        region,
+                        PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
+                        voteInfo
+                    JOIN voteInfo.election election
+                    JOIN voteInfo.territoire territoire
+                    WHERE region.circonscriptionEuropeenne  = :territoire
+                    AND voteInfo.territoire = region
+                    AND election.echeance = :echeance'
+                )
+                ->setParameters(array(
+                    'echeance' => $echeance,
+                    'territoire' => $territoire,
+                ))
+            ;
 
-        $result0 = $query->getSingleResult();
-
-        $query = $this
-            ->em
-            ->createQuery(
-                'SELECT
-                    SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
-                    SUM(voteInfo.voteInfoVO.votants) AS votants,
-                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits
-                FROM
-                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
-                    region,
-                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
-                    departement,
-                    PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
-                    voteInfo
-                JOIN voteInfo.election election
-                JOIN voteInfo.territoire territoire
-                WHERE region.circonscriptionEuropeenne = :territoire
-                ' . (
-                        empty($regionsAcResultats) ? ''
-                        : 'AND region.id NOT IN (:regionsAcResultats)'
-                    ) . '
-                AND departement.region  = region
-                AND voteInfo.territoire = departement
-                AND election.echeance = :echeance'
-            )
-            ->setParameters(array(
-                'echeance' => $echeance,
-                'territoire' => $territoire,
-            ))
-        ;
-
-        if (!empty($regionsAcResultats)) {
-            $query->setParameter('regionsAcResultats', $regionsAcResultats);
+            $result0 = $query->getSingleResult();
+        } else {
+            $result0 = array('exprimes' => 0, 'votants' => 0, 'inscrits' => 0);
         }
 
-        $result1 = $query->getSingleResult();
+        if (!empty($departementsAcResultats)) {
+            $query = $this
+                ->em
+                ->createQuery(
+                    'SELECT
+                        SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
+                        SUM(voteInfo.voteInfoVO.votants) AS votants,
+                        SUM(voteInfo.voteInfoVO.inscrits) AS inscrits
+                    FROM
+                        PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
+                        region,
+                        PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
+                        departement,
+                        PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
+                        voteInfo
+                    JOIN voteInfo.election election
+                    JOIN voteInfo.territoire territoire
+                    WHERE region.circonscriptionEuropeenne = :territoire
+                    ' . (
+                            empty($regionsAcResultats) ? ''
+                            : 'AND region.id NOT IN (:regionsAcResultats)'
+                        ) . '
+                    AND departement.region  = region
+                    AND voteInfo.territoire = departement
+                    AND election.echeance = :echeance'
+                )
+                ->setParameters(array(
+                    'echeance' => $echeance,
+                    'territoire' => $territoire,
+                ))
+            ;
+
+            if (!empty($regionsAcResultats)) {
+                $query->setParameter('regionsAcResultats', $regionsAcResultats);
+            }
+
+            $result1 = $query->getSingleResult();
+        } else {
+            $result1 = array('exprimes' => 0, 'votants' => 0, 'inscrits' => 0);
+        }
 
         $query = $this
             ->em
@@ -755,30 +763,34 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
 
         $departementsAcResultats = $query->getResult();
 
-        $query = $this
-            ->em
-            ->createQuery(
-                'SELECT
-                    SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
-                    SUM(voteInfo.voteInfoVO.votants) AS votants,
-                    SUM(voteInfo.voteInfoVO.inscrits) AS inscrits
-                FROM
-                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
-                    departement,
-                    PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
-                    voteInfo
-                JOIN voteInfo.election election
-                JOIN voteInfo.territoire territoire
-                WHERE departement.region  = :territoire
-                AND voteInfo.territoire = departement
-                AND election.echeance = :echeance'
-            )
-                        ->setParameters(array(
-                'echeance' => $echeance,
-                'territoire' => $territoire,
-            ))
-        ;
-        $result = $query->getSingleResult();
+        if (!empty($departementsAcResultats)) {
+            $query = $this
+                ->em
+                ->createQuery(
+                    'SELECT
+                        SUM(voteInfo.voteInfoVO.exprimes) AS exprimes,
+                        SUM(voteInfo.voteInfoVO.votants) AS votants,
+                        SUM(voteInfo.voteInfoVO.inscrits) AS inscrits
+                    FROM
+                        PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
+                        departement,
+                        PartiDeGauche\ElectionDomain\Entity\Election\VoteInfoAssignment
+                        voteInfo
+                    JOIN voteInfo.election election
+                    JOIN voteInfo.territoire territoire
+                    WHERE departement.region  = :territoire
+                    AND voteInfo.territoire = departement
+                    AND election.echeance = :echeance'
+                )
+                ->setParameters(array(
+                    'echeance' => $echeance,
+                    'territoire' => $territoire,
+                ))
+            ;
+            $result = $query->getSingleResult();
+        } else {
+            $result = array('exprimes' => 0, 'votants' => 0, 'inscrits' => 0);
+        }
 
         $query = $this
             ->em

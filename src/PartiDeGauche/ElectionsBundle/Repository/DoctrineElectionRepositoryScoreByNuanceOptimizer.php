@@ -196,11 +196,6 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
             return $line['region'];
         }, $regionsAcResultats);
 
-        $regCondition = '';
-        if (count($regionsAcResultats) > 0) {
-            $regCondition = 'AND region NOT IN (:regionsAcResultats)';
-        }
-
         $query = $this
             ->em
             ->createQuery(
@@ -227,72 +222,78 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
             return $line['departement'];
         }, $departementsAcResultats);
 
-        $depCondition = '';
-        if (count($departementsAcResultats) > 0) {
-            $depCondition = 'AND departement NOT IN (:departementsAcResultats)';
+        if (!empty($regionsAcResultats)) {
+            $query = $this
+                ->em
+                ->createQuery(
+                    'SELECT candidat_.nuance AS nuance, SUM(score.scoreVO.voix) AS voix
+                    FROM
+                        PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
+                        region,
+                        PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat
+                        candidat_,
+                        PartiDeGauche\ElectionDomain\Entity\Election\ScoreAssignment
+                        score
+                    JOIN score.election election
+                    WHERE region.circonscriptionEuropeenne  = :circo
+                        AND score.scoreVO.voix IS NOT NULL
+                        AND score.territoire = region
+                        AND score.candidat = candidat_
+                        AND election.echeance = :echeance
+                    GROUP BY candidat_.nuance'
+                )
+                ->setParameters(array(
+                    'echeance' => $echeance,
+                    'circo' => $circo
+                ))
+            ;
+            $results0 = $query->getResult();
+        } else {
+            $results0 = array();
         }
 
-        $query = $this
-            ->em
-            ->createQuery(
-                'SELECT candidat_.nuance AS nuance, SUM(score.scoreVO.voix) AS voix
-                FROM
-                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
-                    region,
-                    PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat
-                    candidat_,
-                    PartiDeGauche\ElectionDomain\Entity\Election\ScoreAssignment
-                    score
-                JOIN score.election election
-                WHERE region.circonscriptionEuropeenne  = :circo
-                    AND score.scoreVO.voix IS NOT NULL
-                    AND score.territoire = region
-                    AND score.candidat = candidat_
-                    AND election.echeance = :echeance
-                GROUP BY candidat_.nuance'
-            )
-            ->setParameters(array(
-                'echeance' => $echeance,
-                'circo' => $circo
-            ))
-        ;
-        $results0 = $query->getResult();
-
-        $query = $this
-            ->em
-            ->createQuery(
-                'SELECT candidat_.nuance AS nuance, SUM(score.scoreVO.voix) AS voix
-                FROM
-                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
-                    region,
-                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
-                    departement,
-                    PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat
-                    candidat_,
-                    PartiDeGauche\ElectionDomain\Entity\Election\ScoreAssignment
-                    score
-                JOIN score.election election
-                WHERE region.circonscriptionEuropeenne = :circo
-                    '. $regCondition . '
-                    AND departement.region  = region
-                    AND score.scoreVO.voix IS NOT NULL
-                    AND score.territoire = departement
-                    AND score.candidat = candidat_
-                    AND election.echeance = :echeance
-                GROUP BY candidat_.nuance'
-            )
-            ->setParameters(array(
-                'echeance' => $echeance,
-                'circo' => $circo
-            ))
-        ;
-        if (count($regionsAcResultats) > 0) {
-            $query->setParameter(
-                'regionsAcResultats',
-                $regionsAcResultats
-            );
+        if (!empty($departementsAcResultats)) {
+            $query = $this
+                ->em
+                ->createQuery(
+                    'SELECT candidat_.nuance AS nuance, SUM(score.scoreVO.voix) AS voix
+                    FROM
+                        PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
+                        region,
+                        PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
+                        departement,
+                        PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat
+                        candidat_,
+                        PartiDeGauche\ElectionDomain\Entity\Election\ScoreAssignment
+                        score
+                    JOIN score.election election
+                    WHERE region.circonscriptionEuropeenne = :circo
+                        ' . (
+                            empty($regionsAcResultats) ? ''
+                            :'AND region NOT IN (:regionsAcResultats)'
+                        ). '
+                        AND departement.region  = region
+                        AND score.scoreVO.voix IS NOT NULL
+                        AND score.territoire = departement
+                        AND score.candidat = candidat_
+                        AND election.echeance = :echeance
+                    GROUP BY candidat_.nuance'
+                )
+                ->setParameters(array(
+                    'echeance' => $echeance,
+                    'circo' => $circo
+                ))
+            ;
+            if (count($regionsAcResultats) > 0) {
+                $query->setParameter(
+                    'regionsAcResultats',
+                    $regionsAcResultats
+                );
+            }
+            $results1 = $query->getResult();
+        } else {
+            $results1 = array();
         }
-        $results1 = $query->getResult();
 
         $query = $this
             ->em
@@ -311,9 +312,15 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
                     score
                 JOIN score.election election
                 WHERE region.circonscriptionEuropeenne = :circo
-                    '. $regCondition . '
+                    ' . (
+                        empty($regionsAcResultats) ? ''
+                        :'AND region NOT IN (:regionsAcResultats)'
+                    ). '
                     AND departement.region  = region
-                    '. $depCondition . '
+                    '. (
+                        empty($departementsAcResultats) ? ''
+                        : 'AND departement NOT IN (:departementsAcResultats)'
+                    ) . '
                     AND commune.departement = departement
                     AND score.scoreVO.voix IS NOT NULL
                     AND score.territoire = commune
@@ -466,36 +473,35 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
             return $line['departement'];
         }, $departementsAcResultats);
 
-        $depCondition = '';
-        if (count($departementsAcResultats) > 0) {
-            $depCondition = 'AND departement NOT IN (:departementsAcResultats)';
+        if (!empty($departementsAcResultats)) {
+            $query = $this
+                ->em
+                ->createQuery(
+                    'SELECT candidat_.nuance AS nuance, SUM(score.scoreVO.voix) AS voix
+                    FROM
+                        PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
+                        departement,
+                        PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat
+                        candidat_,
+                        PartiDeGauche\ElectionDomain\Entity\Election\ScoreAssignment
+                        score
+                    JOIN score.election election
+                    WHERE departement.region  = :region
+                        AND score.scoreVO.voix IS NOT NULL
+                        AND score.territoire = departement
+                        AND score.candidat = candidat_
+                        AND election.echeance = :echeance
+                    GROUP BY candidat_.nuance'
+                )
+                ->setParameters(array(
+                    'echeance' => $echeance,
+                    'region' => $region
+                ))
+            ;
+            $results1 = $query->getResult();
+        } else {
+            $results1 = array();
         }
-
-        $query = $this
-            ->em
-            ->createQuery(
-                'SELECT candidat_.nuance AS nuance, SUM(score.scoreVO.voix) AS voix
-                FROM
-                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
-                    departement,
-                    PartiDeGauche\ElectionDomain\Entity\Candidat\Candidat
-                    candidat_,
-                    PartiDeGauche\ElectionDomain\Entity\Election\ScoreAssignment
-                    score
-                JOIN score.election election
-                WHERE departement.region  = :region
-                    AND score.scoreVO.voix IS NOT NULL
-                    AND score.territoire = departement
-                    AND score.candidat = candidat_
-                    AND election.echeance = :echeance
-                GROUP BY candidat_.nuance'
-            )
-            ->setParameters(array(
-                'echeance' => $echeance,
-                'region' => $region
-            ))
-        ;
-        $results1 = $query->getResult();
 
         $query = $this
             ->em
@@ -512,7 +518,10 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
                     score
                 JOIN score.election election
                 WHERE departement.region  = :region
-                    '. $depCondition . '
+                    ' . (
+                        empty($departementsAcResultats) ? ''
+                        : 'AND departement NOT IN (:departementsAcResultats)'
+                    ) . '
                     AND commune.departement = departement
                     AND score.scoreVO.voix IS NOT NULL
                     AND score.territoire = commune

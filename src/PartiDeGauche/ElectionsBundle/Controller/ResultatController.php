@@ -363,9 +363,15 @@ class ResultatController extends Controller
             );
         }
 
+        /*
+         * On arrive à descendre à 4 queries par échéances à l'échelon communal.
+         */
         foreach ($echeances as $echeance) {
             $result[$echeance->getNom()] = array();
 
+            /*
+             * Première query sur Election
+             */
             $election = $this
                 ->get('repository.election')
                 ->get($echeance, $territoire)
@@ -379,6 +385,9 @@ class ResultatController extends Controller
                 $this->fakeCompletedResult($echeance, $territoire, $election);
             }
 
+            /**
+             * Deuxième query sur VoteInfoAssignment.
+             */
             $voteInfo = $this
                 ->get('repository.election')
                 ->getVoteInfo($echeance, $territoire)
@@ -388,8 +397,16 @@ class ResultatController extends Controller
             $result[$echeance->getNom()]['exprimes'] = $voteInfo->getExprimes();
             $result[$echeance->getNom()]['election'] = $election;
 
+            /**
+             * Idéalement, le repository est assez optimisé pour qu'il n'y ait
+             * des requetes que lors de la première boucle.
+             */
             foreach ($this->nuancesGroups as $nuances) {
                 $spec = new CandidatNuanceSpecification($nuances);
+                /**
+                 * À l'échelon communal, on arrive à descendre à une seule
+                 * requete ici. (C'est donc la troisième, sur ScoreAssignment).
+                 */
                 $score =$this
                     ->get('repository.election')
                     ->getScore(
@@ -406,6 +423,10 @@ class ResultatController extends Controller
                 $candidats = array();
                 $sieges = 0;
                 if ($election) {
+                    /*
+                     * Quatrième query (si il n'y en a eu qu'une pour les
+                     * résultats), sur la table Candidat.
+                     */
                     $candidats = array_filter(
                         $election->getCandidats(),
                         array($spec, 'isSatisfiedBy')
