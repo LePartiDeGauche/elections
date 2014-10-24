@@ -54,6 +54,15 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
             ->persist($element);
     }
 
+    /**
+     * Retourne un objet Election à partir d'une échéance et d'un territoire.
+     * Peut retourner l'objet élection d'un échelon territorial plus élevé.
+     * Par exemple si on demande l'échéance européenne 2009 à Lille, on a
+     * l'élection européenne de 2009 de la circo grand nord.
+     * @param  Echeance           $echeance        L'échéance.
+     * @param  AbstractTerritoire $circonscription La circonscription.
+     * @return ELection                            Un objet élection.
+     */
     public function get(
         Echeance $echeance,
         AbstractTerritoire $circonscription
@@ -62,6 +71,10 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
 
         $circonscriptions[] = $circonscription;
 
+        /**
+         * Ajouter dans le tableau $circonscriptions tous les territoires
+         * parents.
+         */
         if (end($circonscriptions) instanceof Commune) {
             $circonscriptions[] = end($circonscriptions)->getDepartement();
         }
@@ -85,6 +98,10 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
             $circonscriptions[] = end($circonscriptions)->getPays();
         }
 
+        /**
+         * Récupérer une élection pour cette échéance sur un des territoires du
+         * tableau.
+         */
         try {
             return $this
                 ->em
@@ -113,6 +130,10 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
         $territoire,
         $candidat
     ) {
+        /**
+         * Si le territoire est un tableau, on boucle sur la fonction elle-meme
+         * et on attribue le total à $$score.
+         */
         if (
             is_array($territoire)
             || $territoire instanceof \ArrayAccess
@@ -129,6 +150,10 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
             $score = Score::fromVoix($score);
         }
 
+        /**
+         * Si $score est vide est qu'on a un groupe de nuance, on passe par
+         * le NuanceOptimizer et retourne.
+         */
         if (
             (!isset($score) || !$score)
             && $candidat instanceof CandidatNuanceSpecification
@@ -147,6 +172,11 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
                 : new Score();
         }
 
+        /**
+         * Si on a pas retourné avec le NuanceOptimizer et que le score est vide
+         * et qu'on a un candidat unique à une élection connue on passe par
+         * l'election optimizer.
+         */
         if (
             (!isset($score) || !$score)
             && $candidat instanceof Candidat && $this->get($echeance, $territoire)
@@ -165,10 +195,18 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
                 : new Score();
         }
 
+        /**
+         * En dernier recours on fait une requete classique sur l'unique
+         * territoire.
+         */
         if (!isset($score) || !$score) {
             $score = $this->doScoreQuery($echeance, $territoire, $candidat);
         }
 
+        /**
+         * Et si on a toujours rien, on fait une requete de consolidation
+         * des échelons plus petits.
+         */
         if (!$score) {
             if ($territoire instanceof Region) {
                 $score = $this->doScoreRegionQuery(
@@ -208,6 +246,13 @@ class DoctrineElectionRepository implements ElectionRepositoryInterface
             : new Score();
     }
 
+    /**
+     * Récupérer les VoteInfo (exprimés votants etc.) d'une échéance sur
+     * un territoire. Avec des vrais morceaux de mise en cache inside.
+     * @param  Echeance $echeance   [description]
+     * @param  [type]   $territoire [description]
+     * @return [type]               [description]
+     */
     public function getVoteInfo(Echeance $echeance, $territoire)
     {
         if (

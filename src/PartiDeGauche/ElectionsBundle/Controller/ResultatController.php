@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ResultatController extends Controller
 {
 
-    private $nuancess = array(
+    private $nuancesGroups = array(
         array('EXG', 'LEXG'),
         array('FG', 'LCOP', 'LCOM' ,'LPG', 'LFG'),
         array('VEC', 'LVEC'),
@@ -388,7 +388,7 @@ class ResultatController extends Controller
             $result[$echeance->getNom()]['exprimes'] = $voteInfo->getExprimes();
             $result[$echeance->getNom()]['election'] = $election;
 
-            foreach ($this->nuancess as $nuances) {
+            foreach ($this->nuancesGroups as $nuances) {
                 $spec = new CandidatNuanceSpecification($nuances);
                 $score =$this
                     ->get('repository.election')
@@ -399,6 +399,10 @@ class ResultatController extends Controller
                     )
                 ;
 
+                /**
+                 * Si il y a une élection à l'échelle de ce territoire, on
+                 * récupère les noms des candidats associés à la nuance.
+                 */
                 $candidats = array();
                 $sieges = 0;
                 if ($election) {
