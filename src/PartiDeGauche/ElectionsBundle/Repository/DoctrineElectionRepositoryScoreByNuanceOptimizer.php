@@ -173,7 +173,7 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
         $query = $this
             ->em
             ->createQuery(
-                'SELECT territoire.id AS region
+                'SELECT territoire.id
                 FROM
                     PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
                     region_,
@@ -192,35 +192,38 @@ class DoctrineElectionRepositoryScoreByNuanceOptimizer
             ))
         ;
         $regionsAcResultats = $query->getResult();
-        $regionsAcResultats = array_map(function ($line) {
-            return $line['region'];
-        }, $regionsAcResultats);
 
         $query = $this
             ->em
             ->createQuery(
-                'SELECT territoire.id AS departement
+                'SELECT territoire.id
                 FROM
+                    PartiDeGauche\TerritoireDomain\Entity\Territoire\Region
+                    region,
                     PartiDeGauche\TerritoireDomain\Entity\Territoire\Departement
-                    departement_,
+                    departement,
                     PartiDeGauche\ElectionDomain\Entity\Election\ScoreAssignment
                     score
                 JOIN score.election election
                 JOIN score.territoire territoire
-                WHERE departement_.region = :circo
-                    AND score.scoreVO.voix IS NOT NULL
-                    AND score.territoire = departement_
+                WHERE region.circonscriptionEuropeenne = :territoire
+                ' . (
+                        empty($regionsAcResultats) ? ''
+                        : 'AND region.id NOT IN (:regionsAcResultats)'
+                    ) . '
+                    AND departement.region  = region
+                    AND score.territoire = departement
                     AND election.echeance = :echeance'
             )
             ->setParameters(array(
                 'echeance' => $echeance,
-                'circo' => $circo,
+                'territoire' => $circo,
             ))
         ;
+        if (!empty($regionsAcResultats)) {
+            $query->setParameter('regionsAcResultats', $regionsAcResultats);
+        }
         $departementsAcResultats = $query->getResult();
-        $departementsAcResultats = array_map(function ($line) {
-            return $line['departement'];
-        }, $departementsAcResultats);
 
         if (!empty($regionsAcResultats)) {
             $query = $this
